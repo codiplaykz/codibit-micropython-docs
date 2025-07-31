@@ -93,6 +93,203 @@ print(f"Button A was pressed {total_presses} times total")
 4. **State Tracking**: `was_pressed()`, `get_presses()`, and `get_press_count()` methods automatically track button events
 5. **Counter Management**: `get_presses()` resets the counter, while `get_press_count()` does not
 
+## Buzzer
+
+API for controlling the built-in buzzer on the Codi:bit board.
+
+### Global Instance
+
+```python
+buzzer  # Built-in buzzer (GPIO16)
+```
+
+### Classes
+
+#### `Note`
+
+Musical note frequency constants.
+
+```python
+# Octave 3
+Note.C3 = 131
+Note.D3 = 147
+Note.E3 = 165
+Note.F3 = 175
+Note.G3 = 196
+Note.A3 = 220
+Note.B3 = 247
+
+# Octave 4 (Standard)
+Note.C4 = 262
+Note.D4 = 294
+Note.E4 = 330
+Note.F4 = 349
+Note.G4 = 392
+Note.A4 = 440
+Note.B4 = 494
+
+# Octave 5
+Note.C5 = 523
+Note.D5 = 587
+Note.E5 = 659
+Note.F5 = 698
+Note.G5 = 784
+Note.A5 = 880
+Note.B5 = 988
+Note.C6 = 1047
+```
+
+#### `Sound`
+
+Sound type constants for practical sounds and drum sounds.
+
+**Practical Sounds:**
+```python
+Sound.BEEP = "beep"           # Basic beep
+Sound.CHIME = "chime"         # Chime bell
+Sound.ALERT = "alert"         # Warning sound
+Sound.NOTIFICATION = "notification"  # Notification sound
+Sound.SUCCESS = "success"      # Success sound
+Sound.ERROR = "error"          # Error sound
+Sound.CLICK = "click"         # Click sound
+Sound.TICK = "tick"           # Tick sound
+```
+
+**Drum Sounds (16 types):**
+```python
+Sound.DRUM_KICK = "drum_kick"         # Kick drum
+Sound.DRUM_SNARE = "drum_snare"       # Snare drum
+Sound.DRUM_HIHAT = "drum_hihat"       # Hi-hat
+Sound.DRUM_TOM1 = "drum_tom1"         # Tom 1
+Sound.DRUM_TOM2 = "drum_tom2"         # Tom 2
+Sound.DRUM_CRASH = "drum_crash"       # Crash cymbal
+Sound.DRUM_RIDE = "drum_ride"         # Ride cymbal
+Sound.DRUM_COWBELL = "drum_cowbell"   # Cowbell
+Sound.DRUM_TOM3 = "drum_tom3"         # Tom 3
+Sound.DRUM_FLOOR_TOM = "drum_floor_tom"  # Floor tom
+Sound.DRUM_HIHAT_OPEN = "drum_hihat_open"  # Open hi-hat
+Sound.DRUM_HIHAT_CLOSED = "drum_hihat_closed"  # Closed hi-hat
+Sound.DRUM_CHINA = "drum_china"       # China cymbal
+Sound.DRUM_SPLASH = "drum_splash"     # Splash cymbal
+Sound.DRUM_CLAP = "drum_clap"         # Clap
+Sound.DRUM_SHAKER = "drum_shaker"     # Shaker
+```
+
+#### `Melody`
+
+Built-in melody definitions.
+
+```python
+Melody.HAPPY_BIRTHDAY  # Happy Birthday song
+Melody.TWINKLE_TWINKLE # Twinkle Twinkle Little Star
+Melody.MARY_HAD_A_LITTLE_LAMB  # Mary Had a Little Lamb
+```
+
+### Methods
+
+#### `buzzer.play_tone(frequency, duration_ms=1000, auto_stop=True)`
+
+Plays a tone with the specified frequency.
+
+**Parameters:**
+- `frequency` (int | Note): Frequency in Hz or Note constant
+- `duration_ms` (int): Duration in milliseconds (default: 1000)
+- `auto_stop` (bool): Whether to stop automatically after playing (default: True)
+
+**Example:**
+```python
+buzzer.play_tone(Note.A4, 1000)  # Play A4 for 1 second
+buzzer.play_tone(440, 1000)      # Play 440Hz for 1 second
+```
+
+#### `buzzer.play_melody(melody, tempo=None)`
+
+Plays a melody with the specified tempo.
+
+**Parameters:**
+- `melody` (list): List of tuples `(frequency | Note, duration)` representing notes
+- `tempo` (int): Tempo in BPM (Beats Per Minute), uses default if None
+
+**Example:**
+```python
+melody = [(Note.C4, 300), (Note.D4, 300), (Note.E4, 300)]
+buzzer.play_melody(melody, tempo=120)
+```
+
+#### `buzzer.play_song(song_name)`
+
+Plays a built-in song.
+
+**Parameters:**
+- `song_name` (str | Melody): Song name string or Melody constant
+
+**Available Songs:**
+- `Melody.HAPPY_BIRTHDAY`: Happy Birthday
+- `Melody.TWINKLE_TWINKLE`: Twinkle Twinkle Little Star
+- `Melody.MARY_HAD_A_LITTLE_LAMB`: Mary Had a Little Lamb
+
+**Example:**
+```python
+buzzer.play_song(Melody.HAPPY_BIRTHDAY)
+```
+
+#### `buzzer.play_sound(sound_type)`
+
+Plays a predefined sound.
+
+**Parameters:**
+- `sound_type` (str | Sound): Sound type from Sound class constants
+
+**Example:**
+```python
+buzzer.play_sound(Sound.BEEP)
+buzzer.play_sound(Sound.DRUM_KICK)
+```
+
+#### `buzzer.stop()`
+
+Stops the current sound.
+
+**Example:**
+```python
+buzzer.play_tone(440, 5000)  # Play for 5 seconds
+buzzer.stop()  # Stop immediately
+```
+
+#### `buzzer.set_volume(volume)`
+
+Sets the buzzer volume.
+
+**Parameters:**
+- `volume` (int): Volume level (0-3)
+  - `0`: Mute
+  - `1`: Low
+  - `2`: Medium (default)
+  - `3`: High
+
+**Example:**
+```python
+buzzer.set_volume(3)  # Set to high volume
+buzzer.play_tone(440, 1000)
+```
+
+### Hardware Information
+
+- **Type**: Piezoelectric buzzer
+- **Pin Assignment**: GPIO16
+- **PWM Frequency Range**: 20Hz - 20kHz
+- **Volume Control**: PWM duty cycle (0-900)
+- **Power Supply**: 3.3V
+- **Physical Location**: Front side of the board
+
+### Notes
+
+1. **Volume Control**: Volume is controlled by PWM duty cycle, with maximum duty cycle of 900
+2. **Interruptible**: All melody and song playback can be interrupted with Ctrl+C
+3. **Tempo Control**: Tempo is specified in BPM (Beats Per Minute)
+4. **Note Constants**: Use Note class constants for standard musical frequencies
+5. **Sound Types**: 8 practical sounds and 16 drum sounds available
+
 ## Microphone
 
 API for controlling the built-in microphone sensor.
