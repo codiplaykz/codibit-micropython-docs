@@ -16,6 +16,7 @@ const sidebars: SidebarsConfig = {
   // Main documentation sidebar - manually ordered
   docsSidebar: [
     'intro',
+    'intro-ko',
     {
       type: 'category',
       label: 'Tutorials',

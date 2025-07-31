@@ -14,22 +14,21 @@ This documentation is organized using the [Diátaxis framework](https://diataxis
 **Purpose**: Learning - Complete learning paths that users can follow from start to finish
 
 - **Getting Started**: Introduction to Codi:bit, first program, basic concepts
-- **Basics**: LED control, button handling, display usage
-- **Sensors**: Compass, motion detection, environment sensing
-- **Advanced**: IoT projects, wireless games, music player
+- **Basic Projects**: LED control, button handling, display usage
+- **Sensor Projects**: Light detection, sound sensing, environment monitoring
+- **Advanced Projects**: Multi-sensor applications, interactive projects
 
 ### 🔧 **How-to Guides**
 **Purpose**: Tasks - Specific methods for performing particular tasks
 
-- **Hardware Control**: Display, LED, buzzer control
-- **Sensor Usage**: Magnetometer, accelerometer, gyroscope usage
-- **Communication**: WiFi, HTTP, MQTT connections
-- **Data Processing**: Logging, visualization, analysis
+- **[Button Usage](how-to/button-usage)**: How to detect button presses and handle user input
+- **[Light Change Detection](how-to/light-change-detection)**: How to detect and respond to light level changes
+- **[Microphone Usage](how-to/microphone-usage)**: How to use the microphone sensor for sound detection
 
 ### 📖 **Reference**
 **Purpose**: Information - API and technical details
 
-- **API Reference**: Detailed descriptions of all functions and classes
+- **[Built-in Sensors API](reference/builtin)**: Complete API documentation for all built-in sensors
 - **Hardware Reference**: Pin assignments, specifications, power management
 - **System Reference**: MicroPython and ESP32 related information
 
@@ -50,14 +49,17 @@ from codibit import *
 # Display text
 display.show("Hello Codi:bit!")
 
-# Set LED color
-rgb_led.set_pixel(0, (255, 0, 0))  # Red
-rgb_led.show()
+# Read button state
+if button_a.is_pressed():
+    print("Button A is pressed!")
 
-# Read sensor values
-x = compass.get_x()
-y = compass.get_y()
-z = compass.get_z()
+# Read light sensor
+light_level = light.read_level()
+print(f"Light level: {light_level}")
+
+# Read microphone
+sound_level = microphone.get_level()
+print(f"Sound level: {sound_level}")
 ```
 
 ### Hardware Overview
@@ -65,58 +67,99 @@ z = compass.get_z()
 Codi:bit is an ESP32-based educational microcontroller board with:
 
 - **Display**: SH1106 OLED (128x64 pixels)
-- **Sensors**: MMC5603NJ magnetometer, QMI8658C 6-axis IMU, ALS-PT19 light sensor
-- **I/O**: WS2812B LED, buzzer, 2 buttons
+- **Sensors**:
+  - MMC5603NJ magnetometer
+  - QMI8658C 6-axis IMU (accelerometer, gyroscope)
+  - ALS-PT19 light sensor
+  - Microphone sensor
+- **I/O**:
+  - WS2812B RGB LED
+  - Buzzer
+  - 2 buttons (A and B)
 - **Connectivity**: WiFi, Bluetooth
 
 ## 📁 Documentation Sections
 
 ### Tutorials (Learning)
-- **[Getting Started](getting-started/introduction)**: Hardware introduction and first program
-- **[Basics](basics/blink-led)**: LED blinking, button response, display usage
-- **[Sensors](sensors/compass-project)**: Compass, motion detection, environment sensing
-- **[Advanced](advanced/iot-sensor)**: IoT projects, wireless communication, music
+- **[Getting Started](tutorials/intro)**: Hardware introduction and first program
+- **Basic Projects**: LED blinking, button response, display usage
+- **Sensor Projects**: Light detection, sound sensing, environment monitoring
+- **Advanced Projects**: Multi-sensor applications, interactive projects
 
 ### How-to Guides (Tasks)
-- **[Hardware Control](hardware/display-control)**: Display, LED, buzzer control methods
-- **[Sensor Usage](sensors-usage/magnetometer-usage)**: Sensor reading and calibration
-- **[Communication](communication/wifi-connection)**: WiFi, HTTP, MQTT setup
-- **[Data Processing](data/data-logging)**: Data logging and visualization
+- **[Button Usage](how-to/button-usage)**: Detect button presses and handle user input
+- **[Light Change Detection](how-to/light-change-detection)**: Detect and respond to light level changes
+- **[Microphone Usage](how-to/microphone-usage)**: Use microphone sensor for sound detection
 
 ### Reference (Information)
-- **[API Reference](api/display-api)**: Complete API documentation
-- **[Hardware Reference](hardware-ref/pin-assignments)**: Pin mappings and specifications
-- **[System Reference](system/micropython-reference)**: MicroPython and ESP32 details
+- **[Built-in Sensors API](reference/builtin)**: Complete API documentation for all sensors
+- **Hardware Reference**: Pin mappings and specifications
+- **System Reference**: MicroPython and ESP32 details
 
 ### Explanation (Understanding)
-- **[Concepts](concepts/sensor-principles)**: Sensor principles and communication protocols
-- **[Architecture](architecture/library-architecture)**: Library design and hardware architecture
-- **[Education](education/educational-philosophy)**: Educational approach and STEM learning
+- **[Concepts](explanation/intro)**: Sensor principles and programming concepts
+- **Architecture**: Library design and hardware architecture
+- **Education**: Educational approach and STEM learning
 
 ## 🎯 Learning Path
 
 ### For Beginners
-1. Start with **[Getting Started](getting-started/introduction)**
-2. Learn **[Basics](basics/blink-led)** for fundamental concepts
-3. Explore **[Sensors](sensors/compass-project)** for sensor usage
-4. Try **[Advanced](advanced/iot-sensor)** projects
+1. Start with **[Getting Started](tutorials/intro)**
+2. Learn **[Button Usage](how-to/button-usage)** for user input
+3. Explore **[Light Change Detection](how-to/light-change-detection)** for sensor usage
+4. Try **[Microphone Usage](how-to/microphone-usage)** for sound detection
 
 ### For Developers
-1. Check **[API Reference](api/display-api)** for function details
-2. Review **[Hardware Reference](hardware-ref/pin-assignments)** for specifications
-3. Understand **[Architecture](architecture/library-architecture)** for system design
+1. Check **[Built-in Sensors API](reference/builtin)** for function details
+2. Review hardware specifications for pin assignments
+3. Understand library architecture for system design
 
 ### For Educators
-1. Read **[Educational Philosophy](education/educational-philosophy)**
-2. Explore **[STEM Education](education/stem-education)** concepts
-3. Use **[Tutorials](getting-started/introduction)** for classroom activities
+1. Read educational philosophy and STEM concepts
+2. Explore tutorials for classroom activities
+3. Use examples for hands-on learning
 
 ## 🔗 Quick Links
 
-- **[Hardware Specifications](hardware-ref/hardware-specifications)**: Detailed hardware specs
-- **[Pin Assignments](hardware-ref/pin-assignments)**: GPIO pin mappings
-- **[API Documentation](api/display-api)**: Complete API reference
+- **[Built-in Sensors API](reference/builtin)**: Complete API reference
+- **[Button Usage Guide](how-to/button-usage)**: How to use buttons
+- **[Light Detection Guide](how-to/light-change-detection)**: How to detect light changes
+- **[Microphone Usage Guide](how-to/microphone-usage)**: How to use microphone
 - **[Examples](https://github.com/codiplaykz/codibit-micropython/tree/main/examples)**: Code examples
+
+## 📚 Code Examples
+
+### Button Example
+```python
+from codibit import *
+
+while True:
+    if button_a.is_pressed():
+        print("Button A pressed!")
+    if button_b.is_pressed():
+        print("Button B pressed!")
+    sleep(0.1)
+```
+
+### Light Sensor Example
+```python
+from codibit import *
+
+while True:
+    level = light.read_level()
+    print(f"Light level: {level}")
+    sleep(1)
+```
+
+### Microphone Example
+```python
+from codibit import *
+
+while True:
+    if microphone.is_loud():
+        print("Loud sound detected!")
+    sleep(0.1)
+```
 
 ## 📚 Additional Resources
 
@@ -126,4 +169,4 @@ Codi:bit is an ESP32-based educational microcontroller board with:
 
 ---
 
-**Start Learning**: Begin with [Getting Started](getting-started/introduction) to learn about Codi:bit hardware and create your first program!
+**Start Learning**: Begin with [Getting Started](tutorials/intro) to learn about Codi:bit hardware and create your first program!
