@@ -93,6 +93,203 @@ print(f"버튼 A가 총 {total_presses}번 눌렸습니다")
 4. **상태 추적**: `was_pressed()`, `get_presses()`, `get_press_count()` 메서드는 버튼 이벤트를 자동으로 추적합니다
 5. **카운터 관리**: `get_presses()`는 카운터를 리셋하지만, `get_press_count()`는 리셋하지 않습니다
 
+## 버저 (Buzzer)
+
+Codi:bit 보드의 내장 버저를 제어하는 API입니다.
+
+### 전역 인스턴스
+
+```python
+buzzer  # 내장 버저 (GPIO16)
+```
+
+### 클래스
+
+#### `Note`
+
+음표 주파수 상수들입니다.
+
+```python
+# 옥타브 3
+Note.C3 = 131
+Note.D3 = 147
+Note.E3 = 165
+Note.F3 = 175
+Note.G3 = 196
+Note.A3 = 220
+Note.B3 = 247
+
+# 옥타브 4 (기본)
+Note.C4 = 262
+Note.D4 = 294
+Note.E4 = 330
+Note.F4 = 349
+Note.G4 = 392
+Note.A4 = 440
+Note.B4 = 494
+
+# 옥타브 5
+Note.C5 = 523
+Note.D5 = 587
+Note.E5 = 659
+Note.F5 = 698
+Note.G5 = 784
+Note.A5 = 880
+Note.B5 = 988
+Note.C6 = 1047
+```
+
+#### `Sound`
+
+실용적인 소리와 드럼 소리 타입 상수들입니다.
+
+**실용적인 소리들:**
+```python
+Sound.BEEP = "beep"           # 기본 비프음
+Sound.CHIME = "chime"         # 차임벨
+Sound.ALERT = "alert"         # 경고음
+Sound.NOTIFICATION = "notification"  # 알림음
+Sound.SUCCESS = "success"      # 성공음
+Sound.ERROR = "error"          # 오류음
+Sound.CLICK = "click"         # 클릭음
+Sound.TICK = "tick"           # 틱음
+```
+
+**드럼 소리들 (16가지):**
+```python
+Sound.DRUM_KICK = "drum_kick"         # 킥 드럼
+Sound.DRUM_SNARE = "drum_snare"       # 스네어 드럼
+Sound.DRUM_HIHAT = "drum_hihat"       # 하이햇
+Sound.DRUM_TOM1 = "drum_tom1"         # 톰1
+Sound.DRUM_TOM2 = "drum_tom2"         # 톰2
+Sound.DRUM_CRASH = "drum_crash"       # 크래시 심벌
+Sound.DRUM_RIDE = "drum_ride"         # 라이드 심벌
+Sound.DRUM_COWBELL = "drum_cowbell"   # 카우벨
+Sound.DRUM_TOM3 = "drum_tom3"         # 톰3
+Sound.DRUM_FLOOR_TOM = "drum_floor_tom"  # 플로어 톰
+Sound.DRUM_HIHAT_OPEN = "drum_hihat_open"  # 오픈 하이햇
+Sound.DRUM_HIHAT_CLOSED = "drum_hihat_closed"  # 클로즈드 하이햇
+Sound.DRUM_CHINA = "drum_china"       # 차이나 심벌
+Sound.DRUM_SPLASH = "drum_splash"     # 스플래시 심벌
+Sound.DRUM_CLAP = "drum_clap"         # 클랩
+Sound.DRUM_SHAKER = "drum_shaker"     # 쉐이커
+```
+
+#### `Melody`
+
+내장 멜로디 정의들입니다.
+
+```python
+Melody.HAPPY_BIRTHDAY  # 생일 축하합니다
+Melody.TWINKLE_TWINKLE # 반짝반짝 작은 별
+Melody.MARY_HAD_A_LITTLE_LAMB  # 메리 양의 작은 양
+```
+
+### 메서드
+
+#### `buzzer.play_tone(frequency, duration_ms=1000, auto_stop=True)`
+
+지정된 주파수로 음을 재생합니다.
+
+**매개변수:**
+- `frequency` (int | Note): 주파수 (Hz) 또는 Note 상수
+- `duration_ms` (int): 재생 시간 (밀리초, 기본값: 1000)
+- `auto_stop` (bool): 재생 완료 후 자동 정지 여부 (기본값: True)
+
+**예시:**
+```python
+buzzer.play_tone(Note.A4, 1000)  # A4 음을 1초간 재생
+buzzer.play_tone(440, 1000)      # 440Hz를 1초간 재생
+```
+
+#### `buzzer.play_melody(melody, tempo=None)`
+
+지정된 템포로 멜로디를 재생합니다.
+
+**매개변수:**
+- `melody` (list): `(주파수 | Note, 지속시간)` 튜플들의 리스트로 음표들을 나타냄
+- `tempo` (int): 템포 (BPM, 분당 비트 수), None이면 기본값 사용
+
+**예시:**
+```python
+melody = [(Note.C4, 300), (Note.D4, 300), (Note.E4, 300)]
+buzzer.play_melody(melody, tempo=120)
+```
+
+#### `buzzer.play_song(song_name)`
+
+내장 곡을 재생합니다.
+
+**매개변수:**
+- `song_name` (str | Melody): 곡 이름 문자열 또는 Melody 상수
+
+**사용 가능한 곡들:**
+- `Melody.HAPPY_BIRTHDAY`: 생일 축하합니다
+- `Melody.TWINKLE_TWINKLE`: 반짝반짝 작은 별
+- `Melody.MARY_HAD_A_LITTLE_LAMB`: 비행기
+
+**예시:**
+```python
+buzzer.play_song(Melody.HAPPY_BIRTHDAY)
+```
+
+#### `buzzer.play_sound(sound_type)`
+
+미리 정의된 소리를 재생합니다.
+
+**매개변수:**
+- `sound_type` (str | Sound): Sound 클래스 상수 중 하나
+
+**예시:**
+```python
+buzzer.play_sound(Sound.BEEP)
+buzzer.play_sound(Sound.DRUM_KICK)
+```
+
+#### `buzzer.stop()`
+
+현재 재생 중인 소리를 정지합니다.
+
+**예시:**
+```python
+buzzer.play_tone(440, 5000)  # 5초간 재생
+buzzer.stop()  # 즉시 정지
+```
+
+#### `buzzer.set_volume(volume)`
+
+버저 볼륨을 설정합니다.
+
+**매개변수:**
+- `volume` (int): 볼륨 레벨 (0-3)
+  - `0`: 음소거
+  - `1`: 작게
+  - `2`: 중간 (기본값)
+  - `3`: 크게
+
+**예시:**
+```python
+buzzer.set_volume(3)  # 크게로 설정
+buzzer.play_tone(440, 1000)
+```
+
+### 하드웨어 정보
+
+- **타입**: 압전 버저
+- **핀 할당**: GPIO16
+- **PWM 주파수 범위**: 20Hz - 20kHz
+- **볼륨 제어**: PWM 듀티 사이클 (0-900)
+- **전원 공급**: 3.3V
+- **물리적 위치**: 보드 앞면
+
+### 주의사항
+
+1. **볼륨 제어**: 볼륨은 PWM 듀티 사이클로 제어되며, 최대 듀티 사이클은 900입니다
+2. **중단 가능**: 모든 멜로디와 곡 재생은 Ctrl+C로 중단할 수 있습니다
+3. **템포 제어**: 템포는 BPM (분당 비트 수)로 지정됩니다
+4. **음표 상수**: 표준 음악 주파수는 Note 클래스 상수를 사용하세요
+5. **소리 타입**: 8가지 실용적인 소리와 16가지 드럼 소리를 사용할 수 있습니다
+
 ## 마이크 (Microphone)
 
 내장 마이크 센서를 제어하는 API입니다.

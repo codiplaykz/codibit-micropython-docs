@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-title: 소개
+title: Introduction(소개)
 description: Codi:bit MicroPython API 문서
 ---
 
