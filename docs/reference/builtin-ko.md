@@ -93,6 +93,138 @@ print(f"버튼 A가 총 {total_presses}번 눌렸습니다")
 4. **상태 추적**: `was_pressed()`, `get_presses()`, `get_press_count()` 메서드는 버튼 이벤트를 자동으로 추적합니다
 5. **카운터 관리**: `get_presses()`는 카운터를 리셋하지만, `get_press_count()`는 리셋하지 않습니다
 
+## RGB LED
+
+내장 RGB LED 스트립(3개 LED)을 제어하는 API입니다.
+
+### 전역 인스턴스
+
+```python
+rgb_led  # 내장 RGB LED 스트립
+```
+
+### 메서드
+
+#### `rgb_led.set_color(strip_id, r, g, b, brightness=255)`
+
+특정 LED 스트립의 색상과 밝기를 설정합니다.
+
+**매개변수:**
+- `strip_id` (int): LED 스트립 번호 (0, 1, 2)
+- `r` (int): 빨간색 값 (0-255)
+- `g` (int): 초록색 값 (0-255)
+- `b` (int): 파란색 값 (0-255)
+- `brightness` (int): 밝기 (0-255), 기본값 255
+
+**예시:**
+```python
+# 스트립 0을 빨간색, 스트립 1을 초록색, 스트립 2를 파란색으로 설정
+rgb_led.set_color(0, 255, 0, 0)    # 빨간색
+rgb_led.set_color(1, 0, 255, 0)    # 초록색
+rgb_led.set_color(2, 0, 0, 255)    # 파란색
+rgb_led.show()
+```
+
+#### `rgb_led.set_all(r, g, b, brightness=255)`
+
+모든 LED 스트립을 같은 색상과 밝기로 설정합니다.
+
+**매개변수:**
+- `r` (int): 빨간색 값 (0-255)
+- `g` (int): 초록색 값 (0-255)
+- `b` (int): 파란색 값 (0-255)
+- `brightness` (int): 밝기 (0-255), 기본값 255
+
+**예시:**
+```python
+# 모든 스트립을 흰색으로 설정
+rgb_led.set_all(255, 255, 255)
+rgb_led.show()
+
+# 모든 스트립을 빨간색으로 50% 밝기로 설정
+rgb_led.set_all(255, 0, 0, 128)
+rgb_led.show()
+```
+
+#### `rgb_led.set_brightness(strip_id, brightness)`
+
+특정 LED 스트립의 밝기만 설정합니다. 현재 색상은 유지됩니다.
+
+**매개변수:**
+- `strip_id` (int): LED 스트립 번호 (0, 1, 2)
+- `brightness` (int): 밝기 (0-255)
+
+**예시:**
+```python
+# 스트립 0을 빨간색으로 설정
+rgb_led.set_color(0, 255, 0, 0)
+# 밝기를 50%로 설정
+rgb_led.set_brightness(0, 128)
+rgb_led.show()
+```
+
+#### `rgb_led.set_all_brightness(brightness)`
+
+모든 LED 스트립의 밝기를 동일하게 설정합니다. 현재 색상들은 유지됩니다.
+
+**매개변수:**
+- `brightness` (int): 밝기 (0-255)
+
+**예시:**
+```python
+# 각 스트립을 다른 색상으로 설정
+rgb_led.set_color(0, 255, 0, 0)    # 빨간색
+rgb_led.set_color(1, 0, 255, 0)    # 초록색
+rgb_led.set_color(2, 0, 0, 255)    # 파란색
+# 모든 스트립을 50% 밝기로 설정
+rgb_led.set_all_brightness(128)
+rgb_led.show()
+```
+
+#### `rgb_led.turn_off(strip_id)`
+
+특정 LED 스트립을 끕니다.
+
+**매개변수:**
+- `strip_id` (int): LED 스트립 번호 (0, 1, 2)
+
+**예시:**
+```python
+# 스트립 1을 끄기
+rgb_led.turn_off(1)
+rgb_led.show()
+```
+
+#### `rgb_led.turn_off_all()`
+
+모든 LED 스트립을 끕니다.
+
+**예시:**
+```python
+# 모든 스트립을 끄기
+rgb_led.turn_off_all()
+rgb_led.show()
+```
+
+### 하드웨어 정보
+
+- **타입**: WS2812B RGB LED 스트립
+- **LED 개수**: 3개 LED 직렬 연결
+- **핀 할당**: GPIO17
+- **전원 공급**: 3.3V
+- **데이터 프로토콜**: WS2812B 프로토콜
+- **색상 깊이**: 24-bit (색상당 8-bit)
+- **밝기 제어**: PWM 기반 밝기 제어
+
+### 주의사항
+
+1. **색상 범위**: 각 색상 구성요소(R, G, B)는 0-255 범위입니다
+2. **밝기 제어**: 밝기는 모든 색상 구성요소에 비례적으로 적용됩니다
+3. **전력 효율성**: 낮은 밝기는 전력 소모를 줄입니다
+4. **업데이트 필요**: 색상 설정 후 `show()`를 호출하여 변경사항을 적용해야 합니다
+5. **스트립 번호**: 스트립은 왼쪽부터 0, 1, 2로 번호가 매겨집니다
+6. **색상 혼합**: RGB 값들이 혼합되어 다양한 색상을 만듭니다
+
 ## 버저 (Buzzer)
 
 Codi:bit 보드의 내장 버저를 제어하는 API입니다.
@@ -469,3 +601,135 @@ level = light.read_level()
 2. **반사**: 센서 주변의 반사 물체가 측정에 영향을 줄 수 있습니다
 3. **온도**: 극한 온도에서는 정확도가 떨어질 수 있습니다
 4. **초기화**: 센서는 보드 전원 공급 시 자동으로 초기화됩니다
+
+## RGB LED
+
+내장 RGB LED 스트립(3개 LED)을 제어하는 API입니다.
+
+### 전역 인스턴스
+
+```python
+rgb_led  # 내장 RGB LED 스트립
+```
+
+### 메서드
+
+#### `rgb_led.set_color(strip_id, r, g, b, brightness=255)`
+
+특정 LED 스트립의 색상과 밝기를 설정합니다.
+
+**매개변수:**
+- `strip_id` (int): LED 스트립 번호 (0, 1, 2)
+- `r` (int): 빨간색 값 (0-255)
+- `g` (int): 초록색 값 (0-255)
+- `b` (int): 파란색 값 (0-255)
+- `brightness` (int): 밝기 (0-255), 기본값 255
+
+**예시:**
+```python
+# 스트립 0을 빨간색, 스트립 1을 초록색, 스트립 2를 파란색으로 설정
+rgb_led.set_color(0, 255, 0, 0)    # 빨간색
+rgb_led.set_color(1, 0, 255, 0)    # 초록색
+rgb_led.set_color(2, 0, 0, 255)    # 파란색
+rgb_led.show()
+```
+
+#### `rgb_led.set_all(r, g, b, brightness=255)`
+
+모든 LED 스트립을 같은 색상과 밝기로 설정합니다.
+
+**매개변수:**
+- `r` (int): 빨간색 값 (0-255)
+- `g` (int): 초록색 값 (0-255)
+- `b` (int): 파란색 값 (0-255)
+- `brightness` (int): 밝기 (0-255), 기본값 255
+
+**예시:**
+```python
+# 모든 스트립을 흰색으로 설정
+rgb_led.set_all(255, 255, 255)
+rgb_led.show()
+
+# 모든 스트립을 빨간색으로 50% 밝기로 설정
+rgb_led.set_all(255, 0, 0, 128)
+rgb_led.show()
+```
+
+#### `rgb_led.set_brightness(strip_id, brightness)`
+
+특정 LED 스트립의 밝기만 설정합니다. 현재 색상은 유지됩니다.
+
+**매개변수:**
+- `strip_id` (int): LED 스트립 번호 (0, 1, 2)
+- `brightness` (int): 밝기 (0-255)
+
+**예시:**
+```python
+# 스트립 0을 빨간색으로 설정
+rgb_led.set_color(0, 255, 0, 0)
+# 밝기를 50%로 설정
+rgb_led.set_brightness(0, 128)
+rgb_led.show()
+```
+
+#### `rgb_led.set_all_brightness(brightness)`
+
+모든 LED 스트립의 밝기를 동일하게 설정합니다. 현재 색상들은 유지됩니다.
+
+**매개변수:**
+- `brightness` (int): 밝기 (0-255)
+
+**예시:**
+```python
+# 각 스트립을 다른 색상으로 설정
+rgb_led.set_color(0, 255, 0, 0)    # 빨간색
+rgb_led.set_color(1, 0, 255, 0)    # 초록색
+rgb_led.set_color(2, 0, 0, 255)    # 파란색
+# 모든 스트립을 50% 밝기로 설정
+rgb_led.set_all_brightness(128)
+rgb_led.show()
+```
+
+#### `rgb_led.turn_off(strip_id)`
+
+특정 LED 스트립을 끕니다.
+
+**매개변수:**
+- `strip_id` (int): LED 스트립 번호 (0, 1, 2)
+
+**예시:**
+```python
+# 스트립 1을 끄기
+rgb_led.turn_off(1)
+rgb_led.show()
+```
+
+#### `rgb_led.turn_off_all()`
+
+모든 LED 스트립을 끕니다.
+
+**예시:**
+```python
+# 모든 스트립을 끄기
+rgb_led.turn_off_all()
+rgb_led.show()
+```
+
+### 하드웨어 정보
+
+- **타입**: WS2812B RGB LED 스트립
+- **LED 개수**: 3개 LED 직렬 연결
+- **핀 할당**: GPIO17
+- **전원 공급**: 3.3V
+- **데이터 프로토콜**: WS2812B 프로토콜
+- **색상 깊이**: 24-bit (색상당 8-bit)
+- **밝기 제어**: PWM 기반 밝기 제어
+
+### 주의사항
+
+1. **색상 범위**: 각 색상 구성요소(R, G, B)는 0-255 범위입니다
+2. **밝기 제어**: 밝기는 모든 색상 구성요소에 비례적으로 적용됩니다
+3. **전력 효율성**: 낮은 밝기는 전력 소모를 줄입니다
+4. **업데이트 필요**: 색상 설정 후 `show()`를 호출하여 변경사항을 적용해야 합니다
+5. **스트립 번호**: 스트립은 왼쪽부터 0, 1, 2로 번호가 매겨집니다
+6. **색상 혼합**: RGB 값들이 혼합되어 다양한 색상을 만듭니다
