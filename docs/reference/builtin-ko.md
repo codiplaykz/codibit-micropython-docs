@@ -626,3 +626,500 @@ level = light.read_level()
 2. **반사**: 센서 주변의 반사 물체가 측정에 영향을 줄 수 있습니다
 3. **온도**: 극한 온도에서는 정확도가 떨어질 수 있습니다
 4. **초기화**: 센서는 보드 전원 공급 시 자동으로 초기화됩니다
+
+## 디스플레이 (Display)
+
+내장 SH1106 OLED 디스플레이(128x64 픽셀)를 제어하는 API입니다.
+
+### 전역 인스턴스
+
+```python
+display = Display()
+```
+
+### 메서드
+
+#### `display.get_pixel(x, y)`
+
+지정된 좌표의 픽셀 밝기를 반환합니다.
+
+**매개변수:**
+- `x` (int): X 좌표 (0-127)
+- `y` (int): Y 좌표 (0-63)
+
+**반환값:**
+- `int`: 픽셀 밝기 (0-9)
+
+**예시:**
+```python
+brightness = display.get_pixel(10, 20)
+print(f"픽셀 밝기: {brightness}")
+```
+
+#### `display.set_pixel(x, y, val)`
+
+지정된 좌표의 픽셀 밝기를 설정합니다.
+
+**매개변수:**
+- `x` (int): X 좌표 (0-127)
+- `y` (int): Y 좌표 (0-63)
+- `val` (int): 밝기 값 (0-9)
+
+**예시:**
+```python
+display.set_pixel(10, 20, 9)  # 픽셀을 최대 밝기로 설정
+```
+
+#### `display.show(image, delay=0, wait=True, loop=False, clear=False)`
+
+화면에 이미지를 표시합니다.
+
+**매개변수:**
+- `image`: Image 객체 또는 이미지 리스트
+- `delay` (int): 이미지 간 지연 시간 (밀리초)
+- `wait` (bool): 완료까지 대기 여부
+- `loop` (bool): 반복 재생 여부
+- `clear` (bool): 표시 후 화면 지우기 여부
+
+**예시:**
+```python
+from codibit import Image
+
+# 단일 이미지 표시
+heart = Image.HEART
+display.show(heart)
+
+# 여러 이미지를 애니메이션으로 표시
+images = [Image.HEART, Image.HAPPY, Image.SAD]
+display.show(images, delay=500, loop=True)
+```
+
+#### `display.scroll(string, delay=400)`
+
+텍스트를 디스플레이에 스크롤합니다.
+
+**매개변수:**
+- `string` (str): 스크롤할 텍스트
+- `delay` (int): 스크롤 속도 (밀리초)
+
+**예시:**
+```python
+display.scroll("안녕하세요 Codi:bit!")
+```
+
+#### `display.clear()`
+
+디스플레이를 지웁니다.
+
+**예시:**
+```python
+display.clear()
+```
+
+#### `display.update()`
+
+수동으로 디스플레이를 업데이트합니다 (자동 업데이트가 비활성화된 경우).
+
+**예시:**
+```python
+display.set_auto_update(False)
+display.set_pixel(0, 0, 9)
+display.update()  # 강제 업데이트
+```
+
+#### `display.set_auto_update(enabled=True)`
+
+자동 디스플레이 업데이트를 활성화하거나 비활성화합니다.
+
+**매개변수:**
+- `enabled` (bool): 자동 업데이트 활성화 여부
+
+**예시:**
+```python
+display.set_auto_update(False)  # 성능을 위해 자동 업데이트 비활성화
+# ... 여러 픽셀 그리기 ...
+display.update()  # 마지막에 한 번만 업데이트
+```
+
+#### `display.show_text(text, x, y, color=1)`
+
+지정된 위치에 텍스트를 표시합니다.
+
+**매개변수:**
+- `text` (str): 표시할 텍스트
+- `x` (int): X 좌표
+- `y` (int): Y 좌표
+- `color` (int): 텍스트 색상 (0 또는 1)
+
+**예시:**
+```python
+display.show_text("안녕하세요!", 0, 10)
+```
+
+#### `display.draw_rectangle(x, y, w, h, color=1)`
+
+사각형을 그립니다.
+
+**매개변수:**
+- `x` (int): 왼쪽 상단 모서리의 X 좌표
+- `y` (int): 왼쪽 상단 모서리의 Y 좌표
+- `w` (int): 너비
+- `h` (int): 높이
+- `color` (int): 사각형 색상 (0 또는 1)
+
+**예시:**
+```python
+display.draw_rectangle(10, 10, 20, 15)
+```
+
+#### `display.draw_line(x1, y1, x2, y2, color=1)`
+
+두 점 사이에 선을 그립니다.
+
+**매개변수:**
+- `x1` (int): 시작점의 X 좌표
+- `y1` (int): 시작점의 Y 좌표
+- `x2` (int): 끝점의 X 좌표
+- `y2` (int): 끝점의 Y 좌표
+- `color` (int): 선 색상 (0 또는 1)
+
+**예시:**
+```python
+display.draw_line(0, 0, 50, 50)
+```
+
+#### `display.draw_circle(x, y, r, color=1)`
+
+원을 그립니다.
+
+**매개변수:**
+- `x` (int): 중심의 X 좌표
+- `y` (int): 중심의 Y 좌표
+- `r` (int): 반지름
+- `color` (int): 원 색상 (0 또는 1)
+
+**예시:**
+```python
+display.draw_circle(30, 30, 10)
+```
+
+#### `display.draw_triangle(x1, y1, x2, y2, x3, y3, color=1)`
+
+삼각형을 그립니다.
+
+**매개변수:**
+- `x1, y1` (int): 첫 번째 꼭지점의 좌표
+- `x2, y2` (int): 두 번째 꼭지점의 좌표
+- `x3, y3` (int): 세 번째 꼭지점의 좌표
+- `color` (int): 삼각형 색상 (0 또는 1)
+
+**예시:**
+```python
+display.draw_triangle(10, 10, 20, 40, 40, 40)
+```
+
+#### `display.show_icon(icon_name, scale=1)`
+
+내장 아이콘을 선택적 스케일링과 함께 표시합니다.
+
+**매개변수:**
+- `icon_name` (str): 아이콘 이름 (예: 'HEART', 'HAPPY', 'SAD')
+- `scale` (int): 스케일 배수 (1=5x5, 2=10x10, 3=15x15)
+
+**예시:**
+```python
+display.show_icon('HEART', scale=2)  # 하트를 2배 크기로 표시
+```
+
+#### `display.show_icon_centered(icon_name, scale=1)`
+
+내장 아이콘을 화면 중앙에 표시합니다.
+
+**매개변수:**
+- `icon_name` (str): 아이콘 이름
+- `scale` (int): 스케일 배수 (1=5x5, 2=10x10, 3=15x15)
+
+**예시:**
+```python
+display.show_icon_centered('HAPPY', scale=3)  # 웃는 얼굴을 3배 크기로 중앙에 표시
+```
+
+### 하드웨어 정보
+
+- **디스플레이**: SH1106 OLED
+- **해상도**: 128x64 픽셀
+- **인터페이스**: I2C
+- **주소**: 0x3C
+- **전원 공급**: 3.3V
+- **물리적 위치**: 보드 앞면
+
+### 주의사항
+
+1. **픽셀 좌표**: 원점 (0,0)은 왼쪽 상단 모서리입니다
+2. **밝기 레벨**: 0-9 스케일 (0=꺼짐, 9=최대 밝기)
+3. **자동 업데이트**: 기본적으로 활성화되어 있으며, 성능을 위해 비활성화할 수 있습니다
+4. **내장 아이콘**: 64가지 다양한 아이콘을 사용할 수 있습니다 (Image 섹션 참조)
+5. **스케일링**: 아이콘은 더 나은 가시성을 위해 표시할 때 확대할 수 있습니다
+
+## 이미지 (Image)
+
+디스플레이용 이미지를 생성하고 조작하는 API입니다.
+
+### 전역 인스턴스
+
+```python
+from codibit import Image
+```
+
+### 이미지 생성
+
+#### `Image(width, height)`
+
+지정된 크기의 빈 이미지를 생성합니다.
+
+**매개변수:**
+- `width` (int): 이미지 너비
+- `height` (int): 이미지 높이
+
+**예시:**
+```python
+img = Image(5, 5)  # 5x5 빈 이미지 생성
+```
+
+#### `Image(string)`
+
+문자열 표현에서 이미지를 생성합니다.
+
+**매개변수:**
+- `string` (str): "행1:행2:행3:..." 형식의 이미지 문자열
+
+**예시:**
+```python
+heart = Image('09090:99999:99999:09990:00900:')
+```
+
+### 메서드
+
+#### `image.set_pixel(x, y, value)`
+
+이미지의 픽셀 밝기를 설정합니다.
+
+**매개변수:**
+- `x` (int): X 좌표
+- `y` (int): Y 좌표
+- `value` (int): 밝기 값 (0-9)
+
+**예시:**
+```python
+img = Image(5, 5)
+img.set_pixel(2, 2, 9)  # 중앙 픽셀을 최대 밝기로 설정
+```
+
+#### `image.get_pixel(x, y)`
+
+이미지의 픽셀 밝기를 반환합니다.
+
+**매개변수:**
+- `x` (int): X 좌표
+- `y` (int): Y 좌표
+
+**반환값:**
+- `int`: 픽셀 밝기 (0-9)
+
+**예시:**
+```python
+brightness = img.get_pixel(2, 2)
+```
+
+#### `image.width()`
+
+이미지의 너비를 반환합니다.
+
+**반환값:**
+- `int`: 이미지 너비
+
+**예시:**
+```python
+width = img.width()
+```
+
+#### `image.height()`
+
+이미지의 높이를 반환합니다.
+
+**반환값:**
+- `int`: 이미지 높이
+
+**예시:**
+```python
+height = img.height()
+```
+
+#### `image.shift_left(n)`
+
+이미지를 왼쪽으로 n픽셀 이동시킵니다.
+
+**매개변수:**
+- `n` (int): 이동할 픽셀 수
+
+**반환값:**
+- `Image`: 새로 이동된 이미지
+
+**예시:**
+```python
+shifted = img.shift_left(1)
+```
+
+#### `image.shift_right(n)`
+
+이미지를 오른쪽으로 n픽셀 이동시킵니다.
+
+**매개변수:**
+- `n` (int): 이동할 픽셀 수
+
+**반환값:**
+- `Image`: 새로 이동된 이미지
+
+**예시:**
+```python
+shifted = img.shift_right(1)
+```
+
+#### `image.shift_up(n)`
+
+이미지를 위로 n픽셀 이동시킵니다.
+
+**매개변수:**
+- `n` (int): 이동할 픽셀 수
+
+**반환값:**
+- `Image`: 새로 이동된 이미지
+
+**예시:**
+```python
+shifted = img.shift_up(1)
+```
+
+#### `image.shift_down(n)`
+
+이미지를 아래로 n픽셀 이동시킵니다.
+
+**매개변수:**
+- `n` (int): 이동할 픽셀 수
+
+**반환값:**
+- `Image`: 새로 이동된 이미지
+
+**예시:**
+```python
+shifted = img.shift_down(1)
+```
+
+import ImagePreview from '@site/src/components/ImagePreview';
+import { IMAGE_STRINGS } from '@site/src/constants/imageStrings';
+
+### 내장 이미지
+
+Image 클래스는 디스플레이에서 사용할 수 있는 64개의 내장 이미지를 제공합니다.
+
+#### 기본 아이콘
+
+| 아이콘 | 미리보기 | 아이콘 | 미리보기 | 아이콘 | 미리보기 |
+|--------|----------|--------|----------|--------|----------|
+| `Image.HEART` | <ImagePreview imageString={IMAGE_STRINGS.HEART} /> | `Image.HEART_SMALL` | <ImagePreview imageString={IMAGE_STRINGS.HEART_SMALL} /> | `Image.HAPPY` | <ImagePreview imageString={IMAGE_STRINGS.HAPPY} /> |
+| `Image.STAR` | <ImagePreview imageString={IMAGE_STRINGS.STAR} /> | `Image.SAD` | <ImagePreview imageString={IMAGE_STRINGS.SAD} /> | `Image.CONFUSED` | <ImagePreview imageString={IMAGE_STRINGS.CONFUSED} /> |
+| `Image.ANGRY` | <ImagePreview imageString={IMAGE_STRINGS.ANGRY} /> | `Image.ASLEEP` | <ImagePreview imageString={IMAGE_STRINGS.ASLEEP} /> | `Image.SURPRISED` | <ImagePreview imageString={IMAGE_STRINGS.SURPRISED} /> |
+| `Image.SILLY` | <ImagePreview imageString={IMAGE_STRINGS.SILLY} /> | `Image.FABULOUS` | <ImagePreview imageString={IMAGE_STRINGS.FABULOUS} /> | `Image.MEH` | <ImagePreview imageString={IMAGE_STRINGS.MEH} /> |
+| `Image.O` | <ImagePreview imageString={IMAGE_STRINGS.O} /> | `Image.X` | <ImagePreview imageString={IMAGE_STRINGS.X} /> | | |
+
+#### 기하학적 도형
+
+| 아이콘 | 미리보기 | 아이콘 | 미리보기 | 아이콘 | 미리보기 |
+|--------|----------|--------|----------|--------|----------|
+| `Image.TRIANGLE` | <ImagePreview imageString={IMAGE_STRINGS.TRIANGLE} /> | `Image.TRIANGLE_LEFT` | <ImagePreview imageString={IMAGE_STRINGS.TRIANGLE_LEFT} /> | `Image.CHESSBOARD` | <ImagePreview imageString={IMAGE_STRINGS.CHESSBOARD} /> |
+| `Image.DIAMOND` | <ImagePreview imageString={IMAGE_STRINGS.DIAMOND} /> | `Image.DIAMOND_SMALL` | <ImagePreview imageString={IMAGE_STRINGS.DIAMOND_SMALL} /> | `Image.SQUARE` | <ImagePreview imageString={IMAGE_STRINGS.SQUARE} /> |
+| `Image.SQUARE_SMALL` | <ImagePreview imageString={IMAGE_STRINGS.SQUARE_SMALL} /> | | | | |
+
+#### 동물
+
+| 아이콘 | 미리보기 | 아이콘 | 미리보기 | 아이콘 | 미리보기 |
+|--------|----------|--------|----------|--------|----------|
+| `Image.RABBIT` | <ImagePreview imageString={IMAGE_STRINGS.RABBIT} /> | `Image.COW` | <ImagePreview imageString={IMAGE_STRINGS.COW} /> | `Image.DUCK` | <ImagePreview imageString={IMAGE_STRINGS.DUCK} /> |
+| `Image.TORTOISE` | <ImagePreview imageString={IMAGE_STRINGS.TORTOISE} /> | `Image.BUTTERFLY` | <ImagePreview imageString={IMAGE_STRINGS.BUTTERFLY} /> | `Image.STICKFIGURE` | <ImagePreview imageString={IMAGE_STRINGS.STICKFIGURE} /> |
+| `Image.GHOST` | <ImagePreview imageString={IMAGE_STRINGS.GHOST} /> | `Image.GIRAFFE` | <ImagePreview imageString={IMAGE_STRINGS.GIRAFFE} /> | `Image.SKULL` | <ImagePreview imageString={IMAGE_STRINGS.SKULL} /> |
+| `Image.UMBRELLA` | <ImagePreview imageString={IMAGE_STRINGS.UMBRELLA} /> | `Image.SNAKE` | <ImagePreview imageString={IMAGE_STRINGS.SNAKE} /> | `Image.SCISSORS` | <ImagePreview imageString={IMAGE_STRINGS.SCISSORS} /> |
+
+#### 음악
+
+| 아이콘 | 미리보기 | 아이콘 | 미리보기 | 아이콘 | 미리보기 |
+|--------|----------|--------|----------|--------|----------|
+| `Image.MUSIC_CROTCHET` | <ImagePreview imageString={IMAGE_STRINGS.MUSIC_CROTCHET} /> | `Image.MUSIC_QUAVER` | <ImagePreview imageString={IMAGE_STRINGS.MUSIC_QUAVER} /> | `Image.MUSIC_QUAVERS` | <ImagePreview imageString={IMAGE_STRINGS.MUSIC_QUAVERS} /> |
+| `Image.PITCHFORK` | <ImagePreview imageString={IMAGE_STRINGS.PITCHFORK} /> | | | | |
+
+#### 기타
+
+| 아이콘 | 미리보기 | 아이콘 | 미리보기 | 아이콘 | 미리보기 |
+|--------|----------|--------|----------|--------|----------|
+| `Image.XMAS` | <ImagePreview imageString={IMAGE_STRINGS.XMAS} /> | `Image.PACMAN` | <ImagePreview imageString={IMAGE_STRINGS.PACMAN} /> | `Image.TARGET` | <ImagePreview imageString={IMAGE_STRINGS.TARGET} /> |
+| `Image.TSHIRT` | <ImagePreview imageString={IMAGE_STRINGS.TSHIRT} /> | `Image.ROLLERSKATE` | <ImagePreview imageString={IMAGE_STRINGS.ROLLERSKATE} /> | `Image.HOUSE` | <ImagePreview imageString={IMAGE_STRINGS.HOUSE} /> |
+
+#### 시계 얼굴
+- `Image.CLOCK1`부터 `Image.CLOCK12`까지 - 다양한 시간의 시계 얼굴
+
+#### 화살표
+
+| 아이콘 | 미리보기 | 아이콘 | 미리보기 | 아이콘 | 미리보기 |
+|--------|----------|--------|----------|--------|----------|
+| `Image.ARROW_N` | <ImagePreview imageString={IMAGE_STRINGS.ARROW_N} /> | `Image.ARROW_NE` | <ImagePreview imageString={IMAGE_STRINGS.ARROW_NE} /> | `Image.ARROW_E` | <ImagePreview imageString={IMAGE_STRINGS.ARROW_E} /> |
+| `Image.ARROW_SE` | <ImagePreview imageString={IMAGE_STRINGS.ARROW_SE} /> | `Image.ARROW_S` | <ImagePreview imageString={IMAGE_STRINGS.ARROW_S} /> | `Image.ARROW_SW` | <ImagePreview imageString={IMAGE_STRINGS.ARROW_SW} /> |
+| `Image.ARROW_W` | <ImagePreview imageString={IMAGE_STRINGS.ARROW_W} /> | `Image.ARROW_NW` | <ImagePreview imageString={IMAGE_STRINGS.ARROW_NW} /> | | |
+
+### 이미지 연산
+
+#### 덧셈 (`+`)
+
+두 이미지를 각 픽셀에서 최대 밝기를 취하여 결합합니다.
+
+**예시:**
+```python
+combined = Image.HEART + Image.HAPPY
+```
+
+#### 곱셈 (`*`)
+
+이미지의 밝기를 조정합니다.
+
+**예시:**
+```python
+brighter = Image.HEART * 2  # 밝기를 2배로
+```
+
+### 디스플레이와 함께 사용
+
+이미지는 디스플레이와 원활하게 작동하도록 설계되었습니다:
+
+**예시:**
+```python
+from codibit import display, Image
+
+# 내장 아이콘 표시
+display.show(Image.HEART)
+display.show_icon('HAPPY', scale=2)
+
+# 사용자 정의 이미지 생성
+custom = Image('90009:09090:00900:09090:90009:')
+display.show(custom)
+
+# 여러 이미지로 애니메이션
+animation = [Image.HEART, Image.HAPPY, Image.SAD]
+display.show(animation, delay=500, loop=True)
+```
+
+### 주의사항
+
+1. **문자열 형식**: 이미지는 ':'로 행을 구분하는 문자열에서 생성할 수 있습니다
+2. **밝기 스케일**: 0-9 스케일 (0=꺼짐, 9=최대 밝기)
+3. **내장 아이콘**: 즉시 사용할 수 있는 64가지 다양한 아이콘
+4. **호환성**: API는 micro:bit Image 인터페이스와 호환됩니다
+5. **디스플레이 통합**: 이미지는 디스플레이와 직접 작동하도록 설계되었습니다
+6. **스케일링**: 아이콘은 더 나은 가시성을 위해 표시할 때 확대할 수 있습니다
