@@ -18,25 +18,16 @@ Play a simple tone with a specific frequency:
 
 ```python
 # Play A4 note for 1 second
-buzzer.play_tone(Note.A4, 1000)
+buzzer.play_tone(440, 1000)
 ```
 
-### Using Note Constants
+### Using Note Strings
 
-Use predefined note constants for standard musical frequencies:
+Musical notes are expressed in the format `NOTE[octave][:duration]`:
 
 ```python
-from codibit.builtin.buzzer import Note
-
 # Play C major scale
-buzzer.play_tone(Note.C4, 500)  # C
-buzzer.play_tone(Note.D4, 500)  # D
-buzzer.play_tone(Note.E4, 500)  # E
-buzzer.play_tone(Note.F4, 500)  # F
-buzzer.play_tone(Note.G4, 500)  # G
-buzzer.play_tone(Note.A4, 500)  # A
-buzzer.play_tone(Note.B4, 500)  # B
-buzzer.play_tone(Note.C5, 500)  # C (octave higher)
+buzzer.play_melody(['c4:4', 'd4:4', 'e4:4', 'f4:4', 'g4:4', 'a4:4', 'b4:4', 'c5:8'], tempo=120)
 ```
 
 ## Playing Predefined Sounds
@@ -100,18 +91,16 @@ buzzer.play_sound(Sound.DRUM_SHAKER)    # Shaker
 Create and play your own melody:
 
 ```python
-from codibit.builtin.buzzer import Note
-
 # Create a simple melody (C major scale)
 melody = [
-    (Note.C4, 300),  # C
-    (Note.D4, 300),  # D
-    (Note.E4, 300),  # E
-    (Note.F4, 300),  # F
-    (Note.G4, 300),  # G
-    (Note.A4, 300),  # A
-    (Note.B4, 300),  # B
-    (Note.C5, 600)   # C (octave higher, longer note)
+    'c4:4',  # C
+    'd4:4',  # D
+    'e4:4',  # E
+    'f4:4',  # F
+    'g4:4',  # G
+    'a4:4',  # A
+    'b4:4',  # B
+    'c5:8'   # C (octave higher, longer note)
 ]
 
 # Play the melody with 120 BPM tempo
@@ -123,17 +112,28 @@ buzzer.play_melody(melody, tempo=120)
 Play a chord progression:
 
 ```python
-from codibit.builtin.buzzer import Note
-
 # C major chord progression
 chord_progression = [
-    (Note.C4, 200), (Note.E4, 200), (Note.G4, 400),  # C major
-    (Note.F4, 200), (Note.A4, 200), (Note.C5, 400),  # F major
-    (Note.G4, 200), (Note.B4, 200), (Note.D5, 400),  # G major
-    (Note.C5, 800)  # Final C
+    'c4:2', 'e4:2', 'g4:4',  # C major
+    'f4:2', 'a4:2', 'c5:4',  # F major
+    'g4:2', 'b4:2', 'd5:4',  # G major
+    'c5:8'  # Final C
 ]
 
 buzzer.play_melody(chord_progression, tempo=140)
+```
+
+### Beethoven's 5th Symphony Opening
+
+Play famous melodies:
+
+```python
+# Beethoven's 5th Symphony opening
+beethoven_5th = [
+    'r4:2', 'g', 'g', 'g', 'eb:8', 'r:2', 'f', 'f', 'f', 'd:8'
+]
+
+buzzer.play_melody(beethoven_5th, tempo=120)
 ```
 
 ## Playing Built-in Songs
@@ -142,13 +142,39 @@ Play predefined songs:
 
 ```python
 # Happy Birthday
-buzzer.play_song(Melody.HAPPY_BIRTHDAY)
+buzzer.play_song('happy_birthday')
 
 # Twinkle Twinkle Little Star
-buzzer.play_song(Melody.TWINKLE_TWINKLE)
+buzzer.play_song('twinkle')
 
 # Mary Had a Little Lamb
-buzzer.play_song(Melody.MARY_HAD_A_LITTLE_LAMB)
+buzzer.play_song('mary')
+```
+
+## Tempo Control
+
+Set and adjust the tempo:
+
+```python
+# Set tempo
+buzzer.set_tempo(bpm=180)  # Fast tempo
+buzzer.set_tempo(bpm=60)   # Slow tempo
+
+# Check current tempo
+ticks, bpm = buzzer.get_tempo()
+print(f"Current tempo: {bpm} BPM, {ticks} ticks")
+
+# Play the same melody at different tempos
+melody = ['c4:4', 'd4:4', 'e4:4', 'f4:4', 'g4:8']
+
+buzzer.set_tempo(bpm=60)
+buzzer.play_melody(melody)  # Slow
+
+buzzer.set_tempo(bpm=120)
+buzzer.play_melody(melody)  # Normal
+
+buzzer.set_tempo(bpm=180)
+buzzer.play_melody(melody)  # Fast
 ```
 
 ## Volume Control
@@ -164,7 +190,7 @@ buzzer.set_volume(3)  # High
 
 # Play a tone with high volume
 buzzer.set_volume(3)
-buzzer.play_tone(Note.A4, 1000)
+buzzer.play_tone(440, 1000)
 ```
 
 ## Stopping Sounds
@@ -173,7 +199,7 @@ Stop the current sound:
 
 ```python
 # Start a long tone
-buzzer.play_tone(Note.A4, 10000)  # 10 seconds
+buzzer.play_tone(440, 10000)  # 10 seconds
 
 # Stop it immediately
 buzzer.stop()
@@ -185,22 +211,20 @@ Here's a complete example that demonstrates various buzzer features:
 
 ```python
 from codibit import buzzer
-from codibit.builtin.buzzer import Note, Sound
+from codibit.builtin.buzzer import Sound
 import time
 
 # Volume test
 print("Testing volume levels...")
 for volume in range(4):
     buzzer.set_volume(volume)
-    buzzer.play_tone(Note.A4, 500)
+    buzzer.play_tone(440, 500)
     time.sleep(0.5)
 
-# Note constants test
+# Note string test
 print("Playing C major scale...")
-notes = [Note.C4, Note.D4, Note.E4, Note.F4, Note.G4, Note.A4, Note.B4, Note.C5]
-for note in notes:
-    buzzer.play_tone(note, 300)
-    time.sleep(0.1)
+melody = ['c4:4', 'd4:4', 'e4:4', 'f4:4', 'g4:4', 'a4:4', 'b4:4', 'c5:8']
+buzzer.play_melody(melody, tempo=120)
 
 # Practical sounds test
 print("Playing practical sounds...")
@@ -218,20 +242,57 @@ for drum in drums:
 
 # Custom melody
 print("Playing custom melody...")
-melody = [(Note.C4, 200), (Note.E4, 200), (Note.G4, 400)]
+melody = ['c4:2', 'e4:2', 'g4:4']
 buzzer.play_melody(melody, tempo=120)
+
+# Tempo control test
+print("Playing melody at different tempos...")
+melody = ['c4:4', 'd4:4', 'e4:4', 'f4:4', 'g4:8']
+for bpm in [60, 120, 180]:
+    buzzer.set_tempo(bpm=bpm)
+    buzzer.play_melody(melody)
+    time.sleep(0.5)
 
 # Built-in song
 print("Playing Happy Birthday...")
-buzzer.play_song(Melody.HAPPY_BIRTHDAY)
+buzzer.play_song('happy_birthday')
 
 print("Buzzer demonstration complete!")
 ```
+
+## Musical Notation
+
+### Basic Format
+
+Musical notes are expressed in the format `NOTE[octave][:duration]`:
+
+```python
+'c4:4'    # C4 note for 4 ticks
+'g'        # G4 note for default duration (4 ticks)
+'r:2'      # Rest for 2 ticks
+'eb:8'     # E♭4 note for 8 ticks
+'f#5:1'    # F#5 note for 1 tick
+```
+
+### Supported Notes
+
+- **Basic notes**: `c`, `d`, `e`, `f`, `g`, `a`, `b`
+- **Flats**: `cb`, `db`, `eb`, `fb`, `gb`, `ab`, `bb`
+- **Sharps**: `c#`, `d#`, `e#`, `f#`, `g#`, `a#`, `b#`
+- **Octaves**: 3, 4(default), 5
+- **Rest**: `r` (silence)
+
+### Tempo System
+
+- **Default**: 4 ticks, 120 BPM
+- **1 tick**: 60000 / BPM / ticks_per_beat milliseconds
+- **Default**: 1 tick = 125ms, 1 beat = 500ms
 
 ## Tips
 
 1. **Interrupting**: You can interrupt any melody or song playback with Ctrl+C
 2. **Volume Range**: Volume levels range from 0 (mute) to 3 (high)
 3. **Tempo**: Tempo is specified in BPM (Beats Per Minute)
-4. **Note Constants**: Use Note class constants for standard musical frequencies
+4. **Musical Notation**: Use `NOTE[octave][:duration]` format for musical notes
 5. **Sound Types**: 8 practical sounds and 16 drum sounds are available
+6. **Tick System**: The basic time unit for music is ticks, which length is determined by tempo
