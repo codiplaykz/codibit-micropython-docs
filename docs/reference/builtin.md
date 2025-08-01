@@ -93,6 +93,163 @@ print(f"Button A was pressed {total_presses} times total")
 4. **State Tracking**: `was_pressed()`, `get_presses()`, and `get_press_count()` methods automatically track button events
 5. **Counter Management**: `get_presses()` resets the counter, while `get_press_count()` does not
 
+## RGB LED
+
+API for controlling the built-in RGB LED strip (3 LEDs).
+
+### Global Instance
+
+```python
+rgb_led  # Built-in RGB LED strip
+```
+
+### Methods
+
+#### `rgb_led.set_color(strip_id, r, g, b, brightness=255)`
+
+Sets the color and brightness of a specific LED strip.
+
+**Parameters:**
+- `strip_id` (int): LED strip number (0, 1, 2)
+- `r` (int): Red value (0-255)
+- `g` (int): Green value (0-255)
+- `b` (int): Blue value (0-255)
+- `brightness` (int): Brightness (0-255), default 255
+
+**Example:**
+```python
+# Set strip 0 to red, strip 1 to green, strip 2 to blue
+rgb_led.set_color(0, 255, 0, 0)    # Red
+rgb_led.set_color(1, 0, 255, 0)    # Green
+rgb_led.set_color(2, 0, 0, 255)    # Blue
+rgb_led.show()
+```
+
+#### `rgb_led.set_all(r, g, b, brightness=255)`
+
+Sets all LED strips to the same color and brightness.
+
+**Parameters:**
+- `r` (int): Red value (0-255)
+- `g` (int): Green value (0-255)
+- `b` (int): Blue value (0-255)
+- `brightness` (int): Brightness (0-255), default 255
+
+**Example:**
+```python
+# Set all strips to white
+rgb_led.set_all(255, 255, 255)
+rgb_led.show()
+
+# Set all strips to red with 50% brightness
+rgb_led.set_all(255, 0, 0, 128)
+rgb_led.show()
+```
+
+#### `rgb_led.set_brightness(strip_id, brightness)`
+
+Sets the brightness of a specific LED strip while maintaining its current color.
+
+**Parameters:**
+- `strip_id` (int): LED strip number (0, 1, 2)
+- `brightness` (int): Brightness (0-255)
+
+**Example:**
+```python
+# Set strip 0 to red
+rgb_led.set_color(0, 255, 0, 0)
+# Set brightness to 50%
+rgb_led.set_brightness(0, 128)
+rgb_led.show()
+```
+
+#### `rgb_led.set_all_brightness(brightness)`
+
+Sets the brightness of all LED strips while maintaining their current colors.
+
+**Parameters:**
+- `brightness` (int): Brightness (0-255)
+
+**Example:**
+```python
+# Set different colors for each strip
+rgb_led.set_color(0, 255, 0, 0)    # Red
+rgb_led.set_color(1, 0, 255, 0)    # Green
+rgb_led.set_color(2, 0, 0, 255)    # Blue
+# Set all to 50% brightness
+rgb_led.set_all_brightness(128)
+rgb_led.show()
+```
+
+#### `rgb_led.turn_off(strip_id)`
+
+Turns off a specific LED strip.
+
+**Parameters:**
+- `strip_id` (int): LED strip number (0, 1, 2)
+
+**Example:**
+```python
+# Turn off strip 1
+rgb_led.turn_off(1)
+rgb_led.show()
+```
+
+#### `rgb_led.turn_off_all()`
+
+Turns off all LED strips.
+
+**Example:**
+```python
+# Turn off all strips
+rgb_led.turn_off_all()
+rgb_led.show()
+```
+
+#### `rgb_led.show()`
+
+Applies the set colors and brightness to the actual LED hardware.
+
+**Parameters:**
+- None
+
+**Example:**
+```python
+# Apply changes after setting color
+rgb_led.set_color(0, 255, 0, 0)  # Set red
+rgb_led.show()  # Apply changes
+
+# Apply multiple settings at once
+rgb_led.set_color(0, 255, 0, 0)    # Red
+rgb_led.set_color(1, 0, 255, 0)    # Green
+rgb_led.set_color(2, 0, 0, 255)    # Blue
+rgb_led.show()  # Apply all changes
+```
+
+**Notes:**
+- You must call `show()` after changing colors or brightness
+- Changes will not be reflected on the LED without calling `show()`
+- You can set multiple values and call `show()` once at the end
+
+### Hardware Information
+
+- **Type**: WS2812B RGB LED strip
+- **Number of LEDs**: 3 LEDs in series
+- **Pin Assignment**: GPIO17
+- **Power Supply**: 3.3V
+- **Data Protocol**: WS2812B protocol
+- **Color Depth**: 24-bit (8-bit per color)
+- **Brightness Control**: PWM-based brightness control
+
+### Notes
+
+1. **Color Range**: Each color component (R, G, B) ranges from 0-255
+2. **Brightness Control**: Brightness is applied to all color components proportionally
+3. **Power Efficiency**: Lower brightness reduces power consumption
+4. **Update Required**: Call `show()` after setting colors to apply changes
+5. **Strip Numbering**: Strips are numbered 0, 1, 2 from left to right
+6. **Color Mixing**: RGB values are mixed to create various colors
+
 ## Buzzer
 
 API for controlling the built-in buzzer on the Codi:bit board.
