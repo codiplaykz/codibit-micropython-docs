@@ -103,41 +103,30 @@ API for controlling the built-in buzzer on the Codi:bit board.
 buzzer  # Built-in buzzer (GPIO16)
 ```
 
-### Classes
+### Musical Notation
 
-#### `Note`
+Musical notes are expressed in the format `NOTE[octave][:duration]`.
 
-Musical note frequency constants.
-
+**Note Format:**
 ```python
-# Octave 3
-Note.C3 = 131
-Note.D3 = 147
-Note.E3 = 165
-Note.F3 = 175
-Note.G3 = 196
-Note.A3 = 220
-Note.B3 = 247
-
-# Octave 4 (Standard)
-Note.C4 = 262
-Note.D4 = 294
-Note.E4 = 330
-Note.F4 = 349
-Note.G4 = 392
-Note.A4 = 440
-Note.B4 = 494
-
-# Octave 5
-Note.C5 = 523
-Note.D5 = 587
-Note.E5 = 659
-Note.F5 = 698
-Note.G5 = 784
-Note.A5 = 880
-Note.B5 = 988
-Note.C6 = 1047
+'c4:4'    # C4 note for 4 ticks
+'g'        # G4 note for default duration (4 ticks)
+'r:2'      # Rest for 2 ticks
+'eb:8'     # E♭4 note for 8 ticks
+'f#5:1'    # F#5 note for 1 tick
 ```
+
+**Supported Notes:**
+- Basic notes: `c`, `d`, `e`, `f`, `g`, `a`, `b`
+- Flats: `cb`, `db`, `eb`, `fb`, `gb`, `ab`, `bb`
+- Sharps: `c#`, `d#`, `e#`, `f#`, `g#`, `a#`, `b#`
+- Octaves: 3, 4(default), 5
+- Rest: `r` (silence)
+
+**Tempo System:**
+- Default: 4 ticks, 120 BPM
+- 1 tick = 60000 / BPM / ticks_per_beat milliseconds
+- Default: 1 tick = 125ms, 1 beat = 500ms
 
 #### `Sound`
 
@@ -162,15 +151,15 @@ Sound.DRUM_SNARE = "drum_snare"       # Snare drum
 Sound.DRUM_HIHAT = "drum_hihat"       # Hi-hat
 Sound.DRUM_TOM1 = "drum_tom1"         # Tom 1
 Sound.DRUM_TOM2 = "drum_tom2"         # Tom 2
-Sound.DRUM_CRASH = "drum_crash"       # Crash cymbal
-Sound.DRUM_RIDE = "drum_ride"         # Ride cymbal
-Sound.DRUM_COWBELL = "drum_cowbell"   # Cowbell
 Sound.DRUM_TOM3 = "drum_tom3"         # Tom 3
 Sound.DRUM_FLOOR_TOM = "drum_floor_tom"  # Floor tom
+Sound.DRUM_CRASH = "drum_crash"       # Crash cymbal
+Sound.DRUM_RIDE = "drum_ride"         # Ride cymbal
 Sound.DRUM_HIHAT_OPEN = "drum_hihat_open"  # Open hi-hat
 Sound.DRUM_HIHAT_CLOSED = "drum_hihat_closed"  # Closed hi-hat
 Sound.DRUM_CHINA = "drum_china"       # China cymbal
 Sound.DRUM_SPLASH = "drum_splash"     # Splash cymbal
+Sound.DRUM_COWBELL = "drum_cowbell"   # Cowbell
 Sound.DRUM_CLAP = "drum_clap"         # Clap
 Sound.DRUM_SHAKER = "drum_shaker"     # Shaker
 ```
@@ -192,14 +181,14 @@ Melody.MARY_HAD_A_LITTLE_LAMB  # Mary Had a Little Lamb
 Plays a tone with the specified frequency.
 
 **Parameters:**
-- `frequency` (int | Note): Frequency in Hz or Note constant
+- `frequency` (int): Frequency in Hz
 - `duration_ms` (int): Duration in milliseconds (default: 1000)
 - `auto_stop` (bool): Whether to stop automatically after playing (default: True)
 
 **Example:**
 ```python
-buzzer.play_tone(Note.A4, 1000)  # Play A4 for 1 second
 buzzer.play_tone(440, 1000)      # Play 440Hz for 1 second
+buzzer.play_tone(262, 500)       # Play C4 note for 0.5 seconds
 ```
 
 #### `buzzer.play_melody(melody, tempo=None)`
@@ -207,13 +196,18 @@ buzzer.play_tone(440, 1000)      # Play 440Hz for 1 second
 Plays a melody with the specified tempo.
 
 **Parameters:**
-- `melody` (list): List of tuples `(frequency | Note, duration)` representing notes
+- `melody` (list): List of note strings (e.g., `['c4:4', 'd4:4', 'e4:8']`)
 - `tempo` (int): Tempo in BPM (Beats Per Minute), uses default if None
 
 **Example:**
 ```python
-melody = [(Note.C4, 300), (Note.D4, 300), (Note.E4, 300)]
+# C major scale
+melody = ['c4:4', 'd4:4', 'e4:4', 'f4:4', 'g4:4', 'a4:4', 'b4:4', 'c5:8']
 buzzer.play_melody(melody, tempo=120)
+
+# Beethoven's 5th Symphony opening
+melody = ['r4:2', 'g', 'g', 'g', 'eb:8', 'r:2', 'f', 'f', 'f', 'd:8']
+buzzer.play_melody(melody)
 ```
 
 #### `buzzer.play_song(song_name)`
@@ -221,16 +215,17 @@ buzzer.play_melody(melody, tempo=120)
 Plays a built-in song.
 
 **Parameters:**
-- `song_name` (str | Melody): Song name string or Melody constant
+- `song_name` (str): Song name string
 
 **Available Songs:**
-- `Melody.HAPPY_BIRTHDAY`: Happy Birthday
-- `Melody.TWINKLE_TWINKLE`: Twinkle Twinkle Little Star
-- `Melody.MARY_HAD_A_LITTLE_LAMB`: Mary Had a Little Lamb
+- `'happy_birthday'`: Happy Birthday
+- `'twinkle'`: Twinkle Twinkle Little Star
+- `'mary'`: Mary Had a Little Lamb
 
 **Example:**
 ```python
-buzzer.play_song(Melody.HAPPY_BIRTHDAY)
+buzzer.play_song('happy_birthday')
+buzzer.play_song('twinkle')
 ```
 
 #### `buzzer.play_sound(sound_type)`
@@ -254,6 +249,33 @@ Stops the current sound.
 ```python
 buzzer.play_tone(440, 5000)  # Play for 5 seconds
 buzzer.stop()  # Stop immediately
+```
+
+#### `buzzer.set_tempo(ticks=4, bpm=120)`
+
+Sets the tempo.
+
+**Parameters:**
+- `ticks` (int): Ticks per beat (default: 4)
+- `bpm` (int): Beats per minute (default: 120)
+
+**Example:**
+```python
+buzzer.set_tempo(bpm=180)  # Set to fast tempo
+buzzer.play_melody(['c4:4', 'd4:4', 'e4:4', 'f4:4', 'g4:8'])
+```
+
+#### `buzzer.get_tempo()`
+
+Returns the current tempo.
+
+**Returns:**
+- `tuple`: (ticks, bpm)
+
+**Example:**
+```python
+ticks, bpm = buzzer.get_tempo()
+print(f"Current tempo: {bpm} BPM, {ticks} ticks")
 ```
 
 #### `buzzer.set_volume(volume)`
@@ -287,8 +309,10 @@ buzzer.play_tone(440, 1000)
 1. **Volume Control**: Volume is controlled by PWM duty cycle, with maximum duty cycle of 900
 2. **Interruptible**: All melody and song playback can be interrupted with Ctrl+C
 3. **Tempo Control**: Tempo is specified in BPM (Beats Per Minute)
-4. **Note Constants**: Use Note class constants for standard musical frequencies
+4. **Musical Notation**: Use `NOTE[octave][:duration]` format for musical notes
 5. **Sound Types**: 8 practical sounds and 16 drum sounds available
+6. **Drum Sounds**: Provides 16 different drum sounds
+7. **Tick System**: The basic time unit for music is ticks, which length is determined by tempo
 
 ## Microphone
 

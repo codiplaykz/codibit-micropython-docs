@@ -103,41 +103,30 @@ Codi:bit 보드의 내장 버저를 제어하는 API입니다.
 buzzer  # 내장 버저 (GPIO16)
 ```
 
-### 클래스
+### 음표 표기법
 
-#### `Note`
+음표는 `NOTE[octave][:duration]` 형식으로 표현됩니다.
 
-음표 주파수 상수들입니다.
-
+**음표 형식:**
 ```python
-# 옥타브 3
-Note.C3 = 131
-Note.D3 = 147
-Note.E3 = 165
-Note.F3 = 175
-Note.G3 = 196
-Note.A3 = 220
-Note.B3 = 247
-
-# 옥타브 4 (기본)
-Note.C4 = 262
-Note.D4 = 294
-Note.E4 = 330
-Note.F4 = 349
-Note.G4 = 392
-Note.A4 = 440
-Note.B4 = 494
-
-# 옥타브 5
-Note.C5 = 523
-Note.D5 = 587
-Note.E5 = 659
-Note.F5 = 698
-Note.G5 = 784
-Note.A5 = 880
-Note.B5 = 988
-Note.C6 = 1047
+'c4:4'    # C4 음을 4틱 동안
+'g'        # G4 음을 기본 지속시간(4틱) 동안
+'r:2'      # 2틱 동안 쉼표
+'eb:8'     # E♭4 음을 8틱 동안
+'f#5:1'    # F#5 음을 1틱 동안
 ```
+
+**지원하는 음표:**
+- 기본 음표: `c`, `d`, `e`, `f`, `g`, `a`, `b`
+- 플랫: `cb`, `db`, `eb`, `fb`, `gb`, `ab`, `bb`
+- 샵: `c#`, `d#`, `e#`, `f#`, `g#`, `a#`, `b#`
+- 옥타브: 3, 4(기본), 5
+- 쉼표: `r` (rest)
+
+**템포 시스템:**
+- 기본값: 4틱, 120 BPM
+- 1틱 = 60000 / BPM / ticks_per_beat 밀리초
+- 기본값으로 1틱 = 125ms, 1박자 = 500ms
 
 #### `Sound`
 
@@ -162,15 +151,15 @@ Sound.DRUM_SNARE = "drum_snare"       # 스네어 드럼
 Sound.DRUM_HIHAT = "drum_hihat"       # 하이햇
 Sound.DRUM_TOM1 = "drum_tom1"         # 톰1
 Sound.DRUM_TOM2 = "drum_tom2"         # 톰2
-Sound.DRUM_CRASH = "drum_crash"       # 크래시 심벌
-Sound.DRUM_RIDE = "drum_ride"         # 라이드 심벌
-Sound.DRUM_COWBELL = "drum_cowbell"   # 카우벨
 Sound.DRUM_TOM3 = "drum_tom3"         # 톰3
 Sound.DRUM_FLOOR_TOM = "drum_floor_tom"  # 플로어 톰
+Sound.DRUM_CRASH = "drum_crash"       # 크래시 심벌
+Sound.DRUM_RIDE = "drum_ride"         # 라이드 심벌
 Sound.DRUM_HIHAT_OPEN = "drum_hihat_open"  # 오픈 하이햇
 Sound.DRUM_HIHAT_CLOSED = "drum_hihat_closed"  # 클로즈드 하이햇
 Sound.DRUM_CHINA = "drum_china"       # 차이나 심벌
 Sound.DRUM_SPLASH = "drum_splash"     # 스플래시 심벌
+Sound.DRUM_COWBELL = "drum_cowbell"   # 카우벨
 Sound.DRUM_CLAP = "drum_clap"         # 클랩
 Sound.DRUM_SHAKER = "drum_shaker"     # 쉐이커
 ```
@@ -192,14 +181,14 @@ Melody.MARY_HAD_A_LITTLE_LAMB  # 메리 양의 작은 양
 지정된 주파수로 음을 재생합니다.
 
 **매개변수:**
-- `frequency` (int | Note): 주파수 (Hz) 또는 Note 상수
+- `frequency` (int): 주파수 (Hz)
 - `duration_ms` (int): 재생 시간 (밀리초, 기본값: 1000)
 - `auto_stop` (bool): 재생 완료 후 자동 정지 여부 (기본값: True)
 
 **예시:**
 ```python
-buzzer.play_tone(Note.A4, 1000)  # A4 음을 1초간 재생
 buzzer.play_tone(440, 1000)      # 440Hz를 1초간 재생
+buzzer.play_tone(262, 500)       # C4 음을 0.5초간 재생
 ```
 
 #### `buzzer.play_melody(melody, tempo=None)`
@@ -207,13 +196,18 @@ buzzer.play_tone(440, 1000)      # 440Hz를 1초간 재생
 지정된 템포로 멜로디를 재생합니다.
 
 **매개변수:**
-- `melody` (list): `(주파수 | Note, 지속시간)` 튜플들의 리스트로 음표들을 나타냄
+- `melody` (list): 음표 문자열들의 리스트 (예: `['c4:4', 'd4:4', 'e4:8']`)
 - `tempo` (int): 템포 (BPM, 분당 비트 수), None이면 기본값 사용
 
 **예시:**
 ```python
-melody = [(Note.C4, 300), (Note.D4, 300), (Note.E4, 300)]
+# 도레미파솔라시도
+melody = ['c4:4', 'd4:4', 'e4:4', 'f4:4', 'g4:4', 'a4:4', 'b4:4', 'c5:8']
 buzzer.play_melody(melody, tempo=120)
+
+# 베토벤 5번 교향곡 시작
+melody = ['r4:2', 'g', 'g', 'g', 'eb:8', 'r:2', 'f', 'f', 'f', 'd:8']
+buzzer.play_melody(melody)
 ```
 
 #### `buzzer.play_song(song_name)`
@@ -221,16 +215,17 @@ buzzer.play_melody(melody, tempo=120)
 내장 곡을 재생합니다.
 
 **매개변수:**
-- `song_name` (str | Melody): 곡 이름 문자열 또는 Melody 상수
+- `song_name` (str): 곡 이름 문자열
 
 **사용 가능한 곡들:**
-- `Melody.HAPPY_BIRTHDAY`: 생일 축하합니다
-- `Melody.TWINKLE_TWINKLE`: 반짝반짝 작은 별
-- `Melody.MARY_HAD_A_LITTLE_LAMB`: 비행기
+- `'happy_birthday'`: 생일 축하합니다
+- `'twinkle'`: 반짝반짝 작은 별
+- `'mary'`: 메리 양의 작은 양
 
 **예시:**
 ```python
-buzzer.play_song(Melody.HAPPY_BIRTHDAY)
+buzzer.play_song('happy_birthday')
+buzzer.play_song('twinkle')
 ```
 
 #### `buzzer.play_sound(sound_type)`
@@ -254,6 +249,33 @@ buzzer.play_sound(Sound.DRUM_KICK)
 ```python
 buzzer.play_tone(440, 5000)  # 5초간 재생
 buzzer.stop()  # 즉시 정지
+```
+
+#### `buzzer.set_tempo(ticks=4, bpm=120)`
+
+템포를 설정합니다.
+
+**매개변수:**
+- `ticks` (int): 박자당 틱 수 (기본값: 4)
+- `bpm` (int): 분당 박자 수 (기본값: 120)
+
+**예시:**
+```python
+buzzer.set_tempo(bpm=180)  # 빠른 템포로 설정
+buzzer.play_melody(['c4:4', 'd4:4', 'e4:4', 'f4:4', 'g4:8'])
+```
+
+#### `buzzer.get_tempo()`
+
+현재 템포를 반환합니다.
+
+**반환값:**
+- `tuple`: (ticks, bpm)
+
+**예시:**
+```python
+ticks, bpm = buzzer.get_tempo()
+print(f"현재 템포: {bpm} BPM, {ticks}틱")
 ```
 
 #### `buzzer.set_volume(volume)`
@@ -287,8 +309,10 @@ buzzer.play_tone(440, 1000)
 1. **볼륨 제어**: 볼륨은 PWM 듀티 사이클로 제어되며, 최대 듀티 사이클은 900입니다
 2. **중단 가능**: 모든 멜로디와 곡 재생은 Ctrl+C로 중단할 수 있습니다
 3. **템포 제어**: 템포는 BPM (분당 비트 수)로 지정됩니다
-4. **음표 상수**: 표준 음악 주파수는 Note 클래스 상수를 사용하세요
+4. **음표 표기법**: 음표는 `NOTE[octave][:duration]` 형식을 사용하세요
 5. **소리 타입**: 8가지 실용적인 소리와 16가지 드럼 소리를 사용할 수 있습니다
+6. **드럼 사운드**: 16가지 다양한 드럼 소리를 제공합니다
+7. **틱 시스템**: 음악의 기본 시간 단위는 틱이며, 템포에 따라 길이가 결정됩니다
 
 ## 마이크 (Microphone)
 
