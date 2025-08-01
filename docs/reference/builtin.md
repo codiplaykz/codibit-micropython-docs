@@ -89,9 +89,8 @@ print(f"Button A was pressed {total_presses} times total")
 
 1. **Debouncing**: Hardware button bouncing is handled automatically with 50ms debounce time
 2. **Pull-up**: Built-in 10KΩ pull-up resistors ensure stable HIGH state when not pressed
-3. **Compatibility**: API is compatible with micro:bit button interface
-4. **State Tracking**: `was_pressed()`, `get_presses()`, and `get_press_count()` methods automatically track button events
-5. **Counter Management**: `get_presses()` resets the counter, while `get_press_count()` does not
+3. **State Tracking**: `was_pressed()`, `get_presses()`, and `get_press_count()` methods automatically track button events
+4. **Counter Management**: `get_presses()` resets the counter, while `get_press_count()` does not
 
 ## RGB LED
 
@@ -860,7 +859,6 @@ display.show_icon_centered('HAPPY', scale=3)  # Display happy face centered at 3
 3. **Auto-update**: Enabled by default, can be disabled for performance
 4. **Built-in Icons**: 64 different icons available (see Image section)
 5. **Scaling**: Icons can be scaled 1x, 2x, or 3x for better visibility
-6. **Compatibility**: API is compatible with micro:bit display interface
 
 ## Image
 
@@ -1121,6 +1119,5 @@ display.show(animation, delay=500, loop=True)
 1. **String Format**: Images can be created from strings using ':' to separate rows
 2. **Brightness Scale**: 0-9 scale (0=off, 9=maximum brightness)
 3. **Built-in Icons**: 64 different icons available for immediate use
-4. **Compatibility**: API is compatible with micro:bit Image interface
-5. **Display Integration**: Images are designed to work directly with the display
-6. **Scaling**: Icons can be scaled when displayed for better visibility
+4. **Display Integration**: Images are designed to work directly with the display
+5. **Scaling**: Icons can be scaled when displayed for better visibility
