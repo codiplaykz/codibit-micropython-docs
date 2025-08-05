@@ -628,7 +628,7 @@ level = light.read_level()
 
 ## 디스플레이 (Display)
 
-내장 SH1106 OLED 디스플레이(128x64 픽셀)를 제어하는 API입니다.
+내장 SH1106 OLED 디스플레이(128x64 픽셀)를 제어하는 API입니다. 버퍼 기반 작동 방식으로, 그리기 명령을 버퍼에 저장한 후 `show()` 함수로 화면에 출력합니다.
 
 ### 전역 인스턴스
 
@@ -636,126 +636,95 @@ level = light.read_level()
 display = Display()
 ```
 
-### 메서드
+### 기본 제어 메서드
+
+#### `display.clear()`
+
+화면을 지우고 바로 출력에 반영합니다. 모든 픽셀을 0(꺼짐)으로 설정합니다.
+
+**예시:**
+```python
+display.clear()
+display.show()  # 화면에 반영
+```
+
+#### `display.clear_buffer()`
+
+버퍼만 지우고 출력은 하지 않습니다. 성능 최적화를 위해 여러 그리기 작업 전에 사용할 수 있습니다.
+
+**예시:**
+```python
+# 성능 최적화를 위한 사용법
+display.clear_buffer()  # 버퍼만 지우기
+display.draw_text("Hello", 0, 0)
+display.draw_circle(32, 32, 10)
+display.show()  # 마지막에 한 번만 출력
+```
+
+#### `display.show()`
+
+버퍼의 내용을 화면에 출력합니다. 그리기 작업 후 반드시 호출해야 화면에 표시됩니다.
+
+**예시:**
+```python
+display.draw_text("Hello", 0, 0)
+display.draw_circle(32, 32, 10)
+display.show()  # 화면에 출력
+```
+
+### 픽셀 제어
 
 #### `display.get_pixel(x, y)`
 
-지정된 좌표의 픽셀 밝기를 반환합니다.
+지정된 좌표의 픽셀 상태를 반환합니다.
 
 **매개변수:**
 - `x` (int): X 좌표 (0-127)
 - `y` (int): Y 좌표 (0-63)
 
 **반환값:**
-- `int`: 픽셀 밝기 (0-9)
+- `int`: 픽셀 상태 (0 또는 1)
 
 **예시:**
 ```python
-brightness = display.get_pixel(10, 20)
-print(f"픽셀 밝기: {brightness}")
+pixel_state = display.get_pixel(10, 20)
+print(f"픽셀 상태: {pixel_state}")
 ```
 
 #### `display.set_pixel(x, y, val)`
 
-지정된 좌표의 픽셀 밝기를 설정합니다.
+지정된 좌표의 픽셀 상태를 설정합니다.
 
 **매개변수:**
 - `x` (int): X 좌표 (0-127)
 - `y` (int): Y 좌표 (0-63)
-- `val` (int): 밝기 값 (0-9)
+- `val` (int): 픽셀 상태 (0 또는 1)
 
 **예시:**
 ```python
-display.set_pixel(10, 20, 9)  # 픽셀을 최대 밝기로 설정
+display.set_pixel(10, 20, 1)  # 픽셀을 켬
+display.show()
 ```
 
-#### `display.show(image, delay=0, wait=True, loop=False, clear=False)`
+### 그리기 메서드
 
-화면에 이미지를 표시합니다.
+#### `display.draw_text(text, x, y)`
+
+지정된 위치에 텍스트를 그립니다.
 
 **매개변수:**
-- `image`: Image 객체 또는 이미지 리스트
-- `delay` (int): 이미지 간 지연 시간 (밀리초)
-- `wait` (bool): 완료까지 대기 여부
-- `loop` (bool): 반복 재생 여부
-- `clear` (bool): 표시 후 화면 지우기 여부
-
-**예시:**
-```python
-from codibit import Image
-
-# 단일 이미지 표시
-heart = Image.HEART
-display.show(heart)
-
-# 여러 이미지를 애니메이션으로 표시
-images = [Image.HEART, Image.HAPPY, Image.SAD]
-display.show(images, delay=500, loop=True)
-```
-
-#### `display.scroll(string, delay=400)`
-
-텍스트를 디스플레이에 스크롤합니다.
-
-**매개변수:**
-- `string` (str): 스크롤할 텍스트
-- `delay` (int): 스크롤 속도 (밀리초)
-
-**예시:**
-```python
-display.scroll("안녕하세요 Codi:bit!")
-```
-
-#### `display.clear()`
-
-디스플레이를 지웁니다.
-
-**예시:**
-```python
-display.clear()
-```
-
-#### `display.update()`
-
-수동으로 디스플레이를 업데이트합니다 (자동 업데이트가 비활성화된 경우).
-
-**예시:**
-```python
-display.set_auto_update(False)
-display.set_pixel(0, 0, 9)
-display.update()  # 강제 업데이트
-```
-
-#### `display.set_auto_update(enabled=True)`
-
-자동 디스플레이 업데이트를 활성화하거나 비활성화합니다.
-
-**매개변수:**
-- `enabled` (bool): 자동 업데이트 활성화 여부
-
-**예시:**
-```python
-display.set_auto_update(False)  # 성능을 위해 자동 업데이트 비활성화
-# ... 여러 픽셀 그리기 ...
-display.update()  # 마지막에 한 번만 업데이트
-```
-
-#### `display.show_text(text, x, y, color=1)`
-
-지정된 위치에 텍스트를 표시합니다.
-
-**매개변수:**
-- `text` (str): 표시할 텍스트
+- `text` (str): 그릴 텍스트
 - `x` (int): X 좌표
 - `y` (int): Y 좌표
-- `color` (int): 텍스트 색상 (0 또는 1)
 
 **예시:**
 ```python
-display.show_text("안녕하세요!", 0, 10)
+display.draw_text("Hello", 0, 0)
+display.draw_text("World", 0, 10)
+display.show()
 ```
 
-#### `display.draw_rectangle(x, y, w, h, color=1)`
+#### `display.draw_rectangle(x, y, w, h, fill=False)`
 
 사각형을 그립니다.
 
@@ -764,14 +733,18 @@ display.show_text("안녕하세요!", 0, 10)
 - `y` (int): 왼쪽 상단 모서리의 Y 좌표
 - `w` (int): 너비
 - `h` (int): 높이
-- `color` (int): 사각형 색상 (0 또는 1)
+- `fill` (bool): 채우기 여부 (기본값: False)
 
 **예시:**
 ```python
+# 빈 사각형
 display.draw_rectangle(10, 10, 20, 15)
+# 채워진 사각형
+display.draw_rectangle(40, 10, 20, 15, fill=True)
+display.show()
 ```
 
-#### `display.draw_line(x1, y1, x2, y2, color=1)`
+#### `display.draw_line(x1, y1, x2, y2)`
 
 두 점 사이에 선을 그립니다.
 
@@ -780,14 +753,15 @@ display.draw_rectangle(10, 10, 20, 15)
 - `y1` (int): 시작점의 Y 좌표
 - `x2` (int): 끝점의 X 좌표
 - `y2` (int): 끝점의 Y 좌표
-- `color` (int): 선 색상 (0 또는 1)
 
 **예시:**
 ```python
 display.draw_line(0, 0, 50, 50)
+display.draw_line(0, 50, 50, 0)
+display.show()
 ```
 
-#### `display.draw_circle(x, y, r, color=1)`
+#### `display.draw_circle(x, y, r, fill=False)`
 
 원을 그립니다.
 
@@ -795,14 +769,18 @@ display.draw_line(0, 0, 50, 50)
 - `x` (int): 중심의 X 좌표
 - `y` (int): 중심의 Y 좌표
 - `r` (int): 반지름
-- `color` (int): 원 색상 (0 또는 1)
+- `fill` (bool): 채우기 여부 (기본값: False)
 
 **예시:**
 ```python
-display.draw_circle(30, 30, 10)
+# 빈 원
+display.draw_circle(32, 32, 10)
+# 채워진 원
+display.draw_circle(64, 32, 8, fill=True)
+display.show()
 ```
 
-#### `display.draw_triangle(x1, y1, x2, y2, x3, y3, color=1)`
+#### `display.draw_triangle(x1, y1, x2, y2, x3, y3, fill=False)`
 
 삼각형을 그립니다.
 
@@ -810,55 +788,99 @@ display.draw_circle(30, 30, 10)
 - `x1, y1` (int): 첫 번째 꼭지점의 좌표
 - `x2, y2` (int): 두 번째 꼭지점의 좌표
 - `x3, y3` (int): 세 번째 꼭지점의 좌표
-- `color` (int): 삼각형 색상 (0 또는 1)
+- `fill` (bool): 채우기 여부 (기본값: False)
 
 **예시:**
 ```python
+# 빈 삼각형
 display.draw_triangle(10, 10, 20, 40, 40, 40)
+# 채워진 삼각형
+display.draw_triangle(50, 10, 60, 40, 80, 40, fill=True)
+display.show()
 ```
 
-#### `display.show_icon(icon_name, scale=1)`
+### 이미지 및 아이콘
 
-내장 아이콘을 선택적 스케일링과 함께 표시합니다.
+#### `display.draw_image(image, x, y)`
+
+지정된 위치에 이미지를 그립니다.
+
+**매개변수:**
+- `image`: Image 객체
+- `x` (int): 시작 X 좌표
+- `y` (int): 시작 Y 좌표
+
+**예시:**
+```python
+from codibit import Image
+
+# 내장 아이콘 그리기
+display.draw_image(Image.HEART, 0, 0)
+display.draw_image(Image.HAPPY, 20, 0)
+display.show()
+```
+
+#### `display.draw_icon(icon_name, x=0, y=0, scale=1)`
+
+지정된 위치에 내장 아이콘을 그립니다.
 
 **매개변수:**
 - `icon_name` (str): 아이콘 이름 (예: 'HEART', 'HAPPY', 'SAD')
-- `scale` (int): 스케일 배수 (1=5x5, 2=10x10, 3=15x15)
+- `x` (int): X 좌표 (기본값: 0)
+- `y` (int): Y 좌표 (기본값: 0)
+- `scale` (int): 스케일 크기 (1=5x5, 2=10x10, 3=15x15)
 
 **예시:**
 ```python
-display.show_icon('HEART', scale=2)  # 하트를 2배 크기로 표시
-```
-
-#### `display.show_icon_centered(icon_name, scale=1)`
-
-내장 아이콘을 화면 중앙에 표시합니다.
-
-**매개변수:**
-- `icon_name` (str): 아이콘 이름
-- `scale` (int): 스케일 배수 (1=5x5, 2=10x10, 3=15x15)
-
-**예시:**
-```python
-display.show_icon_centered('HAPPY', scale=3)  # 웃는 얼굴을 3배 크기로 중앙에 표시
+# 기본 크기로 하트 그리기
+display.draw_icon('HEART', 0, 0)
+# 2배 크기로 웃는 얼굴 그리기
+display.draw_icon('HAPPY', 20, 0, scale=2)
+display.show()
 ```
 
 ### 하드웨어 정보
 
 - **디스플레이**: SH1106 OLED
 - **해상도**: 128x64 픽셀
+- **색상**: 단색 (흰색/검은색)
 - **인터페이스**: I2C
 - **주소**: 0x3C
+- **회전**: 180도 (화면이 올바른 방향으로 표시)
 - **전원 공급**: 3.3V
 - **물리적 위치**: 보드 앞면
+
+### 작동 방식
+
+1. **버퍼 기반**: 모든 그리기 명령은 내부 버퍼에 저장됩니다
+2. **지연 출력**: `show()` 함수를 호출해야 화면에 출력됩니다
+3. **성능 최적화**: 여러 그리기 작업을 한 번에 처리한 후 출력 가능
+4. **메모리 효율**: 버퍼 사용으로 메모리 사용량 최적화
+
+### 사용 패턴
+
+```python
+# 1. 화면 지우기
+display.clear()
+
+# 2. 여러 그리기 작업 수행
+display.draw_text("Hello", 0, 0)
+display.draw_circle(32, 32, 10)
+display.draw_rectangle(10, 10, 20, 15)
+
+# 3. 화면에 출력
+display.show()
+```
 
 ### 주의사항
 
 1. **픽셀 좌표**: 원점 (0,0)은 왼쪽 상단 모서리입니다
-2. **밝기 레벨**: 0-9 스케일 (0=꺼짐, 9=최대 밝기)
-3. **자동 업데이트**: 기본적으로 활성화되어 있으며, 성능을 위해 비활성화할 수 있습니다
+2. **픽셀 값**: 0(꺼짐) 또는 1(켜짐)만 지원합니다
+3. **버퍼 출력**: 그리기 작업 후 반드시 `show()`를 호출해야 화면에 표시됩니다
 4. **내장 아이콘**: 64가지 다양한 아이콘을 사용할 수 있습니다 (Image 섹션 참조)
 5. **스케일링**: 아이콘은 더 나은 가시성을 위해 표시할 때 확대할 수 있습니다
+6. **성능**: 여러 그리기 작업을 한 번에 처리한 후 `show()`를 호출하는 것이 효율적입니다
+7. **버퍼 제어**: `clear()`는 즉시 출력하지만, `clear_buffer()`는 버퍼만 지워서 성능 최적화에 유용합니다
 
 ## 이미지 (Image)
 
@@ -1101,17 +1123,20 @@ brighter = Image.HEART * 2  # 밝기를 2배로
 ```python
 from codibit import display, Image
 
-# 내장 아이콘 표시
-display.show(Image.HEART)
-display.show_icon('HAPPY', scale=2)
+# 내장 아이콘 그리기
+display.draw_image(Image.HEART, 0, 0)
+display.draw_image(Image.HAPPY, 20, 0)
+display.show()
 
-# 사용자 정의 이미지 생성
+# 사용자 정의 이미지 생성 및 그리기
 custom = Image('90009:09090:00900:09090:90009:')
-display.show(custom)
+display.draw_image(custom, 0, 20)
+display.show()
 
-# 여러 이미지로 애니메이션
-animation = [Image.HEART, Image.HAPPY, Image.SAD]
-display.show(animation, delay=500, loop=True)
+# 아이콘 스케일링
+display.draw_icon('HAPPY', 0, 0, scale=2)
+display.draw_icon('SAD', 40, 0, scale=3)
+display.show()
 ```
 
 ### 주의사항
@@ -1120,5 +1145,6 @@ display.show(animation, delay=500, loop=True)
 2. **밝기 스케일**: 0-9 스케일 (0=꺼짐, 9=최대 밝기)
 3. **내장 아이콘**: 즉시 사용할 수 있는 64가지 다양한 아이콘
 4. **호환성**: API는 Image 인터페이스와 호환됩니다
-5. **디스플레이 통합**: 이미지는 디스플레이와 직접 작동하도록 설계되었습니다
-6. **스케일링**: 아이콘은 더 나은 가시성을 위해 표시할 때 확대할 수 있습니다
+5. **디스플레이 통합**: 이미지는 `draw_image()` 메서드로 디스플레이에 그릴 수 있습니다
+6. **스케일링**: 아이콘은 `draw_icon()` 메서드로 더 나은 가시성을 위해 확대할 수 있습니다
+7. **버퍼 기반**: 이미지 그리기도 버퍼 기반으로 작동하므로 `show()` 호출이 필요합니다

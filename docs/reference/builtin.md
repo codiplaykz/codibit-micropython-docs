@@ -628,7 +628,7 @@ level = light.read_level()
 
 ## Display
 
-API for controlling the built-in SH1106 OLED display (128x64 pixels).
+API for controlling the built-in SH1106 OLED display (128x64 pixels). Uses a buffer-based approach where drawing commands are stored in a buffer and then output to the screen using the `show()` function.
 
 ### Global Instance
 
@@ -636,126 +636,95 @@ API for controlling the built-in SH1106 OLED display (128x64 pixels).
 display = Display()
 ```
 
-### Methods
+### Basic Control Methods
+
+#### `display.clear()`
+
+Clears the screen and immediately outputs to display. Sets all pixels to 0 (off).
+
+**Example:**
+```python
+display.clear()
+display.show()  # Apply to screen
+```
+
+#### `display.clear_buffer()`
+
+Clears only the buffer without outputting to display. Useful for performance optimization before multiple drawing operations.
+
+**Example:**
+```python
+# Performance optimization usage
+display.clear_buffer()  # Clear buffer only
+display.draw_text("Hello", 0, 0)
+display.draw_circle(32, 32, 10)
+display.show()  # Output once at the end
+```
+
+#### `display.show()`
+
+Outputs the buffer contents to the screen. Must be called after drawing operations to display on screen.
+
+**Example:**
+```python
+display.draw_text("Hello", 0, 0)
+display.draw_circle(32, 32, 10)
+display.show()  # Output to screen
+```
+
+### Pixel Control
 
 #### `display.get_pixel(x, y)`
 
-Returns the brightness of the pixel at the specified coordinates.
+Returns the pixel state at the specified coordinates.
 
 **Parameters:**
 - `x` (int): X coordinate (0-127)
 - `y` (int): Y coordinate (0-63)
 
 **Returns:**
-- `int`: Pixel brightness (0-9)
+- `int`: Pixel state (0 or 1)
 
 **Example:**
 ```python
-brightness = display.get_pixel(10, 20)
-print(f"Pixel brightness: {brightness}")
+pixel_state = display.get_pixel(10, 20)
+print(f"Pixel state: {pixel_state}")
 ```
 
 #### `display.set_pixel(x, y, val)`
 
-Sets the brightness of the pixel at the specified coordinates.
+Sets the pixel state at the specified coordinates.
 
 **Parameters:**
 - `x` (int): X coordinate (0-127)
 - `y` (int): Y coordinate (0-63)
-- `val` (int): Brightness value (0-9)
+- `val` (int): Pixel state (0 or 1)
 
 **Example:**
 ```python
-display.set_pixel(10, 20, 9)  # Set pixel to maximum brightness
+display.set_pixel(10, 20, 1)  # Turn on pixel
+display.show()
 ```
 
-#### `display.show(image, delay=0, wait=True, loop=False, clear=False)`
+### Drawing Methods
 
-Displays an image on the screen.
+#### `display.draw_text(text, x, y)`
+
+Draws text at the specified position.
 
 **Parameters:**
-- `image`: Image object or list of images
-- `delay` (int): Delay between images in milliseconds
-- `wait` (bool): Whether to wait for completion
-- `loop` (bool): Whether to loop the animation
-- `clear` (bool): Whether to clear the screen after display
-
-**Example:**
-```python
-from codibit import Image
-
-# Display a single image
-heart = Image.HEART
-display.show(heart)
-
-# Display multiple images with animation
-images = [Image.HEART, Image.HAPPY, Image.SAD]
-display.show(images, delay=500, loop=True)
-```
-
-#### `display.scroll(string, delay=400)`
-
-Scrolls text across the display.
-
-**Parameters:**
-- `string` (str): Text to scroll
-- `delay` (int): Scroll speed in milliseconds
-
-**Example:**
-```python
-display.scroll("Hello Codi:bit!")
-```
-
-#### `display.clear()`
-
-Clears the display.
-
-**Example:**
-```python
-display.clear()
-```
-
-#### `display.update()`
-
-Manually updates the display (when auto-update is disabled).
-
-**Example:**
-```python
-display.set_auto_update(False)
-display.set_pixel(0, 0, 9)
-display.update()  # Force update
-```
-
-#### `display.set_auto_update(enabled=True)`
-
-Enables or disables automatic display updates.
-
-**Parameters:**
-- `enabled` (bool): Whether to enable auto-update
-
-**Example:**
-```python
-display.set_auto_update(False)  # Disable auto-update for performance
-# ... draw multiple pixels ...
-display.update()  # Update once at the end
-```
-
-#### `display.show_text(text, x, y, color=1)`
-
-Displays text at the specified position.
-
-**Parameters:**
-- `text` (str): Text to display
+- `text` (str): Text to draw
 - `x` (int): X coordinate
 - `y` (int): Y coordinate
-- `color` (int): Text color (0 or 1)
 
 **Example:**
 ```python
-display.show_text("Hello!", 0, 10)
+display.draw_text("Hello", 0, 0)
+display.draw_text("World", 0, 10)
+display.show()
 ```
 
-#### `display.draw_rectangle(x, y, w, h, color=1)`
+#### `display.draw_rectangle(x, y, w, h, fill=False)`
 
 Draws a rectangle.
 
@@ -764,14 +733,18 @@ Draws a rectangle.
 - `y` (int): Y coordinate of top-left corner
 - `w` (int): Width
 - `h` (int): Height
-- `color` (int): Rectangle color (0 or 1)
+- `fill` (bool): Whether to fill (default: False)
 
 **Example:**
 ```python
+# Empty rectangle
 display.draw_rectangle(10, 10, 20, 15)
+# Filled rectangle
+display.draw_rectangle(40, 10, 20, 15, fill=True)
+display.show()
 ```
 
-#### `display.draw_line(x1, y1, x2, y2, color=1)`
+#### `display.draw_line(x1, y1, x2, y2)`
 
 Draws a line between two points.
 
@@ -780,14 +753,15 @@ Draws a line between two points.
 - `y1` (int): Y coordinate of start point
 - `x2` (int): X coordinate of end point
 - `y2` (int): Y coordinate of end point
-- `color` (int): Line color (0 or 1)
 
 **Example:**
 ```python
 display.draw_line(0, 0, 50, 50)
+display.draw_line(0, 50, 50, 0)
+display.show()
 ```
 
-#### `display.draw_circle(x, y, r, color=1)`
+#### `display.draw_circle(x, y, r, fill=False)`
 
 Draws a circle.
 
@@ -795,14 +769,18 @@ Draws a circle.
 - `x` (int): X coordinate of center
 - `y` (int): Y coordinate of center
 - `r` (int): Radius
-- `color` (int): Circle color (0 or 1)
+- `fill` (bool): Whether to fill (default: False)
 
 **Example:**
 ```python
-display.draw_circle(30, 30, 10)
+# Empty circle
+display.draw_circle(32, 32, 10)
+# Filled circle
+display.draw_circle(64, 32, 8, fill=True)
+display.show()
 ```
 
-#### `display.draw_triangle(x1, y1, x2, y2, x3, y3, color=1)`
+#### `display.draw_triangle(x1, y1, x2, y2, x3, y3, fill=False)`
 
 Draws a triangle.
 
@@ -810,55 +788,99 @@ Draws a triangle.
 - `x1, y1` (int): Coordinates of first vertex
 - `x2, y2` (int): Coordinates of second vertex
 - `x3, y3` (int): Coordinates of third vertex
-- `color` (int): Triangle color (0 or 1)
+- `fill` (bool): Whether to fill (default: False)
 
 **Example:**
 ```python
+# Empty triangle
 display.draw_triangle(10, 10, 20, 40, 40, 40)
+# Filled triangle
+display.draw_triangle(50, 10, 60, 40, 80, 40, fill=True)
+display.show()
 ```
 
-#### `display.show_icon(icon_name, scale=1)`
+### Images and Icons
 
-Displays a built-in icon with optional scaling.
+#### `display.draw_image(image, x, y)`
+
+Draws an image at the specified position.
+
+**Parameters:**
+- `image`: Image object
+- `x` (int): Starting X coordinate
+- `y` (int): Starting Y coordinate
+
+**Example:**
+```python
+from codibit import Image
+
+# Draw built-in icons
+display.draw_image(Image.HEART, 0, 0)
+display.draw_image(Image.HAPPY, 20, 0)
+display.show()
+```
+
+#### `display.draw_icon(icon_name, x=0, y=0, scale=1)`
+
+Draws a built-in icon at the specified position.
 
 **Parameters:**
 - `icon_name` (str): Name of the icon (e.g., 'HEART', 'HAPPY', 'SAD')
-- `scale` (int): Scale factor (1=5x5, 2=10x10, 3=15x15)
+- `x` (int): X coordinate (default: 0)
+- `y` (int): Y coordinate (default: 0)
+- `scale` (int): Scale size (1=5x5, 2=10x10, 3=15x15)
 
 **Example:**
 ```python
-display.show_icon('HEART', scale=2)  # Display heart at 2x scale
-```
-
-#### `display.show_icon_centered(icon_name, scale=1)`
-
-Displays a built-in icon centered on the screen.
-
-**Parameters:**
-- `icon_name` (str): Name of the icon
-- `scale` (int): Scale factor (1=5x5, 2=10x10, 3=15x15)
-
-**Example:**
-```python
-display.show_icon_centered('HAPPY', scale=3)  # Display happy face centered at 3x scale
+# Draw heart at default size
+display.draw_icon('HEART', 0, 0)
+# Draw happy face at 2x scale
+display.draw_icon('HAPPY', 20, 0, scale=2)
+display.show()
 ```
 
 ### Hardware Information
 
 - **Display**: SH1106 OLED
 - **Resolution**: 128x64 pixels
+- **Color**: Monochrome (white/black)
 - **Interface**: I2C
 - **Address**: 0x3C
+- **Rotation**: 180 degrees (screen displays in correct orientation)
 - **Power Supply**: 3.3V
 - **Physical Location**: Front side of the board
+
+### Operation Mode
+
+1. **Buffer-based**: All drawing commands are stored in an internal buffer
+2. **Delayed Output**: The `show()` function must be called to output to screen
+3. **Performance Optimization**: Multiple drawing operations can be processed at once before output
+4. **Memory Efficiency**: Buffer usage optimizes memory consumption
+
+### Usage Pattern
+
+```python
+# 1. Clear screen
+display.clear()
+
+# 2. Perform multiple drawing operations
+display.draw_text("Hello", 0, 0)
+display.draw_circle(32, 32, 10)
+display.draw_rectangle(10, 10, 20, 15)
+
+# 3. Output to screen
+display.show()
+```
 
 ### Notes
 
 1. **Pixel Coordinates**: Origin (0,0) is at top-left corner
-2. **Brightness Levels**: 0-9 scale (0=off, 9=maximum brightness)
-3. **Auto-update**: Enabled by default, can be disabled for performance
+2. **Pixel Values**: Only 0 (off) or 1 (on) are supported
+3. **Buffer Output**: `show()` must be called after drawing operations to display on screen
 4. **Built-in Icons**: 64 different icons available (see Image section)
-5. **Scaling**: Icons can be scaled 1x, 2x, or 3x for better visibility
+5. **Scaling**: Icons can be scaled for better visibility when displayed
+6. **Performance**: It's efficient to process multiple drawing operations at once before calling `show()`
+7. **Buffer Control**: `clear()` outputs immediately, while `clear_buffer()` only clears the buffer for performance optimization
 
 ## Image
 
@@ -1101,17 +1123,20 @@ Images are designed to work seamlessly with the display:
 ```python
 from codibit import display, Image
 
-# Display built-in icons
-display.show(Image.HEART)
-display.show_icon('HAPPY', scale=2)
+# Draw built-in icons
+display.draw_image(Image.HEART, 0, 0)
+display.draw_image(Image.HAPPY, 20, 0)
+display.show()
 
-# Create custom image
+# Create and draw custom image
 custom = Image('90009:09090:00900:09090:90009:')
-display.show(custom)
+display.draw_image(custom, 0, 20)
+display.show()
 
-# Animate multiple images
-animation = [Image.HEART, Image.HAPPY, Image.SAD]
-display.show(animation, delay=500, loop=True)
+# Icon scaling
+display.draw_icon('HAPPY', 0, 0, scale=2)
+display.draw_icon('SAD', 40, 0, scale=3)
+display.show()
 ```
 
 ### Notes
@@ -1119,5 +1144,6 @@ display.show(animation, delay=500, loop=True)
 1. **String Format**: Images can be created from strings using ':' to separate rows
 2. **Brightness Scale**: 0-9 scale (0=off, 9=maximum brightness)
 3. **Built-in Icons**: 64 different icons available for immediate use
-4. **Display Integration**: Images are designed to work directly with the display
-5. **Scaling**: Icons can be scaled when displayed for better visibility
+4. **Display Integration**: Images can be drawn to the display using the `draw_image()` method
+5. **Scaling**: Icons can be scaled for better visibility using the `draw_icon()` method
+6. **Buffer-based**: Image drawing also works with the buffer-based approach, requiring `show()` calls

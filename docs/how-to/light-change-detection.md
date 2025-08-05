@@ -49,10 +49,12 @@ while True:
         # Determine the type of change
         if current_level > previous_level:
             print("Light increased!")
-            display.show("↑")  # Up arrow
+            display.draw_text("↑", 0, 0)  # Up arrow
+            display.show()
         elif current_level < previous_level:
             print("Light decreased!")
-            display.show("↓")  # Down arrow
+            display.draw_text("↓", 0, 0)  # Down arrow
+            display.show()
 
         previous_level = current_level
 

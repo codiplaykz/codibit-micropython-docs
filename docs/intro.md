@@ -47,7 +47,8 @@ This documentation is organized using the [Diátaxis framework](https://diataxis
 from codibit import *
 
 # Display text
-display.show("Hello Codi:bit!")
+display.draw_text("Hello Codi:bit!", 0, 0)
+display.show()
 
 # Read button state
 if button_a.is_pressed():
