@@ -49,10 +49,12 @@ while True:
         # 변화 유형 결정
         if current_level > previous_level:
             print("조도가 증가했습니다!")
-            display.show("↑")  # 위쪽 화살표
+            display.draw_text("↑", 0, 0)  # 위쪽 화살표
+            display.show()
         elif current_level < previous_level:
             print("조도가 감소했습니다!")
-            display.show("↓")  # 아래쪽 화살표
+            display.draw_text("↓", 0, 0)  # 아래쪽 화살표
+            display.show()
 
         previous_level = current_level
 

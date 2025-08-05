@@ -47,7 +47,8 @@ description: Codi:bit MicroPython API 문서
 from codibit import *
 
 # 텍스트 표시
-display.show("안녕하세요 Codi:bit!")
+display.draw_text("안녕하세요 Codi:bit!", 0, 0)
+display.show()
 
 # 버튼 상태 읽기
 if button_a.is_pressed():
