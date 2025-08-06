@@ -1147,3 +1147,122 @@ display.show()
 4. **Display Integration**: Images can be drawn to the display using the `draw_image()` method
 5. **Scaling**: Icons can be scaled for better visibility using the `draw_icon()` method
 6. **Buffer-based**: Image drawing also works with the buffer-based approach, requiring `show()` calls
+
+## Accelerometer
+
+API for controlling the built-in QMI8658 accelerometer sensor.
+
+### Global Instance
+
+```python
+accelerometer = Accelerometer()
+```
+
+### Methods
+
+#### `accelerometer.get_x()`
+
+Returns the acceleration value on the X-axis.
+
+**Returns:**
+- `int`: X-axis acceleration value
+
+**Example:**
+```python
+x_value = accelerometer.get_x()
+print(f"X-axis acceleration: {x_value}")
+```
+
+#### `accelerometer.get_y()`
+
+Returns the acceleration value on the Y-axis.
+
+**Returns:**
+- `int`: Y-axis acceleration value
+
+**Example:**
+```python
+y_value = accelerometer.get_y()
+print(f"Y-axis acceleration: {y_value}")
+```
+
+#### `accelerometer.get_z()`
+
+Returns the acceleration value on the Z-axis.
+
+**Returns:**
+- `int`: Z-axis acceleration value
+
+**Example:**
+```python
+z_value = accelerometer.get_z()
+print(f"Z-axis acceleration: {z_value}")
+```
+
+#### `accelerometer.get_values()`
+
+Returns a tuple of acceleration values for all three axes.
+
+**Returns:**
+- `tuple`: (x, y, z) acceleration values
+
+**Example:**
+```python
+x, y, z = accelerometer.get_values()
+print(f"Acceleration: X={x}, Y={y}, Z={z}")
+```
+
+#### `accelerometer.get_strength()`
+
+Returns the magnitude of acceleration (total acceleration strength).
+
+**Returns:**
+- `int`: Acceleration magnitude
+
+**Example:**
+```python
+strength = accelerometer.get_strength()
+print(f"Acceleration strength: {strength}")
+```
+
+### Hardware Information
+
+- **Sensor**: QMI8658 6-axis IMU
+- **Interface**: I2C
+- **Address**: 0x6B
+- **Measurement Range**: ±2g, ±4g, ±8g, ±16g
+- **Resolution**: 16-bit
+- **Update Rate**: Up to 200Hz
+- **Power Supply**: 3.3V
+- **Physical Location**: Integrated on the board
+
+### Coordinate System
+
+The Codi:bit board's accelerometer operates based on the board's actual physical orientation:
+
+#### **Axis Directions**
+- **X-axis**: Forward and backward tilt (Tilt forward and backward)
+  - Positive when tilted forward, negative when tilted backward
+- **Y-axis**: Left and right tilt (Tilt left and right)
+  - Positive when tilted left, negative when tilted right
+- **Z-axis**: Up and down flip (Flip up and down)
+  - Approximately -1.0 when flat, approximately +1.0 when flipped
+
+#### **Gravity Reference**
+- When the board is placed flat, gravity acts in the -Z direction
+- In stationary state, Z-axis is approximately -1.0 (opposite to gravity direction)
+- When the board is flipped, Z-axis is approximately +1.0 (same as gravity direction)
+
+#### **Measurement Range**
+- **General range**: -2.0 ~ +2.0 (measures up to approximately 2 times gravity)
+- **Stationary state**: -1.0 ~ +1.0 (gravity only)
+- **Tilt detection**: Each axis measures gravity components decomposed according to tilt in that direction
+
+### Notes
+
+1. **Calibration**: The sensor automatically calibrates to gravity
+2. **Gravity**: When stationary, the Z-axis typically shows ~1g (gravity)
+3. **Movement Detection**: Use `get_strength()` to detect overall movement
+4. **Axis Values**: Individual axis values can be positive or negative
+5. **Sampling**: Values are updated at the sensor's configured rate
+6. **Noise**: Small variations are normal due to sensor noise
