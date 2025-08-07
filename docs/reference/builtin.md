@@ -1266,3 +1266,177 @@ The Codi:bit board's accelerometer operates based on the board's actual physical
 4. **Axis Values**: Individual axis values can be positive or negative
 5. **Sampling**: Values are updated at the sensor's configured rate
 6. **Noise**: Small variations are normal due to sensor noise
+
+## Magnetometer
+
+API for controlling the Codi:bit magnetometer sensor. Uses the MMC5603 magnetometer sensor to measure 3-axis magnetic fields and provide compass functionality.
+
+### Basic Usage
+
+```python
+from codibit import *
+
+# Initialize the magnetometer
+magnetometer = Magnetometer()
+
+# Read magnetic field values
+x = magnetometer.get_x()
+y = magnetometer.get_y()
+z = magnetometer.get_z()
+
+# Read compass heading
+heading = magnetometer.get_heading()
+```
+
+### Methods
+
+#### `Magnetometer.__init__(scl_pin=I2C_SCL_PIN, sda_pin=I2C_SDA_PIN, addr=I2C_MAGNETOMETER_ADDR)`
+
+Initializes the magnetometer sensor.
+
+**Parameters:**
+- `scl_pin` (int): I2C SCL pin number (default: I2C_SCL_PIN)
+- `sda_pin` (int): I2C SDA pin number (default: I2C_SDA_PIN)
+- `addr` (int): I2C device address (default: I2C_MAGNETOMETER_ADDR)
+
+**Example:**
+```python
+magnetometer = Magnetometer()
+```
+
+#### `magnetometer.calibrate()`
+
+Calibrates the magnetometer sensor. For accurate measurements, hold the board in the air and slowly draw figure-8 patterns for about 20 seconds.
+
+**Example:**
+```python
+print("Starting magnetometer calibration...")
+print("Please hold the board in the air and slowly draw figure-8 patterns")
+print("for about 20 seconds to calibrate the sensor...")
+magnetometer.calibrate()
+print("Calibration complete!")
+```
+
+#### `magnetometer.get_x()`
+
+Returns the magnetic field value on the X-axis.
+
+**Returns:**
+- `float`: X-axis magnetic field value
+
+**Example:**
+```python
+x_value = magnetometer.get_x()
+print(f"X-axis magnetic field: {x_value}")
+```
+
+#### `magnetometer.get_y()`
+
+Returns the magnetic field value on the Y-axis.
+
+**Returns:**
+- `float`: Y-axis magnetic field value
+
+**Example:**
+```python
+y_value = magnetometer.get_y()
+print(f"Y-axis magnetic field: {y_value}")
+```
+
+#### `magnetometer.get_z()`
+
+Returns the magnetic field value on the Z-axis.
+
+**Returns:**
+- `float`: Z-axis magnetic field value
+
+**Example:**
+```python
+z_value = magnetometer.get_z()
+print(f"Z-axis magnetic field: {z_value}")
+```
+
+#### `magnetometer.get_values()`
+
+Returns a tuple of magnetic field values for all three axes.
+
+**Returns:**
+- `tuple`: (x, y, z) magnetic field values
+
+**Example:**
+```python
+x, y, z = magnetometer.get_values()
+print(f"Magnetic field: X={x}, Y={y}, Z={z}")
+```
+
+#### `magnetometer.get_strength()`
+
+Returns the magnetic field strength.
+
+**Returns:**
+- `float`: Magnetic field strength
+
+**Example:**
+```python
+strength = magnetometer.get_strength()
+print(f"Magnetic field strength: {strength}")
+```
+
+#### `magnetometer.get_heading(upright=False)`
+
+Returns the compass heading.
+
+**Parameters:**
+- `upright` (bool): Whether to calculate direction for upright orientation (default: False)
+
+**Returns:**
+- `float`: Compass heading (0-360 degrees)
+
+**Example:**
+```python
+heading = magnetometer.get_heading()
+print(f"Compass heading: {heading} degrees")
+```
+
+### Hardware Information
+
+- **Sensor**: MMC5603 magnetometer sensor
+- **Interface**: I2C
+- **Address**: 0x30
+- **Measurement Range**: ±8 Gauss
+- **Resolution**: 16-bit
+- **Update Rate**: Up to 100Hz
+- **Power Supply**: 3.3V
+- **Physical Location**: Integrated on the board
+
+### Coordinate System
+
+The Codi:bit board's magnetometer operates based on the board's actual physical orientation:
+
+#### **Axis Directions**
+- **X-axis**: Left-right direction
+  - Positive in left direction, negative in right direction
+- **Y-axis**: Forward-backward direction
+  - Positive in forward direction, negative in backward direction
+- **Z-axis**: Up-down direction
+  - Positive in upward direction, negative in downward direction
+
+#### **Compass Directions**
+- **0°**: North
+- **90°**: East
+- **180°**: South
+- **270°**: West
+
+#### **Measurement Range**
+- **Magnetic field values**: -8.0 ~ +8.0 Gauss
+- **Compass heading**: 0.0 ~ 360.0 degrees
+- **Magnetic field strength**: 0.0 ~ +infinity
+
+### Notes
+
+1. **Calibration**: Call `calibrate()` before measurements for accurate readings
+2. **Metal objects**: Nearby metal objects may affect measurements
+3. **Electromagnetic fields**: Accuracy may decrease in environments with electromagnetic fields
+4. **Level position**: Compass functionality is most accurate when the board is level
+5. **Environmental factors**: Magnetic field values can vary greatly depending on the surrounding environment
+6. **Calibration needed**: Calibration is recommended when first used or when the environment changes
