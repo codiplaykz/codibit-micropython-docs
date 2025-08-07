@@ -1440,3 +1440,117 @@ The Codi:bit board's magnetometer operates based on the board's actual physical 
 4. **Level position**: Compass functionality is most accurate when the board is level
 5. **Environmental factors**: Magnetic field values can vary greatly depending on the surrounding environment
 6. **Calibration needed**: Calibration is recommended when first used or when the environment changes
+
+## Gyroscope
+
+API for controlling the built-in QMI8658 gyroscope sensor.
+
+### Global Instance
+
+```python
+gyroscope = Gyroscope()
+```
+
+### Methods
+
+#### `gyroscope.get_x()`
+
+Returns the angular velocity value on the X-axis.
+
+**Returns:**
+- `int`: X-axis angular velocity value
+
+**Example:**
+```python
+x_value = gyroscope.get_x()
+print(f"X-axis angular velocity: {x_value}")
+```
+
+#### `gyroscope.get_y()`
+
+Returns the angular velocity value on the Y-axis.
+
+**Returns:**
+- `int`: Y-axis angular velocity value
+
+**Example:**
+```python
+y_value = gyroscope.get_y()
+print(f"Y-axis angular velocity: {y_value}")
+```
+
+#### `gyroscope.get_z()`
+
+Returns the angular velocity value on the Z-axis.
+
+**Returns:**
+- `int`: Z-axis angular velocity value
+
+**Example:**
+```python
+z_value = gyroscope.get_z()
+print(f"Z-axis angular velocity: {z_value}")
+```
+
+#### `gyroscope.get_values()`
+
+Returns a tuple of angular velocity values for all three axes.
+
+**Returns:**
+- `tuple`: (x, y, z) angular velocity values
+
+**Example:**
+```python
+x, y, z = gyroscope.get_values()
+print(f"Angular velocity: X={x}, Y={y}, Z={z}")
+```
+
+#### `gyroscope.get_strength()`
+
+Returns the magnitude of angular velocity (total rotation strength).
+
+**Returns:**
+- `int`: Angular velocity magnitude
+
+**Example:**
+```python
+strength = gyroscope.get_strength()
+print(f"Angular velocity strength: {strength}")
+```
+
+### Hardware Information
+
+- **Sensor**: QMI8658 6-axis IMU
+- **Interface**: I2C
+- **Address**: 0x6B
+- **Measurement Range**: ±16, ±32, ±64, ±128, ±256, ±512, ±1024, ±2048 dps
+- **Resolution**: 16-bit
+- **Update Rate**: Up to 200Hz
+- **Power Supply**: 3.3V
+- **Physical Location**: Integrated on the board
+
+### Coordinate System
+
+The Codi:bit board's gyroscope operates based on the board's actual physical orientation:
+
+#### **Axis Directions**
+- **X-axis**: Roll (left-right rotation)
+  - Positive when rotating left, negative when rotating right
+- **Y-axis**: Pitch (forward-backward rotation)
+  - Positive when rotating forward, negative when rotating backward
+- **Z-axis**: Yaw (clockwise-counterclockwise rotation)
+  - Positive when rotating clockwise, negative when rotating counterclockwise
+
+#### **Measurement Range**
+- **Angular velocity values**: Depends on configured range (±16 to ±2048 dps)
+- **Rotation detection**: Measures rate of rotation around each axis
+- **Stationary state**: Values close to 0 when not rotating
+
+### Notes
+
+1. **Calibration**: The sensor automatically calibrates to zero when stationary
+2. **Rotation detection**: Use `get_strength()` to detect overall rotation
+3. **Axis values**: Individual axis values can be positive or negative
+4. **Sampling**: Values are updated at the sensor's configured rate
+5. **Noise**: Small variations are normal due to sensor noise
+6. **Range selection**: The sensor automatically selects appropriate measurement range
