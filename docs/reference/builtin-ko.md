@@ -1267,3 +1267,177 @@ Codi:bit 보드의 가속도계는 보드의 실제 물리적 방향을 기준�
 4. **축 값**: 개별 축 값은 양수 또는 음수일 수 있습니다
 5. **샘플링**: 값은 센서의 설정된 속도로 업데이트됩니다
 6. **노이즈**: 센서 노이즈로 인한 작은 변화는 정상입니다
+
+## Magnetometer
+
+Codi:bit의 자기장 센서를 제어하는 클래스입니다. MMC5603 자기장 센서를 사용하여 3축 자기장을 측정하고 나침반 기능을 제공합니다.
+
+### 기본 사용법
+
+```python
+from codibit import *
+
+# 자기장 센서 초기화
+magnetometer = Magnetometer()
+
+# 자기장 값 읽기
+x = magnetometer.get_x()
+y = magnetometer.get_y()
+z = magnetometer.get_z()
+
+# 나침반 방향 읽기
+heading = magnetometer.get_heading()
+```
+
+### 메서드
+
+#### `Magnetometer.__init__(scl_pin=I2C_SCL_PIN, sda_pin=I2C_SDA_PIN, addr=I2C_MAGNETOMETER_ADDR)`
+
+자기장 센서를 초기화합니다.
+
+**매개변수:**
+- `scl_pin` (int): I2C SCL 핀 번호 (기본값: I2C_SCL_PIN)
+- `sda_pin` (int): I2C SDA 핀 번호 (기본값: I2C_SDA_PIN)
+- `addr` (int): I2C 장치 주소 (기본값: I2C_MAGNETOMETER_ADDR)
+
+**예시:**
+```python
+magnetometer = Magnetometer()
+```
+
+#### `magnetometer.calibrate()`
+
+자기장 센서를 보정합니다. 정확한 측정을 위해 보드를 공중에 들고 천천히 8자를 여러 번 그리는 방법으로 20초 정도 보정을 수행합니다.
+
+**예시:**
+```python
+print("자기장 센서 보정을 시작합니다...")
+print("보드를 공중에 들고 천천히 8자를 여러 번 그려주세요")
+print("약 20초 동안 보정이 진행됩니다...")
+magnetometer.calibrate()
+print("보정 완료!")
+```
+
+#### `magnetometer.get_x()`
+
+X축 자기장 값을 반환합니다.
+
+**반환값:**
+- `float`: X축 자기장 값
+
+**예시:**
+```python
+x_value = magnetometer.get_x()
+print(f"X축 자기장: {x_value}")
+```
+
+#### `magnetometer.get_y()`
+
+Y축 자기장 값을 반환합니다.
+
+**반환값:**
+- `float`: Y축 자기장 값
+
+**예시:**
+```python
+y_value = magnetometer.get_y()
+print(f"Y축 자기장: {y_value}")
+```
+
+#### `magnetometer.get_z()`
+
+Z축 자기장 값을 반환합니다.
+
+**반환값:**
+- `float`: Z축 자기장 값
+
+**예시:**
+```python
+z_value = magnetometer.get_z()
+print(f"Z축 자기장: {z_value}")
+```
+
+#### `magnetometer.get_values()`
+
+세 축의 자기장 값 튜플을 반환합니다.
+
+**반환값:**
+- `tuple`: (x, y, z) 자기장 값들
+
+**예시:**
+```python
+x, y, z = magnetometer.get_values()
+print(f"자기장: X={x}, Y={y}, Z={z}")
+```
+
+#### `magnetometer.get_strength()`
+
+자기장의 강도를 반환합니다.
+
+**반환값:**
+- `float`: 자기장 강도
+
+**예시:**
+```python
+strength = magnetometer.get_strength()
+print(f"자기장 강도: {strength}")
+```
+
+#### `magnetometer.get_heading(upright=False)`
+
+나침반 방향을 반환합니다.
+
+**매개변수:**
+- `upright` (bool): 수직 상태에서의 방향 계산 여부 (기본값: False)
+
+**반환값:**
+- `float`: 나침반 방향 (0-360도)
+
+**예시:**
+```python
+heading = magnetometer.get_heading()
+print(f"나침반 방향: {heading}도")
+```
+
+### 하드웨어 정보
+
+- **센서**: MMC5603 자기장 센서
+- **인터페이스**: I2C
+- **주소**: 0x30
+- **측정 범위**: ±8 Gauss
+- **해상도**: 16-bit
+- **업데이트 속도**: 최대 100Hz
+- **전원 공급**: 3.3V
+- **물리적 위치**: 보드에 통합
+
+### 좌표계
+
+Codi:bit 보드의 자기장 센서는 보드의 실제 물리적 방향을 기준으로 동작합니다:
+
+#### **축 방향**
+- **X축**: 좌우 방향 (Left and right)
+  - 왼쪽 방향이 양수, 오른쪽 방향이 음수
+- **Y축**: 앞뒤 방향 (Forward and backward)
+  - 앞쪽 방향이 양수, 뒤쪽 방향이 음수
+- **Z축**: 상하 방향 (Up and down)
+  - 위쪽 방향이 양수, 아래쪽 방향이 음수
+
+#### **나침반 방향**
+- **0°**: 북쪽 (North)
+- **90°**: 동쪽 (East)
+- **180°**: 남쪽 (South)
+- **270°**: 서쪽 (West)
+
+#### **측정값 범위**
+- **자기장 값**: -8.0 ~ +8.0 Gauss
+- **나침반 방향**: 0.0 ~ 360.0도
+- **자기장 강도**: 0.0 ~ +무한대
+
+### 주의사항
+
+1. **보정**: 정확한 측정을 위해 측정 전에 `calibrate()` 호출
+2. **금속 물체**: 주변의 금속 물체가 측정에 영향을 줄 수 있음
+3. **전자기장**: 전자기장이 있는 환경에서는 정확도가 떨어질 수 있음
+4. **수평 상태**: 나침반 기능은 보드가 수평 상태일 때 가장 정확
+5. **환경 영향**: 주변 환경에 따라 자기장 값이 크게 변화할 수 있음
+6. **보정 필요**: 처음 사용 시나 환경이 바뀔 때 보정 권장
