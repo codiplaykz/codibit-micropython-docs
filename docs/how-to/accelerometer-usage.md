@@ -116,38 +116,19 @@ except KeyboardInterrupt:
 ### 3. Orientation Detection
 
 ```python
-from codibit import Accelerometer, display
+from codibit import Accelerometer, Display
 import time
 
 accelerometer = Accelerometer()
 display = Display()
-
-def get_orientation():
-    x, y, z = accelerometer.get_values()
-
-    # Determine primary orientation based on gravity
-    if abs(z) > abs(x) and abs(z) > abs(y):
-        if z > 0:
-            return "Face Up"
-        else:
-            return "Face Down"
-    elif abs(x) > abs(y):
-        if x > 0:
-            return "Tilted Right"
-        else:
-            return "Tilted Left"
-    else:
-        if y > 0:
-            return "Tilted Forward"
-        else:
-            return "Tilted Back"
 
 print("Orientation detection")
 print("Press Ctrl+C to stop")
 
 try:
     while True:
-        orientation = get_orientation()
+        # Use the built-in gesture detection API
+        orientation = accelerometer.get_gesture()
 
         # Display on OLED
         display.clear()
@@ -162,54 +143,77 @@ except KeyboardInterrupt:
     print("\nDetection stopped")
 ```
 
+**Available Gesture Types:**
+- `"FACE_UP"`, `"FACE_DOWN"`, `"UP"`, `"DOWN"`, `"LEFT"`, `"RIGHT"`, `"SHAKE"`, `"FREE_FALL"`
+
+For detailed descriptions of each gesture type, see the [Accelerometer Reference](../reference/builtin#accelerometer).
+
 ### 4. Gesture Detection
 
 ```python
-from codibit import Accelerometer, buzzer
+from codibit import Accelerometer, Buzzer
 import time
 
 accelerometer = Accelerometer()
-
-def detect_gesture():
-    x, y, z = accelerometer.get_values()
-
-    # Simple gesture detection based on axis values
-    if abs(x) > 1000:
-        if x > 0:
-            return "Right"
-        else:
-            return "Left"
-    elif abs(y) > 1000:
-        if y > 0:
-            return "Forward"
-        else:
-            return "Back"
-    elif abs(z) > 1000:
-        if z > 0:
-            return "Up"
-        else:
-            return "Down"
-    else:
-        return "Still"
+buzzer = Buzzer()
 
 print("Gesture detection")
 print("Move the board to detect gestures")
 
 try:
-    last_gesture = "Still"
-
     while True:
-        current_gesture = detect_gesture()
+        # Check for specific gestures using was_gesture()
+        if accelerometer.was_gesture("SHAKE"):
+            print("Shake detected!")
+            buzzer.play_tone(440, 100)  # Beep for shake
 
-        if current_gesture != last_gesture and current_gesture != "Still":
-            print(f"Gesture detected: {current_gesture}")
-            buzzer.play_tone(440, 100)  # Beep for gesture
+        elif accelerometer.was_gesture("FREE_FALL"):
+            print("Free fall detected!")
+            buzzer.play_tone(880, 200)  # Higher tone for free fall
 
-        last_gesture = current_gesture
+        elif accelerometer.was_gesture("FACE_UP"):
+            print("Board flipped to face up!")
+            buzzer.play_tone(330, 50)
+
+        elif accelerometer.was_gesture("FACE_DOWN"):
+            print("Board flipped to face down!")
+            buzzer.play_tone(330, 50)
+
         time.sleep(0.1)
 
 except KeyboardInterrupt:
     print("\nDetection stopped")
+```
+
+**Using `is_gesture()` for continuous state checking:**
+
+```python
+from codibit import Accelerometer, RGBLed
+import time
+
+accelerometer = Accelerometer()
+rgb_led = RGBLed()
+
+print("Continuous gesture monitoring")
+print("Press Ctrl+C to stop")
+
+try:
+    while True:
+        # Check current gesture state
+        if accelerometer.is_gesture("FACE_UP"):
+            rgb_led.set_color(0, 255, 0)  # Green when face up
+        elif accelerometer.is_gesture("FACE_DOWN"):
+            rgb_led.set_color(255, 0, 0)  # Red when face down
+        elif accelerometer.is_gesture("SHAKE"):
+            rgb_led.set_color(255, 255, 0)  # Yellow when shaking
+        else:
+            rgb_led.set_color(0, 0, 255)  # Blue for other orientations
+
+        time.sleep(0.1)
+
+except KeyboardInterrupt:
+    print("\nMonitoring stopped")
+    rgb_led.off()
 ```
 
 ### 5. Data Logging
@@ -249,43 +253,6 @@ log_acceleration_data()
 ```
 
 ## Advanced Usage
-
-### Calibration
-
-For accurate measurements, you may want to calibrate the accelerometer:
-
-```python
-from codibit import Accelerometer
-import time
-
-accelerometer = Accelerometer()
-
-def calibrate():
-    print("Calibrating accelerometer...")
-    print("Place the board on a flat surface and stay still")
-
-    # Collect samples for calibration
-    samples = []
-    for i in range(50):  # Collect 50 samples
-        x, y, z = accelerometer.get_values()
-        samples.append((x, y, z))
-        time.sleep(0.1)
-
-    # Calculate average (offset)
-    avg_x = sum(s[0] for s in samples) / len(samples)
-    avg_y = sum(s[1] for s in samples) / len(samples)
-    avg_z = sum(s[2] for s in samples) / len(samples)
-
-    print(f"Calibration complete:")
-    print(f"X offset: {avg_x:.2f}")
-    print(f"Y offset: {avg_y:.2f}")
-    print(f"Z offset: {avg_z:.2f}")
-
-    return avg_x, avg_y, avg_z
-
-# Run calibration
-offset_x, offset_y, offset_z = calibrate()
-```
 
 ### Low-Pass Filtering
 
@@ -338,7 +305,7 @@ except KeyboardInterrupt:
 1. **Inconsistent Readings**
    - Ensure the board is properly connected
    - Check for electromagnetic interference
-   - Calibrate the sensor in a stable environment
+   - Check sensor placement in a stable environment
 
 2. **High Noise Levels**
    - Use low-pass filtering for smoother readings
@@ -347,7 +314,7 @@ except KeyboardInterrupt:
 
 3. **Incorrect Orientation Detection**
    - Verify coordinate system understanding
-   - Recalibrate the sensor
+   - Check sensor placement and orientation
    - Check for magnetic interference
 
 ### Performance Tips

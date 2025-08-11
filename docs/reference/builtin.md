@@ -1260,6 +1260,59 @@ strength = accelerometer.get_strength()
 print(f"Acceleration strength: {strength}")
 ```
 
+#### `accelerometer.get_gesture()`
+
+Returns the current gesture state of the board.
+
+**Returns:**
+- `str`: Current gesture state
+  - `"FREE_FALL"`: Board is in free fall
+  - `"SHAKE"`: Board is being shaken
+  - `"FACE_UP"`: Board is flat with screen facing up
+  - `"FACE_DOWN"`: Board is flat with screen facing down
+  - `"UP"`: Board is standing vertically (screen facing forward)
+  - `"DOWN"`: Board is standing vertically (screen facing backward)
+  - `"LEFT"`: Board is tilted to the left
+  - `"RIGHT"`: Board is tilted to the right
+
+**Example:**
+```python
+gesture = accelerometer.get_gesture()
+print(f"Current gesture: {gesture}")
+```
+
+#### `accelerometer.is_gesture(name)`
+
+Checks if the specified gesture is currently active.
+
+**Parameters:**
+- `name` (str): Gesture name to check
+
+**Returns:**
+- `bool`: `True` if the gesture is currently active, `False` otherwise
+
+**Example:**
+```python
+if accelerometer.is_gesture("FACE_UP"):
+    print("Board is face up")
+```
+
+#### `accelerometer.was_gesture(name)`
+
+Checks if the specified gesture was activated since the last call to this method.
+
+**Parameters:**
+- `name` (str): Gesture name to check
+
+**Returns:**
+- `bool`: `True` if the gesture was activated, `False` otherwise
+
+**Example:**
+```python
+if accelerometer.was_gesture("SHAKE"):
+    print("Shake detected!")
+```
+
 ### Hardware Information
 
 - **Sensor**: QMI8658 6-axis IMU
@@ -1301,6 +1354,8 @@ The Codi:bit board's accelerometer operates based on the board's actual physical
 4. **Axis Values**: Individual axis values can be positive or negative
 5. **Sampling**: Values are updated at the sensor's configured rate
 6. **Noise**: Small variations are normal due to sensor noise
+7. **Gesture Detection**: Use `get_gesture()`, `is_gesture()`, and `was_gesture()` for advanced gesture recognition
+8. **Gesture Priority**: SHAKE has highest priority, followed by FREE_FALL, then orientation gestures
 
 ## Magnetometer
 

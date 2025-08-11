@@ -88,8 +88,8 @@ import time
 
 accelerometer = Accelerometer()
 
-# 주변 조건에 보정
-print("보정 중... 2초간 움직이지 마세요")
+# 기준값 설정
+print("기준값 설정 중... 2초간 움직이지 마세요")
 time.sleep(2)
 
 baseline_strength = accelerometer.get_strength()
@@ -116,38 +116,19 @@ except KeyboardInterrupt:
 ### 3. 방향 감지
 
 ```python
-from codibit import Accelerometer, display
+from codibit import Accelerometer, Display
 import time
 
 accelerometer = Accelerometer()
 display = Display()
-
-def get_orientation():
-    x, y, z = accelerometer.get_values()
-
-    # 중력을 기반으로 주요 방향 결정
-    if abs(z) > abs(x) and abs(z) > abs(y):
-        if z > 0:
-            return "뒤집힘"
-        else:
-            return "평평함"
-    elif abs(x) > abs(y):
-        if x > 0:
-            return "앞으로 기울어짐"
-        else:
-            return "뒤로 기울어짐"
-    else:
-        if y > 0:
-            return "왼쪽으로 기울어짐"
-        else:
-            return "오른쪽으로 기울어짐"
 
 print("방향 감지")
 print("Ctrl+C를 눌러 중지")
 
 try:
     while True:
-        orientation = get_orientation()
+        # 내장 제스처 감지 API 사용
+        orientation = accelerometer.get_gesture()
 
         # OLED에 표시
         display.clear()
@@ -162,6 +143,79 @@ except KeyboardInterrupt:
     print("\n감지 중지됨")
 ```
 
+**사용 가능한 제스처 타입:**
+- `"FACE_UP"`, `"FACE_DOWN"`, `"UP"`, `"DOWN"`, `"LEFT"`, `"RIGHT"`, `"SHAKE"`, `"FREE_FALL"`
+
+각 제스처 타입에 대한 자세한 설명은 [가속도계 참조](../reference/builtin-ko#가속도계-accelerometer)를 참조하세요.
+
+### 4. 제스처 감지
+
+```python
+from codibit import Accelerometer, Buzzer
+import time
+
+accelerometer = Accelerometer()
+buzzer = Buzzer()
+
+print("제스처 감지")
+print("보드를 움직여서 제스처를 감지하세요")
+
+try:
+    while True:
+        # was_gesture()를 사용하여 특정 제스처 확인
+        if accelerometer.was_gesture("SHAKE"):
+            print("흔들림 감지됨!")
+            buzzer.play_tone(440, 100)  # 흔들림용 비프음
+
+        elif accelerometer.was_gesture("FREE_FALL"):
+            print("자유낙하 감지됨!")
+            buzzer.play_tone(880, 200)  # 자유낙하용 높은 음
+
+        elif accelerometer.was_gesture("FACE_UP"):
+            print("보드가 위쪽으로 뒤집힘!")
+            buzzer.play_tone(330, 50)
+
+        elif accelerometer.was_gesture("FACE_DOWN"):
+            print("보드가 아래쪽으로 뒤집힘!")
+            buzzer.play_tone(330, 50)
+
+        time.sleep(0.1)
+
+except KeyboardInterrupt:
+    print("\n감지 중지됨")
+```
+
+**`is_gesture()`를 사용한 연속 상태 확인:**
+
+```python
+from codibit import Accelerometer, RGBLed
+import time
+
+accelerometer = Accelerometer()
+rgb_led = RGBLed()
+
+print("연속 제스처 모니터링")
+print("Ctrl+C를 눌러 중지")
+
+try:
+    while True:
+        # 현재 제스처 상태 확인
+        if accelerometer.is_gesture("FACE_UP"):
+            rgb_led.set_color(0, 255, 0)  # 위쪽일 때 초록색
+        elif accelerometer.is_gesture("FACE_DOWN"):
+            rgb_led.set_color(255, 0, 0)  # 아래쪽일 때 빨간색
+        elif accelerometer.is_gesture("SHAKE"):
+            rgb_led.set_color(255, 255, 0)  # 흔들릴 때 노란색
+        else:
+            rgb_led.set_color(0, 0, 255)  # 다른 방향일 때 파란색
+
+        time.sleep(0.1)
+
+except KeyboardInterrupt:
+    print("\n모니터링 중지됨")
+    rgb_led.off()
+```
+
 ## 문제 해결
 
 ### 일반적인 문제
@@ -169,7 +223,7 @@ except KeyboardInterrupt:
 1. **일관성 없는 읽기**
    - 보드가 제대로 연결되었는지 확인
    - 전자기 간섭 확인
-   - 안정적인 환경에서 센서 보정
+   - 안정적인 환경에서 센서 배치 확인
 
 2. **높은 노이즈 레벨**
    - 더 부드러운 읽기를 위해 저역 통과 필터링 사용
@@ -178,7 +232,7 @@ except KeyboardInterrupt:
 
 3. **잘못된 방향 감지**
    - 좌표계 이해 확인
-   - 센서 재보정
+   - 센서 배치 및 방향 확인
    - 자기 간섭 확인
 
 ### 성능 팁
