@@ -2,6 +2,41 @@
 
 API for controlling built-in sensors on the Codi:bit board.
 
+## Utils
+
+API for utility functions that work with built-in sensors.
+
+### `get_board_temperature()`
+
+Returns the current board temperature from the QMI8658 IMU sensor.
+
+**Returns:**
+- `int`: Current board temperature in Celsius (integer)
+  Returns 25 if sensor error occurs
+
+**Example:**
+```python
+temp = get_board_temperature()
+print(f"Current board temperature: {temp}°C")
+```
+
+**Hardware Information:**
+- **Sensor**: QMI8658 6-axis IMU (temperature sensor)
+- **Interface**: I2C
+- **Address**: 0x6B
+- **Temperature Range**: -40°C to 85°C
+- **Resolution**: 0.01°C
+- **Accuracy**: ±1°C
+- **Measurement Type**: Board temperature (not ambient temperature)
+
+**Notes:**
+1. **Board Temperature**: Measures the temperature of the board itself, not the surrounding environment
+2. **Higher Values**: Board temperature is typically higher than ambient temperature due to component heat generation
+3. **Error Handling**: Returns 25°C if sensor communication fails
+4. **Range Validation**: Values outside -40°C to 85°C return 25°C
+5. **Integer Return**: Returns integer value for memory efficiency
+6. **Quiet Failure**: Fails silently with default value on hardware errors
+
 ## Buttons
 
 API for controlling the built-in buttons on the Codi:bit board.
