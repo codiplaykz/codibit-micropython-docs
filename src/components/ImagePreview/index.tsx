@@ -8,6 +8,9 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
   className = '',
 }) => {
   const pixels = useMemo(() => {
+    if (!imageString) {
+      return [];
+    }
     const lines = imageString.split(':');
     const result: number[][] = [];
 
