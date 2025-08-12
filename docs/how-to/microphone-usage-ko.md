@@ -1,4 +1,4 @@
-# How to Use the Microphone Sensor(마이크 센서 사용법)
+# How to use microphone(마이크 사용하기)
 
 이 가이드는 Codi:bit 보드의 내장 마이크 센서를 사용하여 소리를 감지하고 인터랙티브한 오디오 애플리케이션을 만드는 방법을 보여줍니다.
 

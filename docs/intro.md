@@ -4,7 +4,7 @@ title: Introduction
 description: Codi:bit MicroPython API Documentation
 ---
 
-# Codi:bit MicroPython API Documentation
+# Codi:bit MicroPython API documentation
 
 ## 📚 Documentation Structure
 

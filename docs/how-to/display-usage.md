@@ -1,4 +1,4 @@
-# Display Usage Guide
+# How to use display
 
 This guide explains how to use the Codi:bit display with the new buffer-based API.
 

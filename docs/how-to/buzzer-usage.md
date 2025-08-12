@@ -1,4 +1,4 @@
-# Buzzer Usage Guide
+# How to use buzzer
 
 Learn how to use the built-in buzzer on the Codi:bit board to create sounds, melodies, and music.
 

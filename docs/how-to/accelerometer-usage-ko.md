@@ -1,4 +1,4 @@
-# 가속도계 사용 가이드
+# How to use accelerometer(가속도계 사용하기)
 
 이 가이드는 Codi:bit 보드의 내장 가속도계를 사용하는 방법을 보여줍니다.
 

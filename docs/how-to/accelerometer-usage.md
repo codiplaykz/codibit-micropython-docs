@@ -1,4 +1,4 @@
-# Accelerometer Usage Guide
+# How to use accelerometer
 
 This guide shows you how to use the built-in accelerometer on the Codi:bit board.
 

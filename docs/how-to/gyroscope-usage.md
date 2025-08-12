@@ -1,4 +1,4 @@
-# Gyroscope Usage Guide
+# How to use gyroscope
 
 Learn how to use the Codi:bit gyroscope sensor to detect rotation and angular velocity.
 

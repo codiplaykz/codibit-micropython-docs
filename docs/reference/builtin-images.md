@@ -1,4 +1,4 @@
-# Built-in Images and Icons
+# Built-in images and icons
 
 This document provides a comprehensive reference for all 64 built-in images and icons available in the Codi:bit library.
 
