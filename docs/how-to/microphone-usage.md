@@ -1,4 +1,4 @@
-# How to Use the Microphone Sensor
+# How to use microphone
 
 This guide shows you how to use the built-in microphone sensor on the Codi:bit board to detect sounds and create interactive audio applications.
 

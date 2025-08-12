@@ -1,4 +1,4 @@
-# RGB LED Usage Guide
+# How to use RGB LED
 
 This guide shows you how to use the built-in RGB LED strip on the Codi:bit board.
 

@@ -1,4 +1,4 @@
-# RGB LED Usage Guide(RGB LED 사용법 가이드)
+# How to use RGB LED(RGB LED 사용하기)
 
 이 가이드는 Codi:bit 보드의 내장 RGB LED 스트립을 사용하는 방법을 보여줍니다.
 

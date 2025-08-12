@@ -1,4 +1,4 @@
-# How to Detect Light Changes(조도 변화 감지하기)
+# How to detect light changes(조도 변화 감지하기)
 
 이 가이드는 조도 레벨이 변화할 때 감지하고 그 변화에 반응하는 방법을 보여줍니다.
 

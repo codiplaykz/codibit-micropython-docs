@@ -1,4 +1,4 @@
-# Buzzer Usage Guide(버저 사용 가이드)
+# How to use buzzer(버저 사용하기)
 
 Codi:bit 보드의 내장 버저를 사용하여 소리, 멜로디, 음악을 만드는 방법을 배워보세요.
 

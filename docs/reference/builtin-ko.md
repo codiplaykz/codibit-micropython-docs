@@ -855,22 +855,24 @@ display.draw_image(Image.HAPPY, 20, 0)
 display.show()
 ```
 
-#### `display.draw_icon(icon_name, x=0, y=0, scale=1)`
+#### `display.draw_icon(icon, x=0, y=0, scale=1)`
 
-지정된 위치에 내장 아이콘을 그립니다.
+ICONS 상수를 사용하여 지정된 위치에 내장 아이콘을 그립니다.
 
 **매개변수:**
-- `icon_name` (str): 아이콘 이름 (예: 'HEART', 'HAPPY', 'SAD')
+- `icon`: ICONS 상수 (예: ICONS.HEART, ICONS.HAPPY, ICONS.SAD)
 - `x` (int): X 좌표 (기본값: 0)
 - `y` (int): Y 좌표 (기본값: 0)
 - `scale` (int): 스케일 크기 (1=5x5, 2=10x10, 3=15x15)
 
 **예시:**
 ```python
+from codibit import ICONS
+
 # 기본 크기로 하트 그리기
-display.draw_icon('HEART', 0, 0)
+display.draw_icon(ICONS.HEART, 0, 0)
 # 2배 크기로 웃는 얼굴 그리기
-display.draw_icon('HAPPY', 20, 0, scale=2)
+display.draw_icon(ICONS.HAPPY, 20, 0, scale=2)
 display.show()
 ```
 
@@ -916,6 +918,113 @@ display.show()
 5. **스케일링**: 아이콘은 더 나은 가시성을 위해 표시할 때 확대할 수 있습니다
 6. **성능**: 여러 그리기 작업을 한 번에 처리한 후 `show()`를 호출하는 것이 효율적입니다
 7. **버퍼 제어**: `clear()`는 즉시 출력하지만, `clear_buffer()`는 버퍼만 지워서 성능 최적화에 유용합니다
+
+## ICONS
+
+타입 안전성과 IDE 지원을 위한 내장 아이콘 상수 API입니다.
+
+### 전역 인스턴스
+
+```python
+from codibit import ICONS
+```
+
+### 사용 가능한 아이콘
+
+ICONS 클래스는 모든 64개의 내장 아이콘에 대한 상수를 카테고리별로 제공합니다:
+
+#### 감정 표현
+- `ICONS.HEART`, `ICONS.HEART_SMALL`
+- `ICONS.HAPPY`, `ICONS.SAD`, `ICONS.CONFUSED`
+- `ICONS.ANGRY`, `ICONS.SURPRISED`, `ICONS.ASLEEP`
+- `ICONS.SILLY`, `ICONS.FABULOUS`, `ICONS.MEH`
+
+#### 기하학적 도형
+- `ICONS.STAR`, `ICONS.TRIANGLE`, `ICONS.TRIANGLE_LEFT`
+- `ICONS.CHESSBOARD`, `ICONS.DIAMOND`, `ICONS.DIAMOND_SMALL`
+- `ICONS.SQUARE`, `ICONS.SQUARE_SMALL`
+
+#### 동물 및 캐릭터
+- `ICONS.RABBIT`, `ICONS.COW`, `ICONS.DUCK`
+- `ICONS.TORTOISE`, `ICONS.BUTTERFLY`, `ICONS.STICKFIGURE`
+- `ICONS.GHOST`, `ICONS.GIRAFFE`, `ICONS.SKULL`, `ICONS.SNAKE`
+
+#### 도구 및 물건
+- `ICONS.SWORD`, `ICONS.UMBRELLA`, `ICONS.SCISSORS`
+- `ICONS.TSHIRT`, `ICONS.ROLLERSKATE`, `ICONS.HOUSE`
+
+#### 음악
+- `ICONS.MUSIC_CROTCHET`, `ICONS.MUSIC_QUAVER`, `ICONS.MUSIC_QUAVERS`
+- `ICONS.PITCHFORK`
+
+#### 특수
+- `ICONS.XMAS`, `ICONS.PACMAN`, `ICONS.TARGET`
+- `ICONS.O`, `ICONS.X`
+
+#### 시계 (1-12)
+- `ICONS.CLOCK1`부터 `ICONS.CLOCK12`
+
+#### 화살표 (8방향)
+- `ICONS.ARROW_N`, `ICONS.ARROW_NE`, `ICONS.ARROW_E`, `ICONS.ARROW_SE`
+- `ICONS.ARROW_S`, `ICONS.ARROW_SW`, `ICONS.ARROW_W`, `ICONS.ARROW_NW`
+
+### 아이콘 시퀀스
+
+#### `ICONS.ALL_CLOCKS`
+애니메이션을 위한 모든 12개 시계 아이콘 목록입니다.
+
+**예시:**
+```python
+from codibit import ICONS, display
+import time
+
+# 시계 애니메이션
+for clock in ICONS.ALL_CLOCKS:
+    display.clear()
+    display.draw_icon(clock, 0, 0)
+    display.show()
+    time.sleep(0.5)
+```
+
+#### `ICONS.ALL_ARROWS`
+애니메이션을 위한 모든 8개 화살표 아이콘 목록입니다.
+
+**예시:**
+```python
+from codibit import ICONS, display
+import time
+
+# 화살표 애니메이션
+for arrow in ICONS.ALL_ARROWS:
+    display.clear()
+    display.draw_icon(arrow, 0, 0)
+    display.show()
+    time.sleep(0.3)
+```
+
+### 디스플레이와 함께 사용
+
+```python
+from codibit import ICONS, display
+
+# 기본 사용법
+display.draw_icon(ICONS.HEART, 0, 0)
+display.draw_icon(ICONS.HAPPY, 20, 0)
+display.show()
+
+# 스케일링과 함께
+display.draw_icon(ICONS.STAR, 0, 0, scale=2)
+display.draw_icon(ICONS.DIAMOND, 40, 0, scale=3)
+display.show()
+```
+
+### 장점
+
+1. **타입 안전성**: IDE 자동완성 및 컴파일 타임 체크
+2. **오류 방지**: 아이콘 이름의 오타 없음
+3. **일관성**: 모든 아이콘이 동일한 명명 패턴을 따름
+4. **문서화**: 아이콘 타입별 명확한 분류
+5. **애니메이션 지원**: 일반적인 애니메이션을 위한 내장 시퀀스
 
 ## 이미지 (Image)
 
@@ -1076,59 +1185,26 @@ import { IMAGE_STRINGS } from '@site/src/constants/imageStrings';
 
 ### 내장 이미지
 
-Image 클래스는 디스플레이에서 사용할 수 있는 64개의 내장 이미지를 제공합니다.
+Image 클래스는 디스플레이에서 사용할 수 있는 64개의 내장 이미지를 제공합니다. 시각적 미리보기가 포함된 완전한 참조는 [내장 이미지 및 아이콘](./builtin-images-ko.md)을 참조하세요.
 
-#### 기본 아이콘
-
-| 아이콘 | 미리보기 | 아이콘 | 미리보기 | 아이콘 | 미리보기 |
-|--------|----------|--------|----------|--------|----------|
-| `Image.HEART` | <ImagePreview imageString={IMAGE_STRINGS.HEART} /> | `Image.HEART_SMALL` | <ImagePreview imageString={IMAGE_STRINGS.HEART_SMALL} /> | `Image.HAPPY` | <ImagePreview imageString={IMAGE_STRINGS.HAPPY} /> |
-| `Image.STAR` | <ImagePreview imageString={IMAGE_STRINGS.STAR} /> | `Image.SAD` | <ImagePreview imageString={IMAGE_STRINGS.SAD} /> | `Image.CONFUSED` | <ImagePreview imageString={IMAGE_STRINGS.CONFUSED} /> |
-| `Image.ANGRY` | <ImagePreview imageString={IMAGE_STRINGS.ANGRY} /> | `Image.ASLEEP` | <ImagePreview imageString={IMAGE_STRINGS.ASLEEP} /> | `Image.SURPRISED` | <ImagePreview imageString={IMAGE_STRINGS.SURPRISED} /> |
-| `Image.SILLY` | <ImagePreview imageString={IMAGE_STRINGS.SILLY} /> | `Image.FABULOUS` | <ImagePreview imageString={IMAGE_STRINGS.FABULOUS} /> | `Image.MEH` | <ImagePreview imageString={IMAGE_STRINGS.MEH} /> |
-| `Image.O` | <ImagePreview imageString={IMAGE_STRINGS.O} /> | `Image.X` | <ImagePreview imageString={IMAGE_STRINGS.X} /> | | |
-
-#### 기하학적 도형
+#### 예시 아이콘
 
 | 아이콘 | 미리보기 | 아이콘 | 미리보기 | 아이콘 | 미리보기 |
 |--------|----------|--------|----------|--------|----------|
-| `Image.TRIANGLE` | <ImagePreview imageString={IMAGE_STRINGS.TRIANGLE} /> | `Image.TRIANGLE_LEFT` | <ImagePreview imageString={IMAGE_STRINGS.TRIANGLE_LEFT} /> | `Image.CHESSBOARD` | <ImagePreview imageString={IMAGE_STRINGS.CHESSBOARD} /> |
-| `Image.DIAMOND` | <ImagePreview imageString={IMAGE_STRINGS.DIAMOND} /> | `Image.DIAMOND_SMALL` | <ImagePreview imageString={IMAGE_STRINGS.DIAMOND_SMALL} /> | `Image.SQUARE` | <ImagePreview imageString={IMAGE_STRINGS.SQUARE} /> |
-| `Image.SQUARE_SMALL` | <ImagePreview imageString={IMAGE_STRINGS.SQUARE_SMALL} /> | | | | |
+| `Image.HEART` / `ICONS.HEART` | <ImagePreview imageString={IMAGE_STRINGS.HEART} /> | `Image.HAPPY` / `ICONS.HAPPY` | <ImagePreview imageString={IMAGE_STRINGS.HAPPY} /> | `Image.STAR` / `ICONS.STAR` | <ImagePreview imageString={IMAGE_STRINGS.STAR} /> |
+| `Image.SAD` / `ICONS.SAD` | <ImagePreview imageString={IMAGE_STRINGS.SAD} /> | `Image.DIAMOND` / `ICONS.DIAMOND` | <ImagePreview imageString={IMAGE_STRINGS.DIAMOND} /> | `Image.RABBIT` / `ICONS.RABBIT` | <ImagePreview imageString={IMAGE_STRINGS.RABBIT} /> |
 
-#### 동물
+#### 아이콘 카테고리
 
-| 아이콘 | 미리보기 | 아이콘 | 미리보기 | 아이콘 | 미리보기 |
-|--------|----------|--------|----------|--------|----------|
-| `Image.RABBIT` | <ImagePreview imageString={IMAGE_STRINGS.RABBIT} /> | `Image.COW` | <ImagePreview imageString={IMAGE_STRINGS.COW} /> | `Image.DUCK` | <ImagePreview imageString={IMAGE_STRINGS.DUCK} /> |
-| `Image.TORTOISE` | <ImagePreview imageString={IMAGE_STRINGS.TORTOISE} /> | `Image.BUTTERFLY` | <ImagePreview imageString={IMAGE_STRINGS.BUTTERFLY} /> | `Image.STICKFIGURE` | <ImagePreview imageString={IMAGE_STRINGS.STICKFIGURE} /> |
-| `Image.GHOST` | <ImagePreview imageString={IMAGE_STRINGS.GHOST} /> | `Image.GIRAFFE` | <ImagePreview imageString={IMAGE_STRINGS.GIRAFFE} /> | `Image.SKULL` | <ImagePreview imageString={IMAGE_STRINGS.SKULL} /> |
-| `Image.UMBRELLA` | <ImagePreview imageString={IMAGE_STRINGS.UMBRELLA} /> | `Image.SNAKE` | <ImagePreview imageString={IMAGE_STRINGS.SNAKE} /> | `Image.SCISSORS` | <ImagePreview imageString={IMAGE_STRINGS.SCISSORS} /> |
+- **기본 아이콘**: HEART, HAPPY, SAD, STAR, CONFUSED, ANGRY, SURPRISED 등
+- **기하학적 도형**: TRIANGLE, DIAMOND, SQUARE, CHESSBOARD 등
+- **동물 및 캐릭터**: RABBIT, COW, DUCK, GHOST, GIRAFFE 등
+- **도구 및 물건**: SWORD, UMBRELLA, HOUSE, TARGET 등
+- **음악**: MUSIC_CROTCHET, MUSIC_QUAVER, PITCHFORK 등
+- **시계 얼굴**: 시간 애니메이션을 위한 CLOCK1부터 CLOCK12까지
+- **화살표**: 8방향 화살표 (N, NE, E, SE, S, SW, W, NW)
 
-#### 음악
-
-| 아이콘 | 미리보기 | 아이콘 | 미리보기 | 아이콘 | 미리보기 |
-|--------|----------|--------|----------|--------|----------|
-| `Image.MUSIC_CROTCHET` | <ImagePreview imageString={IMAGE_STRINGS.MUSIC_CROTCHET} /> | `Image.MUSIC_QUAVER` | <ImagePreview imageString={IMAGE_STRINGS.MUSIC_QUAVER} /> | `Image.MUSIC_QUAVERS` | <ImagePreview imageString={IMAGE_STRINGS.MUSIC_QUAVERS} /> |
-| `Image.PITCHFORK` | <ImagePreview imageString={IMAGE_STRINGS.PITCHFORK} /> | | | | |
-
-#### 기타
-
-| 아이콘 | 미리보기 | 아이콘 | 미리보기 | 아이콘 | 미리보기 |
-|--------|----------|--------|----------|--------|----------|
-| `Image.XMAS` | <ImagePreview imageString={IMAGE_STRINGS.XMAS} /> | `Image.PACMAN` | <ImagePreview imageString={IMAGE_STRINGS.PACMAN} /> | `Image.TARGET` | <ImagePreview imageString={IMAGE_STRINGS.TARGET} /> |
-| `Image.TSHIRT` | <ImagePreview imageString={IMAGE_STRINGS.TSHIRT} /> | `Image.ROLLERSKATE` | <ImagePreview imageString={IMAGE_STRINGS.ROLLERSKATE} /> | `Image.HOUSE` | <ImagePreview imageString={IMAGE_STRINGS.HOUSE} /> |
-
-#### 시계 얼굴
-- `Image.CLOCK1`부터 `Image.CLOCK12`까지 - 다양한 시간의 시계 얼굴
-
-#### 화살표
-
-| 아이콘 | 미리보기 | 아이콘 | 미리보기 | 아이콘 | 미리보기 |
-|--------|----------|--------|----------|--------|----------|
-| `Image.ARROW_N` | <ImagePreview imageString={IMAGE_STRINGS.ARROW_N} /> | `Image.ARROW_NE` | <ImagePreview imageString={IMAGE_STRINGS.ARROW_NE} /> | `Image.ARROW_E` | <ImagePreview imageString={IMAGE_STRINGS.ARROW_E} /> |
-| `Image.ARROW_SE` | <ImagePreview imageString={IMAGE_STRINGS.ARROW_SE} /> | `Image.ARROW_S` | <ImagePreview imageString={IMAGE_STRINGS.ARROW_S} /> | `Image.ARROW_SW` | <ImagePreview imageString={IMAGE_STRINGS.ARROW_SW} /> |
-| `Image.ARROW_W` | <ImagePreview imageString={IMAGE_STRINGS.ARROW_W} /> | `Image.ARROW_NW` | <ImagePreview imageString={IMAGE_STRINGS.ARROW_NW} /> | | |
+**📖 모든 64개 아이콘과 시각적 미리보기가 포함된 완전한 참조는 [내장 이미지 및 아이콘](./builtin-images-ko.md)을 참조하세요.**
 
 ### 이미지 연산
 
@@ -1169,8 +1245,9 @@ display.draw_image(custom, 0, 20)
 display.show()
 
 # 아이콘 스케일링
-display.draw_icon('HAPPY', 0, 0, scale=2)
-display.draw_icon('SAD', 40, 0, scale=3)
+from codibit import ICONS
+display.draw_icon(ICONS.HAPPY, 0, 0, scale=2)
+display.draw_icon(ICONS.SAD, 40, 0, scale=3)
 display.show()
 ```
 
@@ -1181,7 +1258,7 @@ display.show()
 3. **내장 아이콘**: 즉시 사용할 수 있는 64가지 다양한 아이콘
 4. **호환성**: API는 Image 인터페이스와 호환됩니다
 5. **디스플레이 통합**: 이미지는 `draw_image()` 메서드로 디스플레이에 그릴 수 있습니다
-6. **스케일링**: 아이콘은 `draw_icon()` 메서드로 더 나은 가시성을 위해 확대할 수 있습니다
+6. **스케일링**: 아이콘은 ICONS 상수를 사용한 `draw_icon()` 메서드로 더 나은 가시성을 위해 확대할 수 있습니다
 7. **버퍼 기반**: 이미지 그리기도 버퍼 기반으로 작동하므로 `show()` 호출이 필요합니다
 
 ## 가속도계 (Accelerometer)

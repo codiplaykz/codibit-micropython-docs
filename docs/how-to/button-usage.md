@@ -1,4 +1,4 @@
-# How to Use Buttons
+# How to use buttons
 
 This guide shows you how to use the built-in buttons on the Codi:bit board to detect user input.
 

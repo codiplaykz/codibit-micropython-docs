@@ -4,7 +4,7 @@ title: Introduction(소개)
 description: Codi:bit MicroPython API 문서
 ---
 
-# Codi:bit MicroPython API 문서
+# Codi:bit MicroPython API documentation(Codi:bit MicroPython API 문서)
 
 ## 📚 문서 구조
 

@@ -1,4 +1,4 @@
-# How to Detect Light Changes
+# How to detect light changes
 
 This guide shows you how to detect when the light level changes and respond to those changes.
 

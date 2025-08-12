@@ -1,4 +1,4 @@
-# How to Use Buttons(버튼 사용법)
+# How to use buttons(버튼 사용하기)
 
 이 가이드는 Codi:bit 보드의 내장 버튼을 사용하여 사용자 입력을 감지하는 방법을 보여줍니다.
 

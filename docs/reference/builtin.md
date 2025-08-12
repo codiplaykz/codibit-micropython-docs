@@ -855,22 +855,24 @@ display.draw_image(Image.HAPPY, 20, 0)
 display.show()
 ```
 
-#### `display.draw_icon(icon_name, x=0, y=0, scale=1)`
+#### `display.draw_icon(icon, x=0, y=0, scale=1)`
 
-Draws a built-in icon at the specified position.
+Draws a built-in icon at the specified position using ICONS constants.
 
 **Parameters:**
-- `icon_name` (str): Name of the icon (e.g., 'HEART', 'HAPPY', 'SAD')
+- `icon`: ICONS constant (e.g., ICONS.HEART, ICONS.HAPPY, ICONS.SAD)
 - `x` (int): X coordinate (default: 0)
 - `y` (int): Y coordinate (default: 0)
 - `scale` (int): Scale size (1=5x5, 2=10x10, 3=15x15)
 
 **Example:**
 ```python
+from codibit import ICONS
+
 # Draw heart at default size
-display.draw_icon('HEART', 0, 0)
+display.draw_icon(ICONS.HEART, 0, 0)
 # Draw happy face at 2x scale
-display.draw_icon('HAPPY', 20, 0, scale=2)
+display.draw_icon(ICONS.HAPPY, 20, 0, scale=2)
 display.show()
 ```
 
@@ -916,6 +918,113 @@ display.show()
 5. **Scaling**: Icons can be scaled for better visibility when displayed
 6. **Performance**: It's efficient to process multiple drawing operations at once before calling `show()`
 7. **Buffer Control**: `clear()` outputs immediately, while `clear_buffer()` only clears the buffer for performance optimization
+
+## ICONS
+
+API for accessing built-in icon constants with type safety and IDE support.
+
+### Global Instance
+
+```python
+from codibit import ICONS
+```
+
+### Available Icons
+
+The ICONS class provides constants for all 64 built-in icons, organized by category:
+
+#### Emotions
+- `ICONS.HEART`, `ICONS.HEART_SMALL`
+- `ICONS.HAPPY`, `ICONS.SAD`, `ICONS.CONFUSED`
+- `ICONS.ANGRY`, `ICONS.SURPRISED`, `ICONS.ASLEEP`
+- `ICONS.SILLY`, `ICONS.FABULOUS`, `ICONS.MEH`
+
+#### Geometric Shapes
+- `ICONS.STAR`, `ICONS.TRIANGLE`, `ICONS.TRIANGLE_LEFT`
+- `ICONS.CHESSBOARD`, `ICONS.DIAMOND`, `ICONS.DIAMOND_SMALL`
+- `ICONS.SQUARE`, `ICONS.SQUARE_SMALL`
+
+#### Animals & Characters
+- `ICONS.RABBIT`, `ICONS.COW`, `ICONS.DUCK`
+- `ICONS.TORTOISE`, `ICONS.BUTTERFLY`, `ICONS.STICKFIGURE`
+- `ICONS.GHOST`, `ICONS.GIRAFFE`, `ICONS.SKULL`, `ICONS.SNAKE`
+
+#### Tools & Objects
+- `ICONS.SWORD`, `ICONS.UMBRELLA`, `ICONS.SCISSORS`
+- `ICONS.TSHIRT`, `ICONS.ROLLERSKATE`, `ICONS.HOUSE`
+
+#### Music
+- `ICONS.MUSIC_CROTCHET`, `ICONS.MUSIC_QUAVER`, `ICONS.MUSIC_QUAVERS`
+- `ICONS.PITCHFORK`
+
+#### Special
+- `ICONS.XMAS`, `ICONS.PACMAN`, `ICONS.TARGET`
+- `ICONS.O`, `ICONS.X`
+
+#### Clocks (1-12)
+- `ICONS.CLOCK1` through `ICONS.CLOCK12`
+
+#### Arrows (8 directions)
+- `ICONS.ARROW_N`, `ICONS.ARROW_NE`, `ICONS.ARROW_E`, `ICONS.ARROW_SE`
+- `ICONS.ARROW_S`, `ICONS.ARROW_SW`, `ICONS.ARROW_W`, `ICONS.ARROW_NW`
+
+### Icon Sequences
+
+#### `ICONS.ALL_CLOCKS`
+List of all 12 clock icons for animation.
+
+**Example:**
+```python
+from codibit import ICONS, display
+import time
+
+# Clock animation
+for clock in ICONS.ALL_CLOCKS:
+    display.clear()
+    display.draw_icon(clock, 0, 0)
+    display.show()
+    time.sleep(0.5)
+```
+
+#### `ICONS.ALL_ARROWS`
+List of all 8 arrow icons for animation.
+
+**Example:**
+```python
+from codibit import ICONS, display
+import time
+
+# Arrow animation
+for arrow in ICONS.ALL_ARROWS:
+    display.clear()
+    display.draw_icon(arrow, 0, 0)
+    display.show()
+    time.sleep(0.3)
+```
+
+### Usage with Display
+
+```python
+from codibit import ICONS, display
+
+# Basic usage
+display.draw_icon(ICONS.HEART, 0, 0)
+display.draw_icon(ICONS.HAPPY, 20, 0)
+display.show()
+
+# With scaling
+display.draw_icon(ICONS.STAR, 0, 0, scale=2)
+display.draw_icon(ICONS.DIAMOND, 40, 0, scale=3)
+display.show()
+```
+
+### Benefits
+
+1. **Type Safety**: IDE autocomplete and compile-time checking
+2. **Error Prevention**: No typos in icon names
+3. **Consistency**: All icons follow the same naming pattern
+4. **Documentation**: Clear categorization of icons by type
+5. **Animation Support**: Built-in sequences for common animations
 
 ## Image
 
@@ -1076,59 +1185,26 @@ import { IMAGE_STRINGS } from '@site/src/constants/imageStrings';
 
 ### Built-in Images
 
-The Image class provides 64 built-in images that can be used with the display.
+The Image class provides 64 built-in images that can be used with the display. For a complete reference with visual previews, see [Built-in Images and Icons](./builtin-images.md).
 
-#### Basic Icons
-
-| Icon | Preview | Icon | Preview | Icon | Preview |
-|------|---------|------|---------|------|---------|
-| `Image.HEART` | <ImagePreview imageString={IMAGE_STRINGS.HEART} /> | `Image.HEART_SMALL` | <ImagePreview imageString={IMAGE_STRINGS.HEART_SMALL} /> | `Image.HAPPY` | <ImagePreview imageString={IMAGE_STRINGS.HAPPY} /> |
-| `Image.STAR` | <ImagePreview imageString={IMAGE_STRINGS.STAR} /> | `Image.SAD` | <ImagePreview imageString={IMAGE_STRINGS.SAD} /> | `Image.CONFUSED` | <ImagePreview imageString={IMAGE_STRINGS.CONFUSED} /> |
-| `Image.ANGRY` | <ImagePreview imageString={IMAGE_STRINGS.ANGRY} /> | `Image.ASLEEP` | <ImagePreview imageString={IMAGE_STRINGS.ASLEEP} /> | `Image.SURPRISED` | <ImagePreview imageString={IMAGE_STRINGS.SURPRISED} /> |
-| `Image.SILLY` | <ImagePreview imageString={IMAGE_STRINGS.SILLY} /> | `Image.FABULOUS` | <ImagePreview imageString={IMAGE_STRINGS.FABULOUS} /> | `Image.MEH` | <ImagePreview imageString={IMAGE_STRINGS.MEH} /> |
-| `Image.O` | <ImagePreview imageString={IMAGE_STRINGS.O} /> | `Image.X` | <ImagePreview imageString={IMAGE_STRINGS.X} /> | | |
-
-#### Geometric Shapes
+#### Example Icons
 
 | Icon | Preview | Icon | Preview | Icon | Preview |
 |------|---------|------|---------|------|---------|
-| `Image.TRIANGLE` | <ImagePreview imageString={IMAGE_STRINGS.TRIANGLE} /> | `Image.TRIANGLE_LEFT` | <ImagePreview imageString={IMAGE_STRINGS.TRIANGLE_LEFT} /> | `Image.CHESSBOARD` | <ImagePreview imageString={IMAGE_STRINGS.CHESSBOARD} /> |
-| `Image.DIAMOND` | <ImagePreview imageString={IMAGE_STRINGS.DIAMOND} /> | `Image.DIAMOND_SMALL` | <ImagePreview imageString={IMAGE_STRINGS.DIAMOND_SMALL} /> | `Image.SQUARE` | <ImagePreview imageString={IMAGE_STRINGS.SQUARE} /> |
-| `Image.SQUARE_SMALL` | <ImagePreview imageString={IMAGE_STRINGS.SQUARE_SMALL} /> | | | | |
+| `Image.HEART` / `ICONS.HEART` | <ImagePreview imageString={IMAGE_STRINGS.HEART} /> | `Image.HAPPY` / `ICONS.HAPPY` | <ImagePreview imageString={IMAGE_STRINGS.HAPPY} /> | `Image.STAR` / `ICONS.STAR` | <ImagePreview imageString={IMAGE_STRINGS.STAR} /> |
+| `Image.SAD` / `ICONS.SAD` | <ImagePreview imageString={IMAGE_STRINGS.SAD} /> | `Image.DIAMOND` / `ICONS.DIAMOND` | <ImagePreview imageString={IMAGE_STRINGS.DIAMOND} /> | `Image.RABBIT` / `ICONS.RABBIT` | <ImagePreview imageString={IMAGE_STRINGS.RABBIT} /> |
 
-#### Animals
+#### Icon Categories
 
-| Icon | Preview | Icon | Preview | Icon | Preview |
-|------|---------|------|---------|------|---------|
-| `Image.RABBIT` | <ImagePreview imageString={IMAGE_STRINGS.RABBIT} /> | `Image.COW` | <ImagePreview imageString={IMAGE_STRINGS.COW} /> | `Image.DUCK` | <ImagePreview imageString={IMAGE_STRINGS.DUCK} /> |
-| `Image.TORTOISE` | <ImagePreview imageString={IMAGE_STRINGS.TORTOISE} /> | `Image.BUTTERFLY` | <ImagePreview imageString={IMAGE_STRINGS.BUTTERFLY} /> | `Image.STICKFIGURE` | <ImagePreview imageString={IMAGE_STRINGS.STICKFIGURE} /> |
-| `Image.GHOST` | <ImagePreview imageString={IMAGE_STRINGS.GHOST} /> | `Image.GIRAFFE` | <ImagePreview imageString={IMAGE_STRINGS.GIRAFFE} /> | `Image.SKULL` | <ImagePreview imageString={IMAGE_STRINGS.SKULL} /> |
-| `Image.UMBRELLA` | <ImagePreview imageString={IMAGE_STRINGS.UMBRELLA} /> | `Image.SNAKE` | <ImagePreview imageString={IMAGE_STRINGS.SNAKE} /> | `Image.SCISSORS` | <ImagePreview imageString={IMAGE_STRINGS.SCISSORS} /> |
+- **Basic Icons**: HEART, HAPPY, SAD, STAR, CONFUSED, ANGRY, SURPRISED, etc.
+- **Geometric Shapes**: TRIANGLE, DIAMOND, SQUARE, CHESSBOARD, etc.
+- **Animals & Characters**: RABBIT, COW, DUCK, GHOST, GIRAFFE, etc.
+- **Tools & Objects**: SWORD, UMBRELLA, HOUSE, TARGET, etc.
+- **Music**: MUSIC_CROTCHET, MUSIC_QUAVER, PITCHFORK, etc.
+- **Clock Faces**: CLOCK1 through CLOCK12 for time animations
+- **Arrows**: 8-directional arrows (N, NE, E, SE, S, SW, W, NW)
 
-#### Music
-
-| Icon | Preview | Icon | Preview | Icon | Preview |
-|------|---------|------|---------|------|---------|
-| `Image.MUSIC_CROTCHET` | <ImagePreview imageString={IMAGE_STRINGS.MUSIC_CROTCHET} /> | `Image.MUSIC_QUAVER` | <ImagePreview imageString={IMAGE_STRINGS.MUSIC_QUAVER} /> | `Image.MUSIC_QUAVERS` | <ImagePreview imageString={IMAGE_STRINGS.MUSIC_QUAVERS} /> |
-| `Image.PITCHFORK` | <ImagePreview imageString={IMAGE_STRINGS.PITCHFORK} /> | | | | |
-
-#### Miscellaneous
-
-| Icon | Preview | Icon | Preview | Icon | Preview |
-|------|---------|------|---------|------|---------|
-| `Image.XMAS` | <ImagePreview imageString={IMAGE_STRINGS.XMAS} /> | `Image.PACMAN` | <ImagePreview imageString={IMAGE_STRINGS.PACMAN} /> | `Image.TARGET` | <ImagePreview imageString={IMAGE_STRINGS.TARGET} /> |
-| `Image.TSHIRT` | <ImagePreview imageString={IMAGE_STRINGS.TSHIRT} /> | `Image.ROLLERSKATE` | <ImagePreview imageString={IMAGE_STRINGS.ROLLERSKATE} /> | `Image.HOUSE` | <ImagePreview imageString={IMAGE_STRINGS.HOUSE} /> |
-
-#### Clock Faces
-- `Image.CLOCK1` through `Image.CLOCK12` - Clock faces for different hours
-
-#### Arrows
-
-| Icon | Preview | Icon | Preview | Icon | Preview |
-|------|---------|------|---------|------|---------|
-| `Image.ARROW_N` | <ImagePreview imageString={IMAGE_STRINGS.ARROW_N} /> | `Image.ARROW_NE` | <ImagePreview imageString={IMAGE_STRINGS.ARROW_NE} /> | `Image.ARROW_E` | <ImagePreview imageString={IMAGE_STRINGS.ARROW_E} /> |
-| `Image.ARROW_SE` | <ImagePreview imageString={IMAGE_STRINGS.ARROW_SE} /> | `Image.ARROW_S` | <ImagePreview imageString={IMAGE_STRINGS.ARROW_S} /> | `Image.ARROW_SW` | <ImagePreview imageString={IMAGE_STRINGS.ARROW_SW} /> |
-| `Image.ARROW_W` | <ImagePreview imageString={IMAGE_STRINGS.ARROW_W} /> | `Image.ARROW_NW` | <ImagePreview imageString={IMAGE_STRINGS.ARROW_NW} /> | | |
+**📖 See [Built-in Images and Icons](./builtin-images.md) for the complete reference with all 64 icons and visual previews.**
 
 ### Image Operations
 
@@ -1169,8 +1245,9 @@ display.draw_image(custom, 0, 20)
 display.show()
 
 # Icon scaling
-display.draw_icon('HAPPY', 0, 0, scale=2)
-display.draw_icon('SAD', 40, 0, scale=3)
+from codibit import ICONS
+display.draw_icon(ICONS.HAPPY, 0, 0, scale=2)
+display.draw_icon(ICONS.SAD, 40, 0, scale=3)
 display.show()
 ```
 
@@ -1180,7 +1257,7 @@ display.show()
 2. **Brightness Scale**: 0-9 scale (0=off, 9=maximum brightness)
 3. **Built-in Icons**: 64 different icons available for immediate use
 4. **Display Integration**: Images can be drawn to the display using the `draw_image()` method
-5. **Scaling**: Icons can be scaled for better visibility using the `draw_icon()` method
+5. **Scaling**: Icons can be scaled for better visibility using the `draw_icon()` method with ICONS constants
 6. **Buffer-based**: Image drawing also works with the buffer-based approach, requiring `show()` calls
 
 ## Accelerometer

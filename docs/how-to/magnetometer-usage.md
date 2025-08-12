@@ -5,7 +5,7 @@ sidebar_label: Magnetometer
 description: Learn how to use the Codi:bit magnetometer sensor for compass and magnetic field detection
 ---
 
-# Magnetometer Usage Guide
+# How to use magnetometer
 
 The Codi:bit magnetometer sensor allows you to detect magnetic fields and create compass applications. This guide will show you how to use the magnetometer effectively.
 
