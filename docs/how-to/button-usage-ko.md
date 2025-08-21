@@ -14,6 +14,7 @@
 
 ```python
 from codibit import *
+import time
 
 while True:
     # 버튼 A가 현재 눌려있는지 확인
@@ -25,7 +26,7 @@ while True:
         print("버튼 B가 눌려있습니다!")
 
     # 너무 빈번한 확인을 피하기 위한 작은 지연
-    sleep(0.1)
+    time.sleep(0.1)
 ```
 
 ## 버튼 눌림 이벤트 감지
@@ -34,6 +35,7 @@ while True:
 
 ```python
 from codibit import *
+import time
 
 print("버튼 A 또는 B를 눌러주세요...")
 
@@ -47,7 +49,7 @@ while True:
         print("버튼 B가 눌렸습니다!")
 
     # 작은 지연
-    sleep(0.1)
+    time.sleep(0.1)
 ```
 
 ## 버튼 눌림 횟수 세기
@@ -56,12 +58,13 @@ while True:
 
 ```python
 from codibit import *
+import time
 
 print("버튼을 여러 번 누른 후 5초간 기다리면 카운트가 표시됩니다...")
 
 while True:
     # 5초 대기
-    sleep(5)
+    time.sleep(5)
 
     # 버튼 A가 눌린 횟수 가져오기
     a_presses = button_a.get_presses()
@@ -83,6 +86,7 @@ while True:
 
 ```python
 from codibit import *
+import time
 
 print("버튼을 눌러보세요. 실시간으로 누적 횟수가 표시됩니다...")
 
@@ -96,7 +100,7 @@ while True:
     # 실시간 표시
     print(f"\r총 누름 횟수 - A: {total_a}, B: {total_b}", end="")
 
-    sleep(0.1)
+    time.sleep(0.1)
 ```
 
 ## get_presses() vs get_press_count() 비교
@@ -105,9 +109,10 @@ while True:
 
 ```python
 from codibit import *
+import time
 
 print("버튼을 여러 번 눌러보세요...")
-sleep(3)
+time.sleep(3)
 
 # 첫 번째 확인
 presses_a = button_a.get_presses()  # 카운터 리셋됨
@@ -116,7 +121,7 @@ count_a = button_a.get_press_count()  # 카운터 리셋되지 않음
 print(f"get_presses(): {presses_a} (리셋됨)")
 print(f"get_press_count(): {count_a} (누적)")
 
-sleep(2)
+time.sleep(2)
 
 # 두 번째 확인
 presses_a2 = button_a.get_presses()  # 0 (이미 리셋됨)
@@ -132,6 +137,7 @@ print(f"get_press_count(): {count_a2} (누적 유지)")
 
 ```python
 from codibit import *
+import time
 
 counter = 0
 print("버튼 A: 증가, 버튼 B: 감소")
@@ -146,7 +152,7 @@ while True:
         counter -= 1
         print(f"카운터: {counter}")
 
-    sleep(0.1)
+    time.sleep(0.1)
 ```
 
 ## 버튼 상태 조합
@@ -155,6 +161,7 @@ while True:
 
 ```python
 from codibit import *
+import time
 
 print("버튼 A와 B를 동시에 눌러주세요...")
 
@@ -170,7 +177,7 @@ while True:
         if button_b.was_pressed():
             print("버튼 B만 눌렸습니다")
 
-    sleep(0.1)
+    time.sleep(0.1)
 ```
 
 ## 간단한 메뉴 시스템
@@ -179,6 +186,7 @@ while True:
 
 ```python
 from codibit import *
+import time
 
 menu_items = ["게임 시작", "설정", "종료"]
 current_item = 0
@@ -194,7 +202,7 @@ while True:
     if button_a.was_pressed():
         # 현재 메뉴 항목 선택
         print(f"선택됨: {menu_items[current_item]}")
-        sleep(1)
+        time.sleep(1)
         show_menu()
 
     if button_b.was_pressed():
@@ -202,7 +210,7 @@ while True:
         current_item = (current_item + 1) % len(menu_items)
         show_menu()
 
-    sleep(0.1)
+    time.sleep(0.1)
 ```
 
 ## 팁과 모범 사례

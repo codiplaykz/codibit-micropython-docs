@@ -22,17 +22,23 @@ rgb_led.set_color(2, 0, 0, 255)    # Strip 2: Blue
 rgb_led.show()  # Apply the changes
 ```
 
+### Getting Current Colors
+
+You can get the current color of any strip:
+
+```python
+# Get the current color of strip 0
+current_color = rgb_led.get_color(0)
+print(f"Strip 0 color: {current_color}")  # Returns (r, g, b) tuple
+```
+
 ### Setting All LEDs to the Same Color
 
 Set all LED strips to the same color:
 
 ```python
 # Set all strips to white
-rgb_led.set_all(255, 255, 255)
-rgb_led.show()
-
-# Set all strips to red with 50% brightness
-rgb_led.set_all(255, 0, 0, 128)
+rgb_led.set_all_color(255, 255, 255)
 rgb_led.show()
 ```
 
@@ -43,8 +49,8 @@ Adjust the brightness of individual strips:
 ```python
 # Set strip 0 to red
 rgb_led.set_color(0, 255, 0, 0)
-# Set brightness to 50%
-rgb_led.set_brightness(0, 128)
+# Set strip 0 brightness to 50%
+rgb_led.set_brightness(0, 0.5)
 rgb_led.show()
 ```
 
@@ -56,7 +62,7 @@ rgb_led.set_color(0, 255, 0, 0)    # Red
 rgb_led.set_color(1, 0, 255, 0)    # Green
 rgb_led.set_color(2, 0, 0, 255)    # Blue
 # Set all to 50% brightness
-rgb_led.set_all_brightness(128)
+rgb_led.set_all_brightness(0.5)
 rgb_led.show()
 ```
 
@@ -114,7 +120,7 @@ def color_gradient():
             g = int(color1[1] * (1 - ratio) + color2[1] * ratio)
             b = int(color1[2] * (1 - ratio) + color2[2] * ratio)
 
-            rgb_led.set_all(r, g, b)
+            rgb_led.set_all_color(r, g, b)
             rgb_led.show()
             time.sleep(0.05)
 
@@ -135,20 +141,22 @@ def breathing_effect():
     base_color = (0, 100, 255)  # Soft blue
 
     # Increase brightness (0% to 100%)
-    for brightness in range(0, 256, 5):
-        r = int(base_color[0] * brightness / 255)
-        g = int(base_color[1] * brightness / 255)
-        b = int(base_color[2] * brightness / 255)
-        rgb_led.set_all(r, g, b)
+    for brightness in range(0, 101, 5):
+        brightness_ratio = brightness / 100
+        r = int(base_color[0] * brightness_ratio)
+        g = int(base_color[1] * brightness_ratio)
+        b = int(base_color[2] * brightness_ratio)
+        rgb_led.set_all_color(r, g, b)
         rgb_led.show()
         time.sleep(0.05)
 
     # Decrease brightness (100% to 0%)
-    for brightness in range(255, -1, -5):
-        r = int(base_color[0] * brightness / 255)
-        g = int(base_color[1] * brightness / 255)
-        b = int(base_color[2] * brightness / 255)
-        rgb_led.set_all(r, g, b)
+    for brightness in range(100, -1, -5):
+        brightness_ratio = brightness / 100
+        r = int(base_color[0] * brightness_ratio)
+        g = int(base_color[1] * brightness_ratio)
+        b = int(base_color[2] * brightness_ratio)
+        rgb_led.set_all_color(r, g, b)
         rgb_led.show()
         time.sleep(0.05)
 
@@ -187,6 +195,41 @@ def sequential_led():
 sequential_led()
 ```
 
+### Color Memory Effect
+
+Remember and restore colors:
+
+```python
+def color_memory_demo():
+    """Demonstrate color memory functionality"""
+
+    # Set different colors for each strip
+    rgb_led.set_color(0, 255, 0, 0)    # Red
+    rgb_led.set_color(1, 0, 255, 0)    # Green
+    rgb_led.set_color(2, 0, 0, 255)    # Blue
+    rgb_led.show()
+
+    # Store current colors
+    stored_colors = []
+    for i in range(3):
+        stored_colors.append(rgb_led.get_color(i))
+
+    print("Stored colors:", stored_colors)
+
+    # Turn off all strips
+    rgb_led.turn_off_all()
+    rgb_led.show()
+    time.sleep(2)
+
+    # Restore colors
+    for i, color in enumerate(stored_colors):
+        rgb_led.set_color(i, *color)
+    rgb_led.show()
+
+# Run color memory demo
+color_memory_demo()
+```
+
 ## Common Color Values
 
 Here are some common RGB color values you can use:
@@ -215,7 +258,7 @@ Here are some common RGB color values you can use:
 
 ### LEDs Too Bright or Too Dim
 
-1. **Adjust brightness**: Use the brightness parameter (0-255)
+1. **Adjust brightness**: Use the brightness parameter (0.0-1.0)
 2. **Power consumption**: Lower brightness reduces power consumption
 3. **Eye comfort**: Use lower brightness for better eye comfort
 
@@ -251,17 +294,17 @@ def traffic_light():
 
     while True:
         # Red light
-        rgb_led.set_all(255, 0, 0)
+        rgb_led.set_all_color(255, 0, 0)
         rgb_led.show()
         time.sleep(3)
 
         # Yellow light
-        rgb_led.set_all(255, 255, 0)
+        rgb_led.set_all_color(255, 255, 0)
         rgb_led.show()
         time.sleep(1)
 
         # Green light
-        rgb_led.set_all(0, 255, 0)
+        rgb_led.set_all_color(0, 255, 0)
         rgb_led.show()
         time.sleep(3)
 
@@ -286,10 +329,35 @@ def mood_light():
     ]
 
     for color in colors:
-        rgb_led.set_all(*color, 128)  # 50% brightness
+        rgb_led.set_all_color(*color)
+        rgb_led.set_all_brightness(0.5)  # 50% brightness
         rgb_led.show()
         time.sleep(2)
 
 # Run mood light
 mood_light()
+```
+
+### Individual Strip Brightness Control
+
+```python
+import time
+
+def individual_brightness_demo():
+    """Individual strip brightness control demo"""
+
+    # Set different colors for each strip
+    rgb_led.set_color(0, 255, 0, 0)    # Red
+    rgb_led.set_color(1, 0, 255, 0)    # Green
+    rgb_led.set_color(2, 0, 0, 255)    # Blue
+
+    # Set different brightness for each strip
+    rgb_led.set_brightness(0, 1.0)   # Strip 0: Maximum brightness
+    rgb_led.set_brightness(1, 0.5)   # Strip 1: 50% brightness
+    rgb_led.set_brightness(2, 0.25)  # Strip 2: 25% brightness
+
+    rgb_led.show()
+
+# Run individual brightness control demo
+individual_brightness_demo()
 ```

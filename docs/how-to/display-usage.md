@@ -100,28 +100,22 @@ display.show()
 ### Built-in Icons
 
 ```python
-from codibit import Image, ICONS
+from codibit import Image
 
 # Draw built-in icons using Image objects
 display.draw_image(Image.HEART, 0, 0)
 display.draw_image(Image.HAPPY, 20, 0)
 display.draw_image(Image.SAD, 40, 0)
 display.show()
-
-# Draw built-in icons using ICONS constants (recommended)
-display.draw_icon(ICONS.HEART, 0, 0)
-display.draw_icon(ICONS.HAPPY, 20, 0)
-display.draw_icon(ICONS.SAD, 40, 0)
-display.show()
 ```
 
 ### Icon Scaling
 
 ```python
-# Draw icons at different scales using ICONS constants
-display.draw_icon(ICONS.HEART, 0, 0, scale=1)    # 5x5
-display.draw_icon(ICONS.HAPPY, 20, 0, scale=2)   # 10x10
-display.draw_icon(ICONS.SAD, 50, 0, scale=3)     # 15x15
+# Draw icons at different scales using Image objects
+display.draw_image(Image.HEART, 0, 0, scale=1)    # 5x5
+display.draw_image(Image.HAPPY, 20, 0, scale=2)   # 10x10
+display.draw_image(Image.SAD, 50, 0, scale=3)     # 15x15
 display.show()
 ```
 
@@ -171,15 +165,15 @@ display.show()  # Single output operation
 ### Buffer Control for Performance
 
 ```python
-# For performance optimization: clear_buffer() + multiple operations
-display.clear_buffer()  # Clear buffer only, no output
+# For performance optimization: clear() + multiple operations
+display.clear()  # Clear buffer only, no output
 display.draw_text("Hello", 0, 0)
 display.draw_circle(32, 32, 10)
 display.draw_rectangle(10, 10, 20, 15)
 display.show()  # Single output operation
 
-# For immediate feedback: clear() for simple operations
-display.clear()  # Clear and output immediately
+# For immediate feedback: clear_immediate() for simple operations
+display.clear_immediate()  # Clear and output immediately
 display.draw_text("Status", 0, 0)
 display.show()
 ```
@@ -305,10 +299,10 @@ else:
 2. **Clear before drawing**: Use `clear()` to start with a clean screen
 3. **Batch operations**: Group multiple drawing operations before calling `show()`
 4. **Check coordinates**: Ensure coordinates are within the display bounds (0-127 for x, 0-63 for y)
-5. **Use built-in icons**: Leverage the 64 built-in icons using ICONS constants for type safety and IDE support
+5. **Use built-in icons**: Leverage the built-in icons using Image objects for type safety and IDE support
 6. **Consider performance**: Minimize the number of `show()` calls for better performance
 7. **Test visibility**: Ensure text and graphics are visible against the background
-8. **Choose clear method**: Use `clear_buffer()` for performance optimization with multiple operations, `clear()` for immediate feedback
+8. **Choose clear method**: Use `clear()` for performance optimization with multiple operations, `clear_immediate()` for immediate feedback
 
 ## Hardware Limitations
 

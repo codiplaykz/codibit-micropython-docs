@@ -22,17 +22,23 @@ rgb_led.set_color(2, 0, 0, 255)    # 스트립 2: 파란색
 rgb_led.show()  # 변경사항 적용
 ```
 
+### 현재 색상 가져오기
+
+어떤 스트립의 현재 색상도 가져올 수 있습니다:
+
+```python
+# 스트립 0의 현재 색상 가져오기
+current_color = rgb_led.get_color(0)
+print(f"스트립 0 색상: {current_color}")  # (r, g, b) 튜플 반환
+```
+
 ### 모든 LED를 같은 색상으로 설정
 
 모든 LED 스트립을 같은 색상으로 설정:
 
 ```python
 # 모든 스트립을 흰색으로 설정
-rgb_led.set_all(255, 255, 255)
-rgb_led.show()
-
-# 모든 스트립을 빨간색으로 50% 밝기로 설정
-rgb_led.set_all(255, 0, 0, 128)
+rgb_led.set_all_color(255, 255, 255)
 rgb_led.show()
 ```
 
@@ -43,8 +49,8 @@ rgb_led.show()
 ```python
 # 스트립 0을 빨간색으로 설정
 rgb_led.set_color(0, 255, 0, 0)
-# 밝기를 50%로 설정
-rgb_led.set_brightness(0, 128)
+# 스트립 0의 밝기를 50%로 설정
+rgb_led.set_brightness(0, 0.5)
 rgb_led.show()
 ```
 
@@ -56,7 +62,7 @@ rgb_led.set_color(0, 255, 0, 0)    # 빨간색
 rgb_led.set_color(1, 0, 255, 0)    # 초록색
 rgb_led.set_color(2, 0, 0, 255)    # 파란색
 # 모든 스트립을 50% 밝기로 설정
-rgb_led.set_all_brightness(128)
+rgb_led.set_all_brightness(0.5)
 rgb_led.show()
 ```
 
@@ -114,7 +120,7 @@ def color_gradient():
             g = int(color1[1] * (1 - ratio) + color2[1] * ratio)
             b = int(color1[2] * (1 - ratio) + color2[2] * ratio)
 
-            rgb_led.set_all(r, g, b)
+            rgb_led.set_all_color(r, g, b)
             rgb_led.show()
             time.sleep(0.05)
 
@@ -135,20 +141,22 @@ def breathing_effect():
     base_color = (0, 100, 255)  # 부드러운 파란색
 
     # 밝기 증가 (0% → 100%)
-    for brightness in range(0, 256, 5):
-        r = int(base_color[0] * brightness / 255)
-        g = int(base_color[1] * brightness / 255)
-        b = int(base_color[2] * brightness / 255)
-        rgb_led.set_all(r, g, b)
+    for brightness in range(0, 101, 5):
+        brightness_ratio = brightness / 100
+        r = int(base_color[0] * brightness_ratio)
+        g = int(base_color[1] * brightness_ratio)
+        b = int(base_color[2] * brightness_ratio)
+        rgb_led.set_all_color(r, g, b)
         rgb_led.show()
         time.sleep(0.05)
 
     # 밝기 감소 (100% → 0%)
-    for brightness in range(255, -1, -5):
-        r = int(base_color[0] * brightness / 255)
-        g = int(base_color[1] * brightness / 255)
-        b = int(base_color[2] * brightness / 255)
-        rgb_led.set_all(r, g, b)
+    for brightness in range(100, -1, -5):
+        brightness_ratio = brightness / 100
+        r = int(base_color[0] * brightness_ratio)
+        g = int(base_color[1] * brightness_ratio)
+        b = int(base_color[2] * brightness_ratio)
+        rgb_led.set_all_color(r, g, b)
         rgb_led.show()
         time.sleep(0.05)
 
@@ -187,6 +195,43 @@ def sequential_led():
 sequential_led()
 ```
 
+### 색상 기억 효과
+
+색상을 기억하고 복원하기:
+
+```python
+import time
+
+def color_memory_demo():
+    """색상 기억 기능 데모"""
+
+    # 각 스트립을 다른 색상으로 설정
+    rgb_led.set_color(0, 255, 0, 0)    # 빨간색
+    rgb_led.set_color(1, 0, 255, 0)    # 초록색
+    rgb_led.set_color(2, 0, 0, 255)    # 파란색
+    rgb_led.show()
+
+    # 현재 색상 저장
+    stored_colors = []
+    for i in range(3):
+        stored_colors.append(rgb_led.get_color(i))
+
+    print("저장된 색상:", stored_colors)
+
+    # 모든 스트립 끄기
+    rgb_led.turn_off_all()
+    rgb_led.show()
+    time.sleep(2)
+
+    # 색상 복원
+    for i, color in enumerate(stored_colors):
+        rgb_led.set_color(i, *color)
+    rgb_led.show()
+
+# 색상 기억 데모 실행
+color_memory_demo()
+```
+
 ## 일반적인 색상 값
 
 사용할 수 있는 일반적인 RGB 색상 값들:
@@ -215,7 +260,7 @@ sequential_led()
 
 ### LED가 너무 밝거나 어둠
 
-1. **밝기 조절**: 밝기 매개변수(0-255) 사용
+1. **밝기 조절**: 밝기 매개변수(0.0-1.0) 사용
 2. **전력 소모**: 낮은 밝기는 전력 소모를 줄임
 3. **눈의 편안함**: 더 나은 눈의 편안함을 위해 낮은 밝기 사용
 
@@ -251,17 +296,17 @@ def traffic_light():
 
     while True:
         # 빨간불
-        rgb_led.set_all(255, 0, 0)
+        rgb_led.set_all_color(255, 0, 0)
         rgb_led.show()
         time.sleep(3)
 
         # 노란불
-        rgb_led.set_all(255, 255, 0)
+        rgb_led.set_all_color(255, 255, 0)
         rgb_led.show()
         time.sleep(1)
 
         # 초록불
-        rgb_led.set_all(0, 255, 0)
+        rgb_led.set_all_color(0, 255, 0)
         rgb_led.show()
         time.sleep(3)
 
@@ -286,10 +331,35 @@ def mood_light():
     ]
 
     for color in colors:
-        rgb_led.set_all(*color, 128)  # 50% 밝기
+        rgb_led.set_all_color(*color)
+        rgb_led.set_all_brightness(0.5)  # 50% 밝기
         rgb_led.show()
         time.sleep(2)
 
 # 무드 라이트 실행
 mood_light()
+```
+
+### 개별 스트립 밝기 제어
+
+```python
+import time
+
+def individual_brightness_demo():
+    """개별 스트립 밝기 제어 데모"""
+
+    # 각 스트립을 다른 색상으로 설정
+    rgb_led.set_color(0, 255, 0, 0)    # 빨간색
+    rgb_led.set_color(1, 0, 255, 0)    # 초록색
+    rgb_led.set_color(2, 0, 0, 255)    # 파란색
+
+    # 각 스트립의 밝기를 다르게 설정
+    rgb_led.set_brightness(0, 1.0)   # 스트립 0: 최대 밝기
+    rgb_led.set_brightness(1, 0.5)   # 스트립 1: 50% 밝기
+    rgb_led.set_brightness(2, 0.25)  # 스트립 2: 25% 밝기
+
+    rgb_led.show()
+
+# 개별 밝기 제어 데모 실행
+individual_brightness_demo()
 ```

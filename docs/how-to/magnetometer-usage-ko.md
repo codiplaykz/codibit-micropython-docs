@@ -198,14 +198,7 @@ while True:
 magnetometer.calibrate()
 ```
 
-### 수직 모드
 
-보드가 수직으로 들려있는 애플리케이션의 경우 upright 매개변수 사용:
-
-```python
-# 수직 방향의 방향 가져오기
-heading = magnetometer.get_heading(upright=True)
-```
 
 ### 자기장 강도 모니터링
 

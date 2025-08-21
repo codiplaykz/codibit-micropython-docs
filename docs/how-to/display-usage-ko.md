@@ -100,28 +100,22 @@ display.show()
 ### 내장 아이콘
 
 ```python
-from codibit import Image, ICONS
+from codibit import Image
 
 # Image 객체를 사용한 내장 아이콘 그리기
 display.draw_image(Image.HEART, 0, 0)
 display.draw_image(Image.HAPPY, 20, 0)
 display.draw_image(Image.SAD, 40, 0)
 display.show()
-
-# ICONS 상수를 사용한 내장 아이콘 그리기 (권장)
-display.draw_icon(ICONS.HEART, 0, 0)
-display.draw_icon(ICONS.HAPPY, 20, 0)
-display.draw_icon(ICONS.SAD, 40, 0)
-display.show()
 ```
 
 ### 아이콘 스케일링
 
 ```python
-# ICONS 상수를 사용한 다양한 스케일로 아이콘 그리기
-display.draw_icon(ICONS.HEART, 0, 0, scale=1)    # 5x5
-display.draw_icon(ICONS.HAPPY, 20, 0, scale=2)   # 10x10
-display.draw_icon(ICONS.SAD, 50, 0, scale=3)     # 15x15
+# Image 객체를 사용한 다양한 스케일로 아이콘 그리기
+display.draw_image(Image.HEART, 0, 0, scale=1)    # 5x5
+display.draw_image(Image.HAPPY, 20, 0, scale=2)   # 10x10
+display.draw_image(Image.SAD, 50, 0, scale=3)     # 15x15
 display.show()
 ```
 
@@ -171,15 +165,15 @@ display.show()  # 단일 출력 작업
 ### 성능을 위한 버퍼 제어
 
 ```python
-# 성능 최적화: clear_buffer() + 여러 작업
-display.clear_buffer()  # 버퍼만 지우기, 출력 없음
+# 성능 최적화: clear() + 여러 작업
+display.clear()  # 버퍼만 지우기, 출력 없음
 display.draw_text("Hello", 0, 0)
 display.draw_circle(32, 32, 10)
 display.draw_rectangle(10, 10, 20, 15)
 display.show()  # 단일 출력 작업
 
-# 즉시 피드백: 간단한 작업에는 clear()
-display.clear()  # 지우고 즉시 출력
+# 즉시 피드백: 간단한 작업에는 clear_immediate()
+display.clear_immediate()  # 지우고 즉시 출력
 display.draw_text("상태", 0, 0)
 display.show()
 ```
@@ -305,10 +299,10 @@ else:
 2. **그리기 전 지우기**: 깨끗한 화면으로 시작하려면 `clear()`를 사용하세요
 3. **배치 작업**: 여러 그리기 작업을 그룹화한 후 `show()`를 호출하세요
 4. **좌표 확인**: 좌표가 디스플레이 경계 내에 있는지 확인하세요 (x: 0-127, y: 0-63)
-5. **내장 아이콘 사용**: 타입 안전성과 IDE 지원을 위해 ICONS 상수를 사용하여 64개의 내장 아이콘을 활용하세요
+5. **내장 아이콘 사용**: 타입 안전성과 IDE 지원을 위해 Image 객체를 사용하여 내장 아이콘을 활용하세요
 6. **성능 고려**: 더 나은 성능을 위해 `show()` 호출 횟수를 최소화하세요
 7. **가시성 테스트**: 텍스트와 그래픽이 배경에 대해 잘 보이는지 확인하세요
-8. **지우기 방법 선택**: 여러 작업의 성능 최적화에는 `clear_buffer()`, 즉시 피드백에는 `clear()`를 사용하세요
+8. **지우기 방법 선택**: 여러 작업의 성능 최적화에는 `clear()`, 즉시 피드백에는 `clear_immediate()`를 사용하세요
 
 ## 하드웨어 제한사항
 
