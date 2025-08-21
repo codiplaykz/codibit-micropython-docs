@@ -2,6 +2,11 @@
 
 Codi:bit 보드의 내장 센서들을 제어하는 API입니다.
 
+import TOCInline from '@theme/TOCInline';
+
+**Table of Contents**
+<TOCInline toc={toc} minHeadingLevel={2} maxHeadingLevel={2} />
+
 ## 유틸리티 (Utils)
 
 내장 센서와 함께 작동하는 유틸리티 함수들의 API입니다.
@@ -44,8 +49,10 @@ Codi:bit 보드의 내장 버튼을 제어하는 API입니다.
 ### 전역 인스턴스
 
 ```python
-button_a  # 버튼 A (GPIO0)
-button_b  # 버튼 B (GPIO2)
+from codibit import button_a, button_b
+
+button_a  # 버튼 A
+button_b  # 버튼 B
 ```
 
 ### 메서드
@@ -134,21 +141,22 @@ print(f"버튼 A가 총 {total_presses}번 눌렸습니다")
 ### 전역 인스턴스
 
 ```python
+from codibit import rgb_led
+
 rgb_led  # 내장 RGB LED 스트립
 ```
 
 ### 메서드
 
-#### `rgb_led.set_color(strip_id, r, g, b, brightness=255)`
+#### `rgb_led.set_color(strip_id, r, g, b)`
 
-특정 LED 스트립의 색상과 밝기를 설정합니다.
+특정 LED 스트립의 색상을 설정합니다.
 
 **매개변수:**
 - `strip_id` (int): LED 스트립 번호 (0, 1, 2)
 - `r` (int): 빨간색 값 (0-255)
 - `g` (int): 초록색 값 (0-255)
 - `b` (int): 파란색 값 (0-255)
-- `brightness` (int): 밝기 (0-255), 기본값 255
 
 **예시:**
 ```python
@@ -159,24 +167,40 @@ rgb_led.set_color(2, 0, 0, 255)    # 파란색
 rgb_led.show()
 ```
 
-#### `rgb_led.set_all(r, g, b, brightness=255)`
+#### `rgb_led.get_color(strip_id)`
 
-모든 LED 스트립을 같은 색상과 밝기로 설정합니다.
+특정 LED 스트립의 현재 색상을 가져옵니다.
+
+**매개변수:**
+- `strip_id` (int): LED 스트립 번호 (0, 1, 2)
+
+**반환값:**
+- `tuple`: (r, g, b) 색상 값
+
+**예시:**
+```python
+# 스트립 0의 현재 색상 가져오기
+current_color = rgb_led.get_color(0)
+print(f"스트립 0 색상: {current_color}")  # (r, g, b) 튜플 반환
+```
+
+#### `rgb_led.set_all_color(r, g, b)`
+
+모든 LED 스트립을 같은 색상으로 설정합니다.
 
 **매개변수:**
 - `r` (int): 빨간색 값 (0-255)
 - `g` (int): 초록색 값 (0-255)
 - `b` (int): 파란색 값 (0-255)
-- `brightness` (int): 밝기 (0-255), 기본값 255
 
 **예시:**
 ```python
 # 모든 스트립을 흰색으로 설정
-rgb_led.set_all(255, 255, 255)
+rgb_led.set_all_color(255, 255, 255)
 rgb_led.show()
 
-# 모든 스트립을 빨간색으로 50% 밝기로 설정
-rgb_led.set_all(255, 0, 0, 128)
+# 모든 스트립을 빨간색으로 설정
+rgb_led.set_all_color(255, 0, 0)
 rgb_led.show()
 ```
 
@@ -186,14 +210,14 @@ rgb_led.show()
 
 **매개변수:**
 - `strip_id` (int): LED 스트립 번호 (0, 1, 2)
-- `brightness` (int): 밝기 (0-255)
+- `brightness` (float): 밝기 (0.0-1.0)
 
 **예시:**
 ```python
 # 스트립 0을 빨간색으로 설정
 rgb_led.set_color(0, 255, 0, 0)
 # 밝기를 50%로 설정
-rgb_led.set_brightness(0, 128)
+rgb_led.set_brightness(0, 0.5)
 rgb_led.show()
 ```
 
@@ -202,7 +226,7 @@ rgb_led.show()
 모든 LED 스트립의 밝기를 동일하게 설정합니다. 현재 색상들은 유지됩니다.
 
 **매개변수:**
-- `brightness` (int): 밝기 (0-255)
+- `brightness` (float): 밝기 (0.0-1.0)
 
 **예시:**
 ```python
@@ -211,7 +235,7 @@ rgb_led.set_color(0, 255, 0, 0)    # 빨간색
 rgb_led.set_color(1, 0, 255, 0)    # 초록색
 rgb_led.set_color(2, 0, 0, 255)    # 파란색
 # 모든 스트립을 50% 밝기로 설정
-rgb_led.set_all_brightness(128)
+rgb_led.set_all_brightness(0.5)
 rgb_led.show()
 ```
 
@@ -239,6 +263,7 @@ rgb_led.show()
 rgb_led.turn_off_all()
 rgb_led.show()
 ```
+
 
 #### `rgb_led.show()`
 
@@ -291,7 +316,9 @@ Codi:bit 보드의 내장 버저를 제어하는 API입니다.
 ### 전역 인스턴스
 
 ```python
-buzzer  # 내장 버저 (GPIO16)
+from codibit import buzzer
+
+buzzer  # 내장 버저
 ```
 
 ### 음표 표기법
@@ -324,99 +351,87 @@ buzzer  # 내장 버저 (GPIO16)
 실용적인 소리와 드럼 소리 타입 상수들입니다.
 
 **실용적인 소리들:**
-```python
-Sound.BEEP = "beep"           # 기본 비프음
-Sound.CHIME = "chime"         # 차임벨
-Sound.ALERT = "alert"         # 경고음
-Sound.NOTIFICATION = "notification"  # 알림음
-Sound.SUCCESS = "success"      # 성공음
-Sound.ERROR = "error"          # 오류음
-Sound.CLICK = "click"         # 클릭음
-Sound.TICK = "tick"           # 틱음
-```
+- `Sound.BEEP`
+- `Sound.CHIME`
+- `Sound.ALERT`
+- `Sound.NOTIFICATION`
+- `Sound.SUCCESS`
+- `Sound.ERROR`
+- `Sound.CLICK`
+- `Sound.TICK`
 
-**드럼 소리들 (16가지):**
-```python
-Sound.DRUM_KICK = "drum_kick"         # 킥 드럼
-Sound.DRUM_SNARE = "drum_snare"       # 스네어 드럼
-Sound.DRUM_HIHAT = "drum_hihat"       # 하이햇
-Sound.DRUM_TOM1 = "drum_tom1"         # 톰1
-Sound.DRUM_TOM2 = "drum_tom2"         # 톰2
-Sound.DRUM_TOM3 = "drum_tom3"         # 톰3
-Sound.DRUM_FLOOR_TOM = "drum_floor_tom"  # 플로어 톰
-Sound.DRUM_CRASH = "drum_crash"       # 크래시 심벌
-Sound.DRUM_RIDE = "drum_ride"         # 라이드 심벌
-Sound.DRUM_HIHAT_OPEN = "drum_hihat_open"  # 오픈 하이햇
-Sound.DRUM_HIHAT_CLOSED = "drum_hihat_closed"  # 클로즈드 하이햇
-Sound.DRUM_CHINA = "drum_china"       # 차이나 심벌
-Sound.DRUM_SPLASH = "drum_splash"     # 스플래시 심벌
-Sound.DRUM_COWBELL = "drum_cowbell"   # 카우벨
-Sound.DRUM_CLAP = "drum_clap"         # 클랩
-Sound.DRUM_SHAKER = "drum_shaker"     # 쉐이커
-```
+**드럼 소리들:**
+- `Sound.DRUM_KICK`
+- `Sound.DRUM_SNARE`
+- `Sound.DRUM_HIHAT`
+- `Sound.DRUM_TOM1`
+- `Sound.DRUM_TOM2`
+- `Sound.DRUM_TOM3`
+- `Sound.DRUM_FLOOR_TOM`
+- `Sound.DRUM_CRASH`
+- `Sound.DRUM_RIDE`
+- `Sound.DRUM_HIHAT_OPEN`
+- `Sound.DRUM_HIHAT_CLOSED`
+- `Sound.DRUM_CHINA`
+- `Sound.DRUM_SPLASH`
+- `Sound.DRUM_COWBELL`
+- `Sound.DRUM_CLAP`
+- `Sound.DRUM_SHAKER`
 
 #### `Melody`
 
 내장 멜로디 정의들입니다.
 
 ```python
+from codibit import Melody
+
 Melody.HAPPY_BIRTHDAY  # 생일 축하합니다
 Melody.TWINKLE_TWINKLE # 반짝반짝 작은 별
-Melody.MARY_HAD_A_LITTLE_LAMB  # 메리 양의 작은 양
+Melody.MARY_HAD_A_LITTLE_LAMB  # 비행기
 ```
 
 ### 메서드
 
-#### `buzzer.play_tone(frequency, duration_ms=1000, auto_stop=True)`
+#### `buzzer.play_tone(frequency, duration_ms=1000)`
 
-지정된 주파수로 음을 재생합니다.
+지정된 주파수로 음을 재생합니다. 지정된 시간 후 자동으로 정지됩니다.
 
 **매개변수:**
 - `frequency` (int): 주파수 (Hz)
 - `duration_ms` (int): 재생 시간 (밀리초, 기본값: 1000)
-- `auto_stop` (bool): 재생 완료 후 자동 정지 여부 (기본값: True)
 
 **예시:**
 ```python
-buzzer.play_tone(440, 1000)      # 440Hz를 1초간 재생
-buzzer.play_tone(262, 500)       # C4 음을 0.5초간 재생
+buzzer.play_tone(440, 1000)      # 440Hz를 1초간 재생 (자동 정지)
+buzzer.play_tone(262, 500)       # C4 음을 0.5초간 재생 (자동 정지)
 ```
 
 #### `buzzer.play_melody(melody, tempo=None)`
 
-지정된 템포로 멜로디를 재생합니다.
+음표 문자열을 사용하여 멜로디를 재생합니다.
 
 **매개변수:**
-- `melody` (list): 음표 문자열들의 리스트 (예: `['c4:4', 'd4:4', 'e4:8']`)
-- `tempo` (int): 템포 (BPM, 분당 비트 수), None이면 기본값 사용
+- `melody` (list): 음표 문자열 리스트 (예: ['c4:4', 'd4:4', 'e4:8'])
+- `tempo` (int, optional): BPM 단위의 템포, None이면 기본값 사용
 
-**예시:**
+**내장 멜로디:**
 ```python
-# 도레미파솔라시도
-melody = ['c4:4', 'd4:4', 'e4:4', 'f4:4', 'g4:4', 'a4:4', 'b4:4', 'c5:8']
-buzzer.play_melody(melody, tempo=120)
+from codibit import Melody
 
-# 베토벤 5번 교향곡 시작
-melody = ['r4:2', 'g', 'g', 'g', 'eb:8', 'r:2', 'f', 'f', 'f', 'd:8']
-buzzer.play_melody(melody)
+# 사용 가능한 내장 멜로디
+Melody.HAPPY_BIRTHDAY
+Melody.TWINKLE_TWINKLE
+Melody.MARY_HAD_A_LITTLE_LAMB
 ```
 
-#### `buzzer.play_song(song_name)`
-
-내장 곡을 재생합니다.
-
-**매개변수:**
-- `song_name` (str): 곡 이름 문자열
-
-**사용 가능한 곡들:**
-- `'happy_birthday'`: 생일 축하합니다
-- `'twinkle'`: 반짝반짝 작은 별
-- `'mary'`: 메리 양의 작은 양
-
 **예시:**
 ```python
-buzzer.play_song('happy_birthday')
-buzzer.play_song('twinkle')
+# 사용자 정의 멜로디
+buzzer.play_melody(['c4:4', 'd4:4', 'e4:4', 'f4:4', 'g4:8'], tempo=120)
+
+# 내장 멜로디
+from codibit import Melody
+buzzer.play_melody(Melody.HAPPY_BIRTHDAY, tempo=200)
 ```
 
 #### `buzzer.play_sound(sound_type)`
@@ -512,12 +527,14 @@ buzzer.play_tone(440, 1000)
 ### 전역 인스턴스
 
 ```python
-mic = Microphone()
+from codibit import microphone
+
+microphone  # 내장 마이크 센서
 ```
 
 ### 메서드
 
-#### `mic.read()`
+#### `microphone.read()`
 
 마이크 센서의 원시 ADC 값을 반환합니다.
 
@@ -526,11 +543,11 @@ mic = Microphone()
 
 **예시:**
 ```python
-value = mic.read()
+value = microphone.read()
 print(f"원시 값: {value}")
 ```
 
-#### `mic.get_level()`
+#### `microphone.get_level()`
 
 정규화된 소리 레벨을 반환합니다.
 
@@ -545,11 +562,11 @@ print(f"원시 값: {value}")
 
 **예시:**
 ```python
-level = mic.get_level()
+level = microphone.get_level()
 print(f"소리 레벨: {level}")
 ```
 
-#### `mic.is_sound_detected()`
+#### `microphone.is_sound_detected()`
 
 소리가 감지되는지 확인합니다.
 
@@ -558,11 +575,11 @@ print(f"소리 레벨: {level}")
 
 **예시:**
 ```python
-if mic.is_sound_detected():
+if microphone.is_sound_detected():
     print("소리가 감지되었습니다!")
 ```
 
-#### `mic.is_loud()`
+#### `microphone.is_loud()`
 
 소리 레벨이 큰지 확인합니다.
 
@@ -571,11 +588,11 @@ if mic.is_sound_detected():
 
 **예시:**
 ```python
-if mic.is_loud():
+if microphone.is_loud():
     print("너무 시끄럽습니다!")
 ```
 
-#### `mic.is_quiet()`
+#### `microphone.is_quiet()`
 
 소리 레벨이 조용한지 확인합니다.
 
@@ -584,7 +601,7 @@ if mic.is_loud():
 
 **예시:**
 ```python
-if mic.is_quiet():
+if microphone.is_quiet():
     print("매우 조용합니다.")
 ```
 
@@ -610,7 +627,9 @@ if mic.is_quiet():
 ### 전역 인스턴스
 
 ```python
-light = Light()
+from codibit import light
+
+light
 ```
 
 ### 메서드
@@ -668,32 +687,33 @@ level = light.read_level()
 ### 전역 인스턴스
 
 ```python
-display = Display()
+from codibit import display
+
+display
 ```
 
 ### 기본 제어 메서드
 
 #### `display.clear()`
 
-화면을 지우고 바로 출력에 반영합니다. 모든 픽셀을 0(꺼짐)으로 설정합니다.
-
-**예시:**
-```python
-display.clear()
-display.show()  # 화면에 반영
-```
-
-#### `display.clear_buffer()`
-
 버퍼만 지우고 출력은 하지 않습니다. 성능 최적화를 위해 여러 그리기 작업 전에 사용할 수 있습니다.
 
 **예시:**
 ```python
 # 성능 최적화를 위한 사용법
-display.clear_buffer()  # 버퍼만 지우기
+display.clear()  # 버퍼만 지우기
 display.draw_text("Hello", 0, 0)
 display.draw_circle(32, 32, 10)
 display.show()  # 마지막에 한 번만 출력
+```
+
+#### `display.clear_immediate()`
+
+화면을 지우고 바로 출력에 반영합니다. 모든 픽셀을 0(꺼짐)으로 설정합니다.
+
+**예시:**
+```python
+display.clear_immediate()  # 즉시 화면 지우기
 ```
 
 #### `display.show()`
@@ -834,45 +854,29 @@ display.draw_triangle(50, 10, 60, 40, 80, 40, fill=True)
 display.show()
 ```
 
-### 이미지 및 아이콘
+### 이미지
 
-#### `display.draw_image(image, x, y)`
+#### `display.draw_image(image, x, y, scale=1)`
 
-지정된 위치에 이미지를 그립니다.
+지정된 위치에 이미지를 그립니다. scale 매개변수로 이미지 크기를 조정할 수 있습니다.
 
 **매개변수:**
 - `image`: Image 객체
 - `x` (int): 시작 X 좌표
 - `y` (int): 시작 Y 좌표
+- `scale` (int): 스케일 크기 (1=원본 크기, 2=2배, 3=3배), 기본값: 1
 
 **예시:**
 ```python
 from codibit import Image
 
-# 내장 아이콘 그리기
+# 내장 이미지 그리기 (원본 크기)
 display.draw_image(Image.HEART, 0, 0)
 display.draw_image(Image.HAPPY, 20, 0)
-display.show()
-```
 
-#### `display.draw_icon(icon, x=0, y=0, scale=1)`
-
-ICONS 상수를 사용하여 지정된 위치에 내장 아이콘을 그립니다.
-
-**매개변수:**
-- `icon`: ICONS 상수 (예: ICONS.HEART, ICONS.HAPPY, ICONS.SAD)
-- `x` (int): X 좌표 (기본값: 0)
-- `y` (int): Y 좌표 (기본값: 0)
-- `scale` (int): 스케일 크기 (1=5x5, 2=10x10, 3=15x15)
-
-**예시:**
-```python
-from codibit import ICONS
-
-# 기본 크기로 하트 그리기
-display.draw_icon(ICONS.HEART, 0, 0)
-# 2배 크기로 웃는 얼굴 그리기
-display.draw_icon(ICONS.HAPPY, 20, 0, scale=2)
+# 이미지 확대해서 그리기
+display.draw_image(Image.HEART, 0, 20, scale=2)  # 2배 크기
+display.draw_image(Image.HAPPY, 40, 20, scale=3)  # 3배 크기
 display.show()
 ```
 
@@ -914,123 +918,16 @@ display.show()
 1. **픽셀 좌표**: 원점 (0,0)은 왼쪽 상단 모서리입니다
 2. **픽셀 값**: 0(꺼짐) 또는 1(켜짐)만 지원합니다
 3. **버퍼 출력**: 그리기 작업 후 반드시 `show()`를 호출해야 화면에 표시됩니다
-4. **내장 아이콘**: 64가지 다양한 아이콘을 사용할 수 있습니다 (Image 섹션 참조)
-5. **스케일링**: 아이콘은 더 나은 가시성을 위해 표시할 때 확대할 수 있습니다
+4. **내장 이미지**: 64가지 다양한 이미지를 사용할 수 있습니다 (Image 섹션 참조)
+5. **스케일링**: 이미지는 더 나은 가시성을 위해 표시할 때 확대할 수 있습니다
 6. **성능**: 여러 그리기 작업을 한 번에 처리한 후 `show()`를 호출하는 것이 효율적입니다
-7. **버퍼 제어**: `clear()`는 즉시 출력하지만, `clear_buffer()`는 버퍼만 지워서 성능 최적화에 유용합니다
-
-## ICONS
-
-타입 안전성과 IDE 지원을 위한 내장 아이콘 상수 API입니다.
-
-### 전역 인스턴스
-
-```python
-from codibit import ICONS
-```
-
-### 사용 가능한 아이콘
-
-ICONS 클래스는 모든 64개의 내장 아이콘에 대한 상수를 카테고리별로 제공합니다:
-
-#### 감정 표현
-- `ICONS.HEART`, `ICONS.HEART_SMALL`
-- `ICONS.HAPPY`, `ICONS.SAD`, `ICONS.CONFUSED`
-- `ICONS.ANGRY`, `ICONS.SURPRISED`, `ICONS.ASLEEP`
-- `ICONS.SILLY`, `ICONS.FABULOUS`, `ICONS.MEH`
-
-#### 기하학적 도형
-- `ICONS.STAR`, `ICONS.TRIANGLE`, `ICONS.TRIANGLE_LEFT`
-- `ICONS.CHESSBOARD`, `ICONS.DIAMOND`, `ICONS.DIAMOND_SMALL`
-- `ICONS.SQUARE`, `ICONS.SQUARE_SMALL`
-
-#### 동물 및 캐릭터
-- `ICONS.RABBIT`, `ICONS.COW`, `ICONS.DUCK`
-- `ICONS.TORTOISE`, `ICONS.BUTTERFLY`, `ICONS.STICKFIGURE`
-- `ICONS.GHOST`, `ICONS.GIRAFFE`, `ICONS.SKULL`, `ICONS.SNAKE`
-
-#### 도구 및 물건
-- `ICONS.SWORD`, `ICONS.UMBRELLA`, `ICONS.SCISSORS`
-- `ICONS.TSHIRT`, `ICONS.ROLLERSKATE`, `ICONS.HOUSE`
-
-#### 음악
-- `ICONS.MUSIC_CROTCHET`, `ICONS.MUSIC_QUAVER`, `ICONS.MUSIC_QUAVERS`
-- `ICONS.PITCHFORK`
-
-#### 특수
-- `ICONS.XMAS`, `ICONS.PACMAN`, `ICONS.TARGET`
-- `ICONS.O`, `ICONS.X`
-
-#### 시계 (1-12)
-- `ICONS.CLOCK1`부터 `ICONS.CLOCK12`
-
-#### 화살표 (8방향)
-- `ICONS.ARROW_N`, `ICONS.ARROW_NE`, `ICONS.ARROW_E`, `ICONS.ARROW_SE`
-- `ICONS.ARROW_S`, `ICONS.ARROW_SW`, `ICONS.ARROW_W`, `ICONS.ARROW_NW`
-
-### 아이콘 시퀀스
-
-#### `ICONS.ALL_CLOCKS`
-애니메이션을 위한 모든 12개 시계 아이콘 목록입니다.
-
-**예시:**
-```python
-from codibit import ICONS, display
-import time
-
-# 시계 애니메이션
-for clock in ICONS.ALL_CLOCKS:
-    display.clear()
-    display.draw_icon(clock, 0, 0)
-    display.show()
-    time.sleep(0.5)
-```
-
-#### `ICONS.ALL_ARROWS`
-애니메이션을 위한 모든 8개 화살표 아이콘 목록입니다.
-
-**예시:**
-```python
-from codibit import ICONS, display
-import time
-
-# 화살표 애니메이션
-for arrow in ICONS.ALL_ARROWS:
-    display.clear()
-    display.draw_icon(arrow, 0, 0)
-    display.show()
-    time.sleep(0.3)
-```
-
-### 디스플레이와 함께 사용
-
-```python
-from codibit import ICONS, display
-
-# 기본 사용법
-display.draw_icon(ICONS.HEART, 0, 0)
-display.draw_icon(ICONS.HAPPY, 20, 0)
-display.show()
-
-# 스케일링과 함께
-display.draw_icon(ICONS.STAR, 0, 0, scale=2)
-display.draw_icon(ICONS.DIAMOND, 40, 0, scale=3)
-display.show()
-```
-
-### 장점
-
-1. **타입 안전성**: IDE 자동완성 및 컴파일 타임 체크
-2. **오류 방지**: 아이콘 이름의 오타 없음
-3. **일관성**: 모든 아이콘이 동일한 명명 패턴을 따름
-4. **문서화**: 아이콘 타입별 명확한 분류
-5. **애니메이션 지원**: 일반적인 애니메이션을 위한 내장 시퀀스
+7. **버퍼 제어**: `clear()`는 버퍼만 지우지만, `clear_immediate()`는 즉시 출력하여 성능 최적화에 유용합니다
 
 ## 이미지 (Image)
 
 디스플레이용 이미지를 생성하고 조작하는 API입니다.
 
-### 전역 인스턴스
+### 사용법
 
 ```python
 from codibit import Image
@@ -1060,40 +957,40 @@ img = Image(5, 5)  # 5x5 빈 이미지 생성
 
 **예시:**
 ```python
-heart = Image('09090:99999:99999:09990:00900:')
+heart = Image('01010:11111:11111:01110:00100:')
 ```
 
 ### 메서드
 
 #### `image.set_pixel(x, y, value)`
 
-이미지의 픽셀 밝기를 설정합니다.
+이미지의 픽셀 상태를 설정합니다.
 
 **매개변수:**
 - `x` (int): X 좌표
 - `y` (int): Y 좌표
-- `value` (int): 밝기 값 (0-9)
+- `value` (int): 픽셀 상태 (0 또는 1)
 
 **예시:**
 ```python
 img = Image(5, 5)
-img.set_pixel(2, 2, 9)  # 중앙 픽셀을 최대 밝기로 설정
+img.set_pixel(2, 2, 1)  # 중앙 픽셀을 켬
 ```
 
 #### `image.get_pixel(x, y)`
 
-이미지의 픽셀 밝기를 반환합니다.
+이미지의 픽셀 상태를 반환합니다.
 
 **매개변수:**
 - `x` (int): X 좌표
 - `y` (int): Y 좌표
 
 **반환값:**
-- `int`: 픽셀 밝기 (0-9)
+- `int`: 픽셀 상태 (0 또는 1)
 
 **예시:**
 ```python
-brightness = img.get_pixel(2, 2)
+pixel_state = img.get_pixel(2, 2)
 ```
 
 #### `image.width()`
@@ -1185,18 +1082,18 @@ import { IMAGE_STRINGS } from '@site/src/constants/imageStrings';
 
 ### 내장 이미지
 
-Image 클래스는 디스플레이에서 사용할 수 있는 64개의 내장 이미지를 제공합니다. 시각적 미리보기가 포함된 완전한 참조는 [내장 이미지 및 아이콘](./builtin-images-ko.md)을 참조하세요.
+Image 클래스는 디스플레이에서 사용할 수 있는 64개의 내장 이미지를 제공합니다. 시각적 미리보기가 포함된 완전한 참조는 [내장 이미지](./builtin-images-ko.md)을 참조하세요.
 
-#### 예시 아이콘
+#### 예시 이미지
 
-| 아이콘 | 미리보기 | 아이콘 | 미리보기 | 아이콘 | 미리보기 |
+| 이미지 | 미리보기 | 이미지 | 미리보기 | 이미지 | 미리보기 |
 |--------|----------|--------|----------|--------|----------|
-| `Image.HEART` / `ICONS.HEART` | <ImagePreview imageString={IMAGE_STRINGS.HEART} /> | `Image.HAPPY` / `ICONS.HAPPY` | <ImagePreview imageString={IMAGE_STRINGS.HAPPY} /> | `Image.STAR` / `ICONS.STAR` | <ImagePreview imageString={IMAGE_STRINGS.STAR} /> |
-| `Image.SAD` / `ICONS.SAD` | <ImagePreview imageString={IMAGE_STRINGS.SAD} /> | `Image.DIAMOND` / `ICONS.DIAMOND` | <ImagePreview imageString={IMAGE_STRINGS.DIAMOND} /> | `Image.RABBIT` / `ICONS.RABBIT` | <ImagePreview imageString={IMAGE_STRINGS.RABBIT} /> |
+| `Image.HEART` | <ImagePreview imageString={IMAGE_STRINGS.HEART} /> | `Image.HAPPY` | <ImagePreview imageString={IMAGE_STRINGS.HAPPY} /> | `Image.STAR` | <ImagePreview imageString={IMAGE_STRINGS.STAR} /> |
+| `Image.SAD` | <ImagePreview imageString={IMAGE_STRINGS.SAD} /> | `Image.DIAMOND` | <ImagePreview imageString={IMAGE_STRINGS.DIAMOND} /> | `Image.RABBIT` | <ImagePreview imageString={IMAGE_STRINGS.RABBIT} /> |
 
-#### 아이콘 카테고리
+#### 이미지 카테고리
 
-- **기본 아이콘**: HEART, HAPPY, SAD, STAR, CONFUSED, ANGRY, SURPRISED 등
+- **기본 이미지**: HEART, HAPPY, SAD, STAR, CONFUSED, ANGRY, SURPRISED 등
 - **기하학적 도형**: TRIANGLE, DIAMOND, SQUARE, CHESSBOARD 등
 - **동물 및 캐릭터**: RABBIT, COW, DUCK, GHOST, GIRAFFE 등
 - **도구 및 물건**: SWORD, UMBRELLA, HOUSE, TARGET 등
@@ -1204,27 +1101,7 @@ Image 클래스는 디스플레이에서 사용할 수 있는 64개의 내장 �
 - **시계 얼굴**: 시간 애니메이션을 위한 CLOCK1부터 CLOCK12까지
 - **화살표**: 8방향 화살표 (N, NE, E, SE, S, SW, W, NW)
 
-**📖 모든 64개 아이콘과 시각적 미리보기가 포함된 완전한 참조는 [내장 이미지 및 아이콘](./builtin-images-ko.md)을 참조하세요.**
-
-### 이미지 연산
-
-#### 덧셈 (`+`)
-
-두 이미지를 각 픽셀에서 최대 밝기를 취하여 결합합니다.
-
-**예시:**
-```python
-combined = Image.HEART + Image.HAPPY
-```
-
-#### 곱셈 (`*`)
-
-이미지의 밝기를 조정합니다.
-
-**예시:**
-```python
-brighter = Image.HEART * 2  # 밝기를 2배로
-```
+**📖 모든 64개 이미지와 시각적 미리보기가 포함된 완전한 참조는 [내장 이미지](./builtin-images-ko.md)을 참조하세요.**
 
 ### 디스플레이와 함께 사용
 
@@ -1234,31 +1111,67 @@ brighter = Image.HEART * 2  # 밝기를 2배로
 ```python
 from codibit import display, Image
 
-# 내장 아이콘 그리기
+# 내장 이미지 그리기
 display.draw_image(Image.HEART, 0, 0)
 display.draw_image(Image.HAPPY, 20, 0)
 display.show()
 
 # 사용자 정의 이미지 생성 및 그리기
-custom = Image('90009:09090:00900:09090:90009:')
+custom = Image('10001:01010:00100:01010:10001:')
 display.draw_image(custom, 0, 20)
 display.show()
 
-# 아이콘 스케일링
-from codibit import ICONS
-display.draw_icon(ICONS.HAPPY, 0, 0, scale=2)
-display.draw_icon(ICONS.SAD, 40, 0, scale=3)
+# 이미지 스케일링
+display.draw_image(Image.HEART, 0, 0, scale=2)
+display.draw_image(Image.HAPPY, 40, 0, scale=3)
 display.show()
+```
+
+### 이미지 리스트
+
+Image 클래스는 애니메이션과 반복 작업을 위한 편리한 이미지 리스트를 제공합니다:
+
+#### `Image.ALL_CLOCKS`
+
+시계 애니메이션을 위한 12개의 시계 이미지 리스트입니다.
+
+**예시:**
+```python
+# 시계 바늘 회전 애니메이션
+for clock in Image.ALL_CLOCKS:
+    display.clear()
+    display.draw_image(clock, 0, 0)
+    display.show()
+    time.sleep(0.1)
+```
+
+#### `Image.ALL_ARROWS`
+
+8방향 화살표 이미지 리스트입니다. 회전하는 화살표 애니메이션에 유용합니다.
+
+**예시:**
+```python
+# 회전하는 화살표 애니메이션
+for arrow in Image.ALL_ARROWS:
+    display.clear()
+    display.draw_image(arrow, 0, 0)
+    display.show()
+    time.sleep(0.2)
+
+# 랜덤 화살표 선택
+import random
+random_arrow = random.choice(Image.ALL_ARROWS)
+display.draw_image(random_arrow, 0, 0, scale=2)
 ```
 
 ### 주의사항
 
 1. **문자열 형식**: 이미지는 ':'로 행을 구분하는 문자열에서 생성할 수 있습니다
-2. **밝기 스케일**: 0-9 스케일 (0=꺼짐, 9=최대 밝기)
-3. **내장 아이콘**: 즉시 사용할 수 있는 64가지 다양한 아이콘
+2. **픽셀 상태**: 0-1 스케일 (0=꺼짐, 1=켜짐)
+3. **내장 이미지**: 즉시 사용할 수 있는 64가지 다양한 이미지
 4. **호환성**: API는 Image 인터페이스와 호환됩니다
 5. **디스플레이 통합**: 이미지는 `draw_image()` 메서드로 디스플레이에 그릴 수 있습니다
-6. **스케일링**: 아이콘은 ICONS 상수를 사용한 `draw_icon()` 메서드로 더 나은 가시성을 위해 확대할 수 있습니다
+6. **스케일링**: 이미지는 `draw_image()` 메서드로 더 나은 가시성을 위해 확대할 수 있습니다
 7. **버퍼 기반**: 이미지 그리기도 버퍼 기반으로 작동하므로 `show()` 호출이 필요합니다
 
 ## 가속도계 (Accelerometer)
@@ -1268,7 +1181,9 @@ display.show()
 ### 전역 인스턴스
 
 ```python
-accelerometer = Accelerometer()
+from codibit import accelerometer
+
+accelerometer
 ```
 
 ### 메서드
@@ -1443,15 +1358,27 @@ Codi:bit 보드의 가속도계는 보드의 실제 물리적 방향을 기준�
 
 ## Magnetometer
 
-Codi:bit의 자기장 센서를 제어하는 클래스입니다. MMC5603 자기장 센서를 사용하여 3축 자기장을 측정하고 나침반 기능을 제공합니다.
+Codi:bit의 자기장 센서를 제어하는 API입니다. MMC5603 자기장 센서를 사용하여 3축 자기장을 측정하고 나침반 기능을 제공합니다.
+
+### 전역 인스턴스
+
+```python
+from codibit import magnetometer
+
+magnetometer  # 내장 자기장 센서
+```
 
 ### 기본 사용법
 
 ```python
 from codibit import *
 
-# 자기장 센서 초기화
-magnetometer = Magnetometer()
+# 자기장 센서 보정 (사용 전 필수)
+print("자기장 센서 보정을 시작합니다...")
+print("보드를 공중에 들고 천천히 8자를 여러 번 그려주세요")
+print("약 20초 동안 보정이 진행됩니다...")
+magnetometer.calibrate()
+print("보정 완료!")
 
 # 자기장 값 읽기
 x = magnetometer.get_x()
@@ -1464,18 +1391,17 @@ heading = magnetometer.get_heading()
 
 ### 메서드
 
-#### `Magnetometer.__init__(scl_pin=I2C_SCL_PIN, sda_pin=I2C_SDA_PIN, addr=I2C_MAGNETOMETER_ADDR)`
+#### `magnetometer.calibrate()`
 
-자기장 센서를 초기화합니다.
-
-**매개변수:**
-- `scl_pin` (int): I2C SCL 핀 번호 (기본값: I2C_SCL_PIN)
-- `sda_pin` (int): I2C SDA 핀 번호 (기본값: I2C_SDA_PIN)
-- `addr` (int): I2C 장치 주소 (기본값: I2C_MAGNETOMETER_ADDR)
+자기장 센서를 보정합니다. 정확한 측정을 위해 보드를 공중에 들고 천천히 8자를 여러 번 그리는 방법으로 20초 정도 보정을 수행합니다.
 
 **예시:**
 ```python
-magnetometer = Magnetometer()
+print("자기장 센서 보정을 시작합니다...")
+print("보드를 공중에 들고 천천히 8자를 여러 번 그려주세요")
+print("약 20초 동안 보정이 진행됩니다...")
+magnetometer.calibrate()
+print("보정 완료!")
 ```
 
 #### `magnetometer.calibrate()`
@@ -1556,12 +1482,9 @@ strength = magnetometer.get_strength()
 print(f"자기장 강도: {strength}")
 ```
 
-#### `magnetometer.get_heading(upright=False)`
+#### `magnetometer.get_heading()`
 
-나침반 방향을 반환합니다.
-
-**매개변수:**
-- `upright` (bool): 수직 상태에서의 방향 계산 여부 (기본값: False)
+나침반 방향을 반환합니다. 보드가 수평 상태일 때 가장 정확한 방향을 제공합니다.
 
 **반환값:**
 - `float`: 나침반 방향 (0-360도)
@@ -1611,7 +1534,7 @@ Codi:bit 보드의 자기장 센서는 보드의 실제 물리적 방향을 기�
 1. **보정**: 정확한 측정을 위해 측정 전에 `calibrate()` 호출
 2. **금속 물체**: 주변의 금속 물체가 측정에 영향을 줄 수 있음
 3. **전자기장**: 전자기장이 있는 환경에서는 정확도가 떨어질 수 있음
-4. **수평 상태**: 나침반 기능은 보드가 수평 상태일 때 가장 정확
+4. **수평 상태**: 나침반 기능은 보드가 수평 상태일 때 가장 정확함
 5. **환경 영향**: 주변 환경에 따라 자기장 값이 크게 변화할 수 있음
 6. **보정 필요**: 처음 사용 시나 환경이 바뀔 때 보정 권장
 
@@ -1622,7 +1545,9 @@ Codi:bit 보드의 자기장 센서는 보드의 실제 물리적 방향을 기�
 ### 전역 인스턴스
 
 ```python
-gyroscope = Gyroscope()
+from codibit import gyroscope
+
+gyroscope
 ```
 
 ### 메서드

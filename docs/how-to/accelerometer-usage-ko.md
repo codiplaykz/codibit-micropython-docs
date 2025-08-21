@@ -213,7 +213,7 @@ try:
 
 except KeyboardInterrupt:
     print("\n모니터링 중지됨")
-    rgb_led.off()
+    rgb_led.turn_off_all()
 ```
 
 ## 문제 해결

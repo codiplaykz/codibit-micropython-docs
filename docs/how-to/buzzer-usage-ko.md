@@ -10,16 +10,46 @@ Codi:bit 보드의 내장 버저를 사용하여 소리, 멜로디, 음악을 �
 from codibit import buzzer
 ```
 
-## 간단한 음 재생
+## 단순한 음 재생
 
 ### 기본 음
 
-특정 주파수로 간단한 음을 재생합니다:
+특정 주파수로 단순한 음을 재생합니다. 지정된 시간 후 자동으로 정지됩니다:
 
 ```python
-# A4 음을 1초간 재생
+# A4 음을 1초간 재생 (자동 정지)
 buzzer.play_tone(440, 1000)
+
+# 저음 재생
+buzzer.play_tone(200, 500)
+
+# 고음 재생
+buzzer.play_tone(1000, 2000)
 ```
+
+### 주파수 예시
+
+일반적인 음악 주파수:
+
+```python
+# 음악 음표 주파수 (Hz)
+C4 = 262   # 중간 C
+D4 = 294
+E4 = 330
+F4 = 349
+G4 = 392
+A4 = 440   # 표준 조율 기준
+B4 = 494
+C5 = 523
+
+# 간단한 C 장음계 재생
+notes = [C4, D4, E4, F4, G4, A4, B4, C5]
+for note in notes:
+    buzzer.play_tone(note, 500)
+    time.sleep(0.1)
+```
+
+## 멜로디 재생
 
 ### 음표 문자열 사용
 
@@ -28,63 +58,11 @@ buzzer.play_tone(440, 1000)
 ```python
 # C 장음계 재생
 buzzer.play_melody(['c4:4', 'd4:4', 'e4:4', 'f4:4', 'g4:4', 'a4:4', 'b4:4', 'c5:8'], tempo=120)
+
+# 간단한 멜로디
+melody = ['c4:4', 'e4:4', 'g4:8']
+buzzer.play_melody(melody, tempo=100)
 ```
-
-## 미리 정의된 소리 재생
-
-### 실용적인 소리
-
-다양한 목적에 맞는 유용한 소리를 재생합니다:
-
-```python
-from codibit.builtin.buzzer import Sound
-
-# 기본 소리들
-buzzer.play_sound(Sound.BEEP)        # 기본 비프음
-buzzer.play_sound(Sound.CHIME)       # 차임벨
-buzzer.play_sound(Sound.ALERT)       # 경고음
-buzzer.play_sound(Sound.NOTIFICATION) # 알림음
-buzzer.play_sound(Sound.SUCCESS)     # 성공음
-buzzer.play_sound(Sound.ERROR)       # 오류음
-buzzer.play_sound(Sound.CLICK)       # 클릭음
-buzzer.play_sound(Sound.TICK)        # 틱음
-```
-
-### 드럼 소리
-
-리듬과 타악기를 위한 드럼 소리를 재생합니다:
-
-```python
-from codibit.builtin.buzzer import Sound
-
-# 기본 드럼킷
-buzzer.play_sound(Sound.DRUM_KICK)      # 킥 드럼
-buzzer.play_sound(Sound.DRUM_SNARE)     # 스네어 드럼
-buzzer.play_sound(Sound.DRUM_HIHAT)     # 하이햇
-buzzer.play_sound(Sound.DRUM_CRASH)     # 크래시 심벌
-
-# 추가 드럼들
-buzzer.play_sound(Sound.DRUM_TOM1)      # 톰1
-buzzer.play_sound(Sound.DRUM_TOM2)      # 톰2
-buzzer.play_sound(Sound.DRUM_TOM3)      # 톰3
-buzzer.play_sound(Sound.DRUM_FLOOR_TOM) # 플로어 톰
-
-# 심벌들
-buzzer.play_sound(Sound.DRUM_RIDE)      # 라이드 심벌
-buzzer.play_sound(Sound.DRUM_CHINA)     # 차이나 심벌
-buzzer.play_sound(Sound.DRUM_SPLASH)    # 스플래시 심벌
-
-# 하이햇 변형
-buzzer.play_sound(Sound.DRUM_HIHAT_OPEN)   # 오픈 하이햇
-buzzer.play_sound(Sound.DRUM_HIHAT_CLOSED) # 클로즈드 하이햇
-
-# 타악기
-buzzer.play_sound(Sound.DRUM_COWBELL)   # 카우벨
-buzzer.play_sound(Sound.DRUM_CLAP)      # 클랩
-buzzer.play_sound(Sound.DRUM_SHAKER)    # 쉐이커
-```
-
-## 멜로디 재생
 
 ### 사용자 정의 멜로디
 
@@ -93,14 +71,14 @@ buzzer.play_sound(Sound.DRUM_SHAKER)    # 쉐이커
 ```python
 # 간단한 멜로디 만들기 (C 장음계)
 melody = [
-    'c4:4',  # 도
-    'd4:4',  # 레
-    'e4:4',  # 미
-    'f4:4',  # 파
-    'g4:4',  # 솔
-    'a4:4',  # 라
-    'b4:4',  # 시
-    'c5:8'   # 도 (높은 옥타브, 긴 음)
+    'c4:4',  # C
+    'd4:4',  # D
+    'e4:4',  # E
+    'f4:4',  # F
+    'g4:4',  # G
+    'a4:4',  # A
+    'b4:4',  # B
+    'c5:8'   # C (한 옥타브 높음, 긴 음)
 ]
 
 # 120 BPM 템포로 멜로디 재생
@@ -123,9 +101,9 @@ chord_progression = [
 buzzer.play_melody(chord_progression, tempo=140)
 ```
 
-### 베토벤 5번 교향곡 시작
+### 유명한 멜로디
 
-유명한 멜로디를 재생해보세요:
+잘 알려진 멜로디를 재생합니다:
 
 ```python
 # 베토벤 5번 교향곡 시작 부분
@@ -134,26 +112,128 @@ beethoven_5th = [
 ]
 
 buzzer.play_melody(beethoven_5th, tempo=120)
+
+# 징글벨
+jingle_bells = [
+    'e4:4', 'e4:4', 'e4:8', 'e4:4', 'e4:4', 'e4:8',
+    'e4:4', 'g4:4', 'c4:4', 'd4:4', 'e4:8'
+]
+
+buzzer.play_melody(jingle_bells, tempo=150)
 ```
 
 ## 내장 곡 재생
 
-미리 정의된 곡을 재생합니다:
+Melody 클래스를 사용하여 미리 정의된 곡을 재생합니다:
 
 ```python
+from codibit.builtin.buzzer import Melody
+
 # 생일 축하합니다
-buzzer.play_song('happy_birthday')
+buzzer.play_melody(Melody.HAPPY_BIRTHDAY, tempo=200)
 
 # 반짝반짝 작은 별
-buzzer.play_song('twinkle')
+buzzer.play_melody(Melody.TWINKLE_TWINKLE, tempo=180)
 
 # 메리 양의 작은 양
-buzzer.play_song('mary')
+buzzer.play_melody(Melody.MARY_HAD_A_LITTLE_LAMB, tempo=170)
+```
+
+## 미리 정의된 소리 재생
+
+### 실용적인 소리
+
+다양한 목적에 유용한 소리를 재생합니다:
+
+```python
+from codibit import *
+
+# 기본 소리
+buzzer.play_sound(Sound.BEEP)        # 기본 비프음
+buzzer.play_sound(Sound.CHIME)       # 차임벨
+buzzer.play_sound(Sound.ALERT)       # 경고음
+buzzer.play_sound(Sound.NOTIFICATION) # 알림음
+buzzer.play_sound(Sound.SUCCESS)     # 성공음
+buzzer.play_sound(Sound.ERROR)       # 오류음
+buzzer.play_sound(Sound.CLICK)       # 클릭음
+buzzer.play_sound(Sound.TICK)        # 틱음
+```
+
+### 드럼 소리
+
+리듬과 타악기를 위한 드럼 소리를 재생합니다:
+
+```python
+from codibit import *
+
+# 기본 드럼 키트
+buzzer.play_sound(Sound.DRUM_KICK)      # 킥 드럼
+buzzer.play_sound(Sound.DRUM_SNARE)     # 스네어 드럼
+buzzer.play_sound(Sound.DRUM_HIHAT)     # 하이햇
+buzzer.play_sound(Sound.DRUM_CRASH)     # 크래시 심벌
+
+# 추가 드럼
+buzzer.play_sound(Sound.DRUM_TOM1)      # 톰 1
+buzzer.play_sound(Sound.DRUM_TOM2)      # 톰 2
+buzzer.play_sound(Sound.DRUM_TOM3)      # 톰 3
+buzzer.play_sound(Sound.DRUM_FLOOR_TOM) # 플로어 톰
+
+# 심벌
+buzzer.play_sound(Sound.DRUM_RIDE)      # 라이드 심벌
+buzzer.play_sound(Sound.DRUM_CHINA)     # 차이나 심벌
+buzzer.play_sound(Sound.DRUM_SPLASH)    # 스플래시 심벌
+
+# 하이햇 변형
+buzzer.play_sound(Sound.DRUM_HIHAT_OPEN)   # 오픈 하이햇
+buzzer.play_sound(Sound.DRUM_HIHAT_CLOSED) # 클로즈드 하이햇
+
+# 타악기
+buzzer.play_sound(Sound.DRUM_COWBELL)   # 카우벨
+buzzer.play_sound(Sound.DRUM_CLAP)      # 클랩
+buzzer.play_sound(Sound.DRUM_SHAKER)    # 쉐이커
+```
+
+### 드럼 패턴 만들기
+
+간단한 드럼 패턴을 만듭니다:
+
+```python
+from codibit import *
+import time
+
+# 간단한 록 비트
+def play_rock_beat():
+    for _ in range(4):  # 4마디
+        # 1박자
+        buzzer.play_sound(Sound.DRUM_KICK)
+        time.sleep(0.1)
+        buzzer.play_sound(Sound.DRUM_HIHAT)
+        time.sleep(0.1)
+
+        # 2박자
+        buzzer.play_sound(Sound.DRUM_SNARE)
+        time.sleep(0.1)
+        buzzer.play_sound(Sound.DRUM_HIHAT)
+        time.sleep(0.1)
+
+        # 3박자
+        buzzer.play_sound(Sound.DRUM_KICK)
+        time.sleep(0.1)
+        buzzer.play_sound(Sound.DRUM_HIHAT)
+        time.sleep(0.1)
+
+        # 4박자
+        buzzer.play_sound(Sound.DRUM_SNARE)
+        time.sleep(0.1)
+        buzzer.play_sound(Sound.DRUM_HIHAT)
+        time.sleep(0.1)
+
+play_rock_beat()
 ```
 
 ## 템포 제어
 
-템포를 설정하고 조정합니다:
+멜로디의 템포를 설정하고 조정합니다:
 
 ```python
 # 템포 설정
@@ -191,6 +271,12 @@ buzzer.set_volume(3)  # 크게
 # 큰 볼륨으로 음 재생
 buzzer.set_volume(3)
 buzzer.play_tone(440, 1000)
+
+# 볼륨 페이드 효과 만들기
+for volume in range(4):
+    buzzer.set_volume(volume)
+    buzzer.play_tone(440, 500)
+    time.sleep(0.1)
 ```
 
 ## 소리 정지
@@ -203,6 +289,10 @@ buzzer.play_tone(440, 10000)  # 10초
 
 # 즉시 정지
 buzzer.stop()
+
+# 멜로디 정지
+buzzer.play_melody(['c4:4', 'd4:4', 'e4:4', 'f4:4', 'g4:8'])
+buzzer.stop()  # 멜로디 정지
 ```
 
 ## 완전한 예시
@@ -210,9 +300,10 @@ buzzer.stop()
 다양한 버저 기능을 보여주는 완전한 예시입니다:
 
 ```python
-from codibit import buzzer
-from codibit.builtin.buzzer import Sound
+from codibit import *
 import time
+
+print("=== Codi:bit 버저 데모 ===")
 
 # 볼륨 테스트
 print("볼륨 레벨 테스트 중...")
@@ -255,7 +346,7 @@ for bpm in [60, 120, 180]:
 
 # 내장 곡
 print("생일 축하합니다 재생 중...")
-buzzer.play_song('happy_birthday')
+buzzer.play_melody(Melody.HAPPY_BIRTHDAY, tempo=200)
 
 print("버저 데모 완료!")
 ```
@@ -288,12 +379,36 @@ print("버저 데모 완료!")
 - **1틱**: 60000 / BPM / ticks_per_beat 밀리초
 - **기본값**: 1틱 = 125ms, 1박자 = 500ms
 
+## API 요약
+
+### 핵심 메서드
+
+- `buzzer.play_tone(frequency, duration_ms)` - 단일 음 재생 (자동 정지)
+- `buzzer.play_melody(melody, tempo=None)` - 음표 문자열로 멜로디 재생
+- `buzzer.play_sound(sound_type)` - 미리 정의된 소리 재생
+- `buzzer.stop()` - 현재 소리 정지
+
+### 제어 메서드
+
+- `buzzer.set_volume(volume)` - 볼륨 설정 (0-3)
+- `buzzer.set_tempo(ticks=4, bpm=120)` - 템포 설정
+- `buzzer.get_tempo()` - 현재 템포 가져오기
+
+### 내장 리소스
+
+- `Melody.HAPPY_BIRTHDAY` - 생일 축하합니다
+- `Melody.TWINKLE_TWINKLE` - 반짝반짝 작은 별
+- `Melody.MARY_HAD_A_LITTLE_LAMB` - 메리 양의 작은 양
+- `Sound.BEEP`, `Sound.CHIME` 등 - 실용적인 소리
+- `Sound.DRUM_KICK`, `Sound.DRUM_SNARE` 등 - 드럼 소리
+
 ## 팁
 
-1. **중단**: Ctrl+C로 모든 멜로디나 곡 재생을 중단할 수 있습니다
-2. **볼륨 범위**: 볼륨 레벨은 0 (음소거)부터 3 (크게)까지입니다
-3. **템포**: 템포는 BPM (분당 비트 수)로 지정됩니다
-4. **음표 표기법**: 음표는 `NOTE[octave][:duration]` 형식을 사용하세요
-5. **소리 타입**: 8가지 실용적인 소리와 16가지 드럼 소리를 사용할 수 있습니다
-6. **드럼 사운드**: 16가지 다양한 드럼 소리를 제공합니다
-7. **틱 시스템**: 음악의 기본 시간 단위는 틱이며, 템포에 따라 길이가 결정됩니다
+1. **단순하고 직관적**: API는 `auto_stop` 같은 복잡한 파라미터 없이 단순하게 설계되었습니다
+2. **자동 정지**: 모든 음은 지정된 시간 후 자동으로 정지됩니다
+3. **중단**: Ctrl+C로 모든 멜로디나 곡 재생을 중단할 수 있습니다
+4. **볼륨 범위**: 볼륨 레벨은 0 (음소거)부터 3 (크게)까지입니다
+5. **템포**: 템포는 BPM (분당 비트 수)로 지정됩니다
+6. **음표 표기법**: 음표는 `NOTE[octave][:duration]` 형식을 사용하세요
+7. **소리 타입**: 8가지 실용적인 소리와 16가지 드럼 소리를 사용할 수 있습니다
+8. **틱 시스템**: 음악의 기본 시간 단위는 틱이며, 템포에 따라 길이가 결정됩니다

@@ -14,6 +14,7 @@ The simplest way to detect button presses is using the `is_pressed()` method.
 
 ```python
 from codibit import *
+import time
 
 while True:
     # Check if Button A is currently pressed
@@ -25,7 +26,7 @@ while True:
         print("Button B is pressed!")
 
     # Small delay to avoid too frequent checks
-    sleep(0.1)
+    time.sleep(0.1)
 ```
 
 ## Detecting Button Press Events
@@ -34,6 +35,7 @@ Use `was_pressed()` to detect when a button was pressed and released (button pre
 
 ```python
 from codibit import *
+import time
 
 print("Press buttons A or B...")
 
@@ -47,7 +49,7 @@ while True:
         print("Button B was pressed!")
 
     # Small delay
-    sleep(0.1)
+    time.sleep(0.1)
 ```
 
 ## Counting Button Presses
@@ -56,12 +58,13 @@ The `get_presses()` method returns the total number of button presses and resets
 
 ```python
 from codibit import *
+import time
 
 print("Press buttons multiple times, then wait 5 seconds for count...")
 
 while True:
     # Wait 5 seconds
-    sleep(5)
+    time.sleep(5)
 
     # Get the number of times Button A was pressed
     a_presses = button_a.get_presses()
@@ -83,6 +86,7 @@ The `get_press_count()` method returns the total accumulated number of button pr
 
 ```python
 from codibit import *
+import time
 
 print("Press buttons to see real-time accumulated count...")
 
@@ -96,7 +100,7 @@ while True:
     # Real-time display
     print(f"\rTotal presses - A: {total_a}, B: {total_b}", end="")
 
-    sleep(0.1)
+    time.sleep(0.1)
 ```
 
 ## get_presses() vs get_press_count() Comparison
@@ -105,9 +109,10 @@ It's important to understand the difference between these two methods:
 
 ```python
 from codibit import *
+import time
 
 print("Press buttons multiple times...")
-sleep(3)
+time.sleep(3)
 
 # First check
 presses_a = button_a.get_presses()  # Counter is reset
@@ -116,7 +121,7 @@ count_a = button_a.get_press_count()  # Counter is not reset
 print(f"get_presses(): {presses_a} (reset)")
 print(f"get_press_count(): {count_a} (accumulated)")
 
-sleep(2)
+time.sleep(2)
 
 # Second check
 presses_a2 = button_a.get_presses()  # 0 (already reset)
@@ -132,6 +137,7 @@ You can create different behaviors for each button.
 
 ```python
 from codibit import *
+import time
 
 counter = 0
 print("Button A: increment, Button B: decrement")
@@ -146,7 +152,7 @@ while True:
         counter -= 1
         print(f"Counter: {counter}")
 
-    sleep(0.1)
+    time.sleep(0.1)
 ```
 
 ## Combining Button States
@@ -155,6 +161,7 @@ You can check multiple buttons at the same time.
 
 ```python
 from codibit import *
+import time
 
 print("Press both buttons A and B together...")
 
@@ -170,7 +177,7 @@ while True:
         if button_b.was_pressed():
             print("Only Button B was pressed")
 
-    sleep(0.1)
+    time.sleep(0.1)
 ```
 
 ## Simple Menu System
@@ -179,6 +186,7 @@ Create a basic menu system using buttons.
 
 ```python
 from codibit import *
+import time
 
 menu_items = ["Start Game", "Settings", "Exit"]
 current_item = 0
@@ -194,7 +202,7 @@ while True:
     if button_a.was_pressed():
         # Select current menu item
         print(f"Selected: {menu_items[current_item]}")
-        sleep(1)
+        time.sleep(1)
         show_menu()
 
     if button_b.was_pressed():
@@ -202,7 +210,7 @@ while True:
         current_item = (current_item + 1) % len(menu_items)
         show_menu()
 
-    sleep(0.1)
+    time.sleep(0.1)
 ```
 
 ## Tips and Best Practices

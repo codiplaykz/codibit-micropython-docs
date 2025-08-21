@@ -213,7 +213,7 @@ try:
 
 except KeyboardInterrupt:
     print("\nMonitoring stopped")
-    rgb_led.off()
+    rgb_led.turn_off_all()
 ```
 
 ### 5. Data Logging

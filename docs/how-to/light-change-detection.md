@@ -14,6 +14,7 @@ The simplest way to detect light changes is to compare the current reading with 
 
 ```python
 from codibit import *
+import time
 
 # Store the previous light level
 previous_level = light.read_level()
@@ -30,7 +31,7 @@ while True:
         previous_level = current_level
 
     # Small delay to avoid too frequent checks
-    sleep(0.5)
+    time.sleep(0.5)
 ```
 
 ## Responding to Light Changes
@@ -58,7 +59,7 @@ while True:
 
         previous_level = current_level
 
-    sleep(0.5)
+    time.sleep(0.5)
 ```
 
 ## Advanced: Threshold-Based Detection
@@ -67,6 +68,7 @@ For more precise control, you can set specific thresholds for light changes.
 
 ```python
 from codibit import *
+import time
 
 previous_level = light.read_level()
 threshold = 2  # Minimum change to trigger detection
@@ -90,7 +92,7 @@ while True:
 
         previous_level = current_level
 
-    sleep(0.3)
+    time.sleep(0.3)
 ```
 
 ## Practical Applications
@@ -99,6 +101,7 @@ while True:
 
 ```python
 from codibit import *
+import time
 
 previous_level = light.read_level()
 change_count = 0
@@ -115,13 +118,14 @@ while True:
 
         previous_level = current_level
 
-    sleep(0.5)
+    time.sleep(0.5)
 ```
 
 ### 2. Light-Based Alerts
 
 ```python
 from codibit import *
+import time
 
 previous_level = light.read_level()
 
@@ -132,14 +136,14 @@ while True:
         # Alert based on light level
         if current_level <= 2:
             print("ALERT: Very dark environment!")
-            buzzer.beep(1000, 200)  # Beep for 200ms
+            buzzer.play_tone(1000, 200)  # Beep for 200ms
         elif current_level >= 7:
             print("ALERT: Very bright environment!")
-            buzzer.beep(2000, 200)  # Higher pitch beep
+            buzzer.play_tone(2000, 200)  # Higher pitch beep
 
         previous_level = current_level
 
-    sleep(0.5)
+    time.sleep(0.5)
 ```
 
 ## Tips and Best Practices

@@ -198,14 +198,7 @@ For accurate compass readings, calibrate the magnetometer:
 magnetometer.calibrate()
 ```
 
-### Upright Mode
 
-For applications where the board is held upright, use the upright parameter:
-
-```python
-# Get heading for upright orientation
-heading = magnetometer.get_heading(upright=True)
-```
 
 ### Magnetic Field Strength Monitoring
 
