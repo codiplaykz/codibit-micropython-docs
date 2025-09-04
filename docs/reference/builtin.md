@@ -686,6 +686,28 @@ level = light.read_level()
 
 API for controlling the built-in SH1106 OLED display (128x64 pixels). Uses a buffer-based approach where drawing commands are stored in a buffer and then output to the screen using the `show()` function.
 
+### Operation Mode
+
+1. **Buffer-based**: All drawing commands are stored in an internal buffer
+2. **Delayed Output**: The `show()` function must be called to output to screen
+3. **Performance Optimization**: Multiple drawing operations can be processed at once before output
+4. **Memory Efficiency**: Buffer usage optimizes memory consumption
+
+### Usage Pattern
+
+```python
+# 1. Clear screen
+display.clear()
+
+# 2. Perform multiple drawing operations
+display.draw_text("Hello", 0, 0)
+display.draw_circle(32, 32, 10)
+display.draw_rectangle(10, 10, 20, 15)
+
+# 3. Output to screen
+display.show()
+```
+
 ### Global Instance
 
 ```python
@@ -892,28 +914,6 @@ display.show()
 - **Rotation**: 180 degrees (screen displays in correct orientation)
 - **Power Supply**: 3.3V
 - **Physical Location**: Front side of the board
-
-### Operation Mode
-
-1. **Buffer-based**: All drawing commands are stored in an internal buffer
-2. **Delayed Output**: The `show()` function must be called to output to screen
-3. **Performance Optimization**: Multiple drawing operations can be processed at once before output
-4. **Memory Efficiency**: Buffer usage optimizes memory consumption
-
-### Usage Pattern
-
-```python
-# 1. Clear screen
-display.clear()
-
-# 2. Perform multiple drawing operations
-display.draw_text("Hello", 0, 0)
-display.draw_circle(32, 32, 10)
-display.draw_rectangle(10, 10, 20, 15)
-
-# 3. Output to screen
-display.show()
-```
 
 ### Notes
 
