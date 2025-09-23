@@ -164,7 +164,6 @@ rgb_led  # 내장 RGB LED 스트립
 rgb_led.set_color(0, 255, 0, 0)    # 빨간색
 rgb_led.set_color(1, 0, 255, 0)    # 초록색
 rgb_led.set_color(2, 0, 0, 255)    # 파란색
-rgb_led.show()
 ```
 
 #### `rgb_led.get_color(strip_id)`
@@ -197,11 +196,9 @@ print(f"스트립 0 색상: {current_color}")  # (r, g, b) 튜플 반환
 ```python
 # 모든 스트립을 흰색으로 설정
 rgb_led.set_all_color(255, 255, 255)
-rgb_led.show()
 
 # 모든 스트립을 빨간색으로 설정
 rgb_led.set_all_color(255, 0, 0)
-rgb_led.show()
 ```
 
 #### `rgb_led.set_brightness(strip_id, brightness)`
@@ -261,34 +258,9 @@ rgb_led.show()
 ```python
 # 모든 스트립을 끄기
 rgb_led.turn_off_all()
-rgb_led.show()
 ```
 
 
-#### `rgb_led.show()`
-
-설정된 색상과 밝기를 실제 LED 하드웨어에 적용합니다.
-
-**매개변수:**
-- 없음
-
-**예시:**
-```python
-# 색상 설정 후 변경사항 적용
-rgb_led.set_color(0, 255, 0, 0)  # 빨간색 설정
-rgb_led.show()  # 변경사항 적용
-
-# 여러 설정 후 한 번에 적용
-rgb_led.set_color(0, 255, 0, 0)    # 빨간색
-rgb_led.set_color(1, 0, 255, 0)    # 초록색
-rgb_led.set_color(2, 0, 0, 255)    # 파란색
-rgb_led.show()  # 모든 변경사항 적용
-```
-
-**주의사항:**
-- 색상이나 밝기를 변경한 후에는 반드시 `show()`를 호출해야 합니다
-- `show()`를 호출하지 않으면 변경사항이 LED에 반영되지 않습니다
-- 여러 설정을 한 후 마지막에 한 번만 `show()`를 호출하면 됩니다
 
 ### 하드웨어 정보
 
@@ -305,7 +277,7 @@ rgb_led.show()  # 모든 변경사항 적용
 1. **색상 범위**: 각 색상 구성요소(R, G, B)는 0-255 범위입니다
 2. **밝기 제어**: 밝기는 모든 색상 구성요소에 비례적으로 적용됩니다
 3. **전력 효율성**: 낮은 밝기는 전력 소모를 줄입니다
-4. **업데이트 필요**: 색상 설정 후 `show()`를 호출하여 변경사항을 적용해야 합니다
+4. **자동 업데이트**: 색상 설정 시 자동으로 적용됩니다
 5. **스트립 번호**: 스트립은 왼쪽부터 0, 1, 2로 번호가 매겨집니다
 6. **색상 혼합**: RGB 값들이 혼합되어 다양한 색상을 만듭니다
 

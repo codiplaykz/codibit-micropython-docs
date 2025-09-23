@@ -164,7 +164,6 @@ Sets the color of a specific LED strip.
 rgb_led.set_color(0, 255, 0, 0)    # Red
 rgb_led.set_color(1, 0, 255, 0)    # Green
 rgb_led.set_color(2, 0, 0, 255)    # Blue
-rgb_led.show()
 ```
 
 #### `rgb_led.get_color(strip_id)`
@@ -197,11 +196,9 @@ Sets all LED strips to the same color.
 ```python
 # Set all strips to white
 rgb_led.set_all_color(255, 255, 255)
-rgb_led.show()
 
 # Set all strips to red
 rgb_led.set_all_color(255, 0, 0)
-rgb_led.show()
 ```
 
 #### `rgb_led.set_brightness(strip_id, brightness)`
@@ -261,34 +258,7 @@ Turns off all LED strips.
 ```python
 # Turn off all strips
 rgb_led.turn_off_all()
-rgb_led.show()
 ```
-
-
-#### `rgb_led.show()`
-
-Applies the set colors and brightness to the actual LED hardware.
-
-**Parameters:**
-- None
-
-**Example:**
-```python
-# Apply changes after setting color
-rgb_led.set_color(0, 255, 0, 0)  # Set red
-rgb_led.show()  # Apply changes
-
-# Apply multiple settings at once
-rgb_led.set_color(0, 255, 0, 0)    # Red
-rgb_led.set_color(1, 0, 255, 0)    # Green
-rgb_led.set_color(2, 0, 0, 255)    # Blue
-rgb_led.show()  # Apply all changes
-```
-
-**Notes:**
-- You must call `show()` after changing colors or brightness
-- Changes will not be reflected on the LED without calling `show()`
-- You can set multiple values and call `show()` once at the end
 
 ### Hardware Information
 
@@ -305,7 +275,7 @@ rgb_led.show()  # Apply all changes
 1. **Color Range**: Each color component (R, G, B) ranges from 0-255
 2. **Brightness Control**: Brightness is applied to all color components proportionally
 3. **Power Efficiency**: Lower brightness reduces power consumption
-4. **Update Required**: Call `show()` after setting colors to apply changes
+4. **Automatic Update**: Colors are automatically applied when set
 5. **Strip Numbering**: Strips are numbered 0, 1, 2 from left to right
 6. **Color Mixing**: RGB values are mixed to create various colors
 

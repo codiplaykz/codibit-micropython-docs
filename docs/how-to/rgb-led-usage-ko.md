@@ -19,7 +19,7 @@ from codibit import rgb_led
 rgb_led.set_color(0, 255, 0, 0)    # 스트립 0: 빨간색
 rgb_led.set_color(1, 0, 255, 0)    # 스트립 1: 초록색
 rgb_led.set_color(2, 0, 0, 255)    # 스트립 2: 파란색
-rgb_led.show()  # 변경사항 적용
+  # 변경사항 적용
 ```
 
 ### 현재 색상 가져오기
@@ -39,7 +39,6 @@ print(f"스트립 0 색상: {current_color}")  # (r, g, b) 튜플 반환
 ```python
 # 모든 스트립을 흰색으로 설정
 rgb_led.set_all_color(255, 255, 255)
-rgb_led.show()
 ```
 
 ### 밝기 제어
@@ -51,7 +50,6 @@ rgb_led.show()
 rgb_led.set_color(0, 255, 0, 0)
 # 스트립 0의 밝기를 50%로 설정
 rgb_led.set_brightness(0, 0.5)
-rgb_led.show()
 ```
 
 또는 모든 스트립을 한 번에 조절:
@@ -63,7 +61,6 @@ rgb_led.set_color(1, 0, 255, 0)    # 초록색
 rgb_led.set_color(2, 0, 0, 255)    # 파란색
 # 모든 스트립을 50% 밝기로 설정
 rgb_led.set_all_brightness(0.5)
-rgb_led.show()
 ```
 
 ### LED 끄기
@@ -73,7 +70,6 @@ rgb_led.show()
 ```python
 # 스트립 1 끄기
 rgb_led.turn_off(1)
-rgb_led.show()
 ```
 
 또는 모든 스트립 끄기:
@@ -81,7 +77,6 @@ rgb_led.show()
 ```python
 # 모든 스트립 끄기
 rgb_led.turn_off_all()
-rgb_led.show()
 ```
 
 ## 고급 예시
@@ -121,7 +116,6 @@ def color_gradient():
             b = int(color1[2] * (1 - ratio) + color2[2] * ratio)
 
             rgb_led.set_all_color(r, g, b)
-            rgb_led.show()
             time.sleep(0.05)
 
 # 그라데이션 효과 실행
@@ -147,7 +141,6 @@ def breathing_effect():
         g = int(base_color[1] * brightness_ratio)
         b = int(base_color[2] * brightness_ratio)
         rgb_led.set_all_color(r, g, b)
-        rgb_led.show()
         time.sleep(0.05)
 
     # 밝기 감소 (100% → 0%)
@@ -157,7 +150,6 @@ def breathing_effect():
         g = int(base_color[1] * brightness_ratio)
         b = int(base_color[2] * brightness_ratio)
         rgb_led.set_all_color(r, g, b)
-        rgb_led.show()
         time.sleep(0.05)
 
 # 숨쉬기 효과 실행
@@ -176,7 +168,6 @@ def sequential_led():
 
     # 먼저 모든 LED 끄기
     rgb_led.turn_off_all()
-    rgb_led.show()
     time.sleep(1)
 
     # 각 LED를 다른 색상으로 켜기
@@ -188,7 +179,6 @@ def sequential_led():
 
     for i in range(3):
         rgb_led.set_color(i, *colors[i])
-        rgb_led.show()
         time.sleep(1)
 
 # 순차 LED 효과 실행
@@ -209,7 +199,6 @@ def color_memory_demo():
     rgb_led.set_color(0, 255, 0, 0)    # 빨간색
     rgb_led.set_color(1, 0, 255, 0)    # 초록색
     rgb_led.set_color(2, 0, 0, 255)    # 파란색
-    rgb_led.show()
 
     # 현재 색상 저장
     stored_colors = []
@@ -220,13 +209,11 @@ def color_memory_demo():
 
     # 모든 스트립 끄기
     rgb_led.turn_off_all()
-    rgb_led.show()
     time.sleep(2)
 
     # 색상 복원
     for i, color in enumerate(stored_colors):
         rgb_led.set_color(i, *color)
-    rgb_led.show()
 
 # 색상 기억 데모 실행
 color_memory_demo()
@@ -253,7 +240,7 @@ color_memory_demo()
 
 ### LED가 켜지지 않음
 
-1. **`show()` 호출 확인**: 색상 설정 후 `rgb_led.show()`를 호출했는지 확인
+1. **자동 업데이트**: 색상 설정 시 자동으로 적용됩니다
 2. **핀 연결 확인**: GPIO17이 올바르게 연결되었는지 확인
 3. **전원 공급 확인**: 보드에 충분한 전원이 공급되는지 확인
 4. **neopixel 라이브러리 확인**: MicroPython 펌웨어에 neopixel 라이브러리가 있는지 확인
@@ -278,7 +265,7 @@ color_memory_demo()
 
 ## 모범 사례
 
-1. **항상 `show()` 호출**: `show()`를 호출해야 변경사항이 적용됨
+1. **자동 적용**: 설정 시 즉시 변경사항이 적용됩니다
 2. **적절한 밝기 사용**: 낮은 밝기는 전력을 절약함
 3. **부드러운 전환**: 부드러운 색상 변화를 위해 작은 단계 사용
 4. **에러 처리**: LED 작업을 try-catch 블록으로 감싸기
@@ -297,17 +284,14 @@ def traffic_light():
     while True:
         # 빨간불
         rgb_led.set_all_color(255, 0, 0)
-        rgb_led.show()
         time.sleep(3)
 
         # 노란불
         rgb_led.set_all_color(255, 255, 0)
-        rgb_led.show()
         time.sleep(1)
 
         # 초록불
         rgb_led.set_all_color(0, 255, 0)
-        rgb_led.show()
         time.sleep(3)
 
 # 신호등 실행 (Ctrl+C로 중단)
@@ -333,7 +317,6 @@ def mood_light():
     for color in colors:
         rgb_led.set_all_color(*color)
         rgb_led.set_all_brightness(0.5)  # 50% 밝기
-        rgb_led.show()
         time.sleep(2)
 
 # 무드 라이트 실행
@@ -358,7 +341,6 @@ def individual_brightness_demo():
     rgb_led.set_brightness(1, 0.5)   # 스트립 1: 50% 밝기
     rgb_led.set_brightness(2, 0.25)  # 스트립 2: 25% 밝기
 
-    rgb_led.show()
 
 # 개별 밝기 제어 데모 실행
 individual_brightness_demo()

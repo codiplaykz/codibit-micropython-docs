@@ -48,7 +48,6 @@ from codibit import *
 
 # Display text
 display.draw_text("Hello Codi:bit!", 0, 0)
-display.show()
 
 # Read button state
 if button_a.is_pressed():

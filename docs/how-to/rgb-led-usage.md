@@ -19,7 +19,6 @@ You can set each LED strip to a different color:
 rgb_led.set_color(0, 255, 0, 0)    # Strip 0: Red
 rgb_led.set_color(1, 0, 255, 0)    # Strip 1: Green
 rgb_led.set_color(2, 0, 0, 255)    # Strip 2: Blue
-rgb_led.show()  # Apply the changes
 ```
 
 ### Getting Current Colors
@@ -39,7 +38,6 @@ Set all LED strips to the same color:
 ```python
 # Set all strips to white
 rgb_led.set_all_color(255, 255, 255)
-rgb_led.show()
 ```
 
 ### Controlling Brightness
@@ -51,7 +49,6 @@ Adjust the brightness of individual strips:
 rgb_led.set_color(0, 255, 0, 0)
 # Set strip 0 brightness to 50%
 rgb_led.set_brightness(0, 0.5)
-rgb_led.show()
 ```
 
 Or adjust all strips at once:
@@ -63,7 +60,6 @@ rgb_led.set_color(1, 0, 255, 0)    # Green
 rgb_led.set_color(2, 0, 0, 255)    # Blue
 # Set all to 50% brightness
 rgb_led.set_all_brightness(0.5)
-rgb_led.show()
 ```
 
 ### Turning Off LEDs
@@ -73,7 +69,6 @@ Turn off individual strips:
 ```python
 # Turn off strip 1
 rgb_led.turn_off(1)
-rgb_led.show()
 ```
 
 Or turn off all strips:
@@ -81,7 +76,6 @@ Or turn off all strips:
 ```python
 # Turn off all strips
 rgb_led.turn_off_all()
-rgb_led.show()
 ```
 
 ## Advanced Examples
@@ -121,7 +115,6 @@ def color_gradient():
             b = int(color1[2] * (1 - ratio) + color2[2] * ratio)
 
             rgb_led.set_all_color(r, g, b)
-            rgb_led.show()
             time.sleep(0.05)
 
 # Run the gradient effect
@@ -147,7 +140,6 @@ def breathing_effect():
         g = int(base_color[1] * brightness_ratio)
         b = int(base_color[2] * brightness_ratio)
         rgb_led.set_all_color(r, g, b)
-        rgb_led.show()
         time.sleep(0.05)
 
     # Decrease brightness (100% to 0%)
@@ -157,7 +149,6 @@ def breathing_effect():
         g = int(base_color[1] * brightness_ratio)
         b = int(base_color[2] * brightness_ratio)
         rgb_led.set_all_color(r, g, b)
-        rgb_led.show()
         time.sleep(0.05)
 
 # Run the breathing effect
@@ -176,7 +167,6 @@ def sequential_led():
 
     # Turn off all LEDs first
     rgb_led.turn_off_all()
-    rgb_led.show()
     time.sleep(1)
 
     # Turn on each LED with different colors
@@ -188,7 +178,6 @@ def sequential_led():
 
     for i in range(3):
         rgb_led.set_color(i, *colors[i])
-        rgb_led.show()
         time.sleep(1)
 
 # Run the sequential LED effect
@@ -207,7 +196,6 @@ def color_memory_demo():
     rgb_led.set_color(0, 255, 0, 0)    # Red
     rgb_led.set_color(1, 0, 255, 0)    # Green
     rgb_led.set_color(2, 0, 0, 255)    # Blue
-    rgb_led.show()
 
     # Store current colors
     stored_colors = []
@@ -218,13 +206,11 @@ def color_memory_demo():
 
     # Turn off all strips
     rgb_led.turn_off_all()
-    rgb_led.show()
     time.sleep(2)
 
     # Restore colors
     for i, color in enumerate(stored_colors):
         rgb_led.set_color(i, *color)
-    rgb_led.show()
 
 # Run color memory demo
 color_memory_demo()
@@ -251,7 +237,7 @@ Here are some common RGB color values you can use:
 
 ### LEDs Not Turning On
 
-1. **Check the `show()` call**: Make sure you call `rgb_led.show()` after setting colors
+1. **Automatic updates**: Colors are automatically applied when set
 2. **Verify pin connection**: Ensure GPIO17 is properly connected
 3. **Check power supply**: Make sure the board has sufficient power
 4. **Verify neopixel library**: The neopixel library should be available in your MicroPython firmware
@@ -276,7 +262,7 @@ Here are some common RGB color values you can use:
 
 ## Best Practices
 
-1. **Always call `show()`**: Changes don't apply until you call `show()`
+1. **Automatic application**: Changes are applied immediately when set
 2. **Use appropriate brightness**: Lower brightness saves power
 3. **Smooth transitions**: Use small steps for smooth color changes
 4. **Error handling**: Wrap LED operations in try-catch blocks
@@ -295,17 +281,14 @@ def traffic_light():
     while True:
         # Red light
         rgb_led.set_all_color(255, 0, 0)
-        rgb_led.show()
         time.sleep(3)
 
         # Yellow light
         rgb_led.set_all_color(255, 255, 0)
-        rgb_led.show()
         time.sleep(1)
 
         # Green light
         rgb_led.set_all_color(0, 255, 0)
-        rgb_led.show()
         time.sleep(3)
 
 # Run traffic light (Ctrl+C to stop)
@@ -331,7 +314,6 @@ def mood_light():
     for color in colors:
         rgb_led.set_all_color(*color)
         rgb_led.set_all_brightness(0.5)  # 50% brightness
-        rgb_led.show()
         time.sleep(2)
 
 # Run mood light
@@ -356,7 +338,6 @@ def individual_brightness_demo():
     rgb_led.set_brightness(1, 0.5)   # Strip 1: 50% brightness
     rgb_led.set_brightness(2, 0.25)  # Strip 2: 25% brightness
 
-    rgb_led.show()
 
 # Run individual brightness control demo
 individual_brightness_demo()
