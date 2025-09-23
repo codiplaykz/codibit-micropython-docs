@@ -658,10 +658,9 @@ API for controlling the built-in SH1106 OLED display (128x64 pixels). Uses a buf
 
 ### Operation Mode
 
-1. **Buffer-based**: All drawing commands are stored in an internal buffer
-2. **Delayed Output**: The `show()` function must be called to output to screen
-3. **Performance Optimization**: Multiple drawing operations can be processed at once before output
-4. **Memory Efficiency**: Buffer usage optimizes memory consumption
+OLED displays consist of a memory buffer (128×64 pixel data) and the actual screen. `draw_` functions only store pixel data in the buffer, and the `show()` function transfers the entire buffer to the screen. `show_` functions internally call `show()` each time, updating the screen every time. Using `show_` functions in infinite loops causes the screen to flicker multiple times, so using `draw_` functions and then calling `show()` once provides smooth display.
+
+> 💡 **For detailed principles, see [How to use display](../how-to/display-usage.md#technical-background), and for function comparison and usage patterns, see [Understanding draw_ vs show_ Functions](../how-to/display-usage.md#understanding-draw_-vs-show_-functions).**
 
 ### Usage Pattern
 
@@ -755,11 +754,11 @@ display.set_pixel(10, 20, 1)  # Turn on pixel
 display.show()
 ```
 
-### Drawing Methods
+### Drawing Methods (draw_ functions)
 
 #### `display.draw_text(text, x, y)`
 
-Draws text at the specified position.
+Draws text at the specified position. Only draws to buffer, requires separate `show()` call to display on screen.
 
 **Parameters:**
 - `text` (str): Text to draw
@@ -775,7 +774,7 @@ display.show()
 
 #### `display.draw_rectangle(x, y, w, h, fill=False)`
 
-Draws a rectangle.
+Draws a rectangle. Only draws to buffer, requires separate `show()` call to display on screen.
 
 **Parameters:**
 - `x` (int): X coordinate of top-left corner
@@ -795,7 +794,7 @@ display.show()
 
 #### `display.draw_line(x1, y1, x2, y2)`
 
-Draws a line between two points.
+Draws a line between two points. Only draws to buffer, requires separate `show()` call to display on screen.
 
 **Parameters:**
 - `x1` (int): X coordinate of start point
@@ -812,7 +811,7 @@ display.show()
 
 #### `display.draw_circle(x, y, r, fill=False)`
 
-Draws a circle.
+Draws a circle. Only draws to buffer, requires separate `show()` call to display on screen.
 
 **Parameters:**
 - `x` (int): X coordinate of center
@@ -831,7 +830,7 @@ display.show()
 
 #### `display.draw_triangle(x1, y1, x2, y2, x3, y3, fill=False)`
 
-Draws a triangle.
+Draws a triangle. Only draws to buffer, requires separate `show()` call to display on screen.
 
 **Parameters:**
 - `x1, y1` (int): Coordinates of first vertex
@@ -848,11 +847,9 @@ display.draw_triangle(50, 10, 60, 40, 80, 40, fill=True)
 display.show()
 ```
 
-### Images
-
 #### `display.draw_image(image, x, y, scale=1)`
 
-Draws an image at the specified position. The scale parameter allows you to adjust the image size.
+Draws an image at the specified position. Only draws to buffer, requires separate `show()` call to display on screen.
 
 **Parameters:**
 - `image`: Image object
@@ -874,6 +871,113 @@ display.draw_image(Image.HAPPY, 40, 20, scale=3)  # 3x size
 display.show()
 ```
 
+### Immediate Display Methods (show_ functions)
+
+#### `display.show_text(text, x, y)`
+
+Draws text and immediately displays it on screen.
+
+**Parameters:**
+- `text` (str): Text to draw
+- `x` (int): X coordinate
+- `y` (int): Y coordinate
+
+**Example:**
+```python
+display.show_text("Hello", 0, 0)  # Immediate display
+display.show_text("World", 0, 10)  # Immediate display
+```
+
+#### `display.show_rectangle(x, y, w, h, fill=False)`
+
+Draws a rectangle and immediately displays it on screen.
+
+**Parameters:**
+- `x` (int): X coordinate of top-left corner
+- `y` (int): Y coordinate of top-left corner
+- `w` (int): Width
+- `h` (int): Height
+- `fill` (bool): Whether to fill (default: False)
+
+**Example:**
+```python
+# Empty rectangle immediate display
+display.show_rectangle(10, 10, 20, 15)
+# Filled rectangle immediate display
+display.show_rectangle(40, 10, 20, 15, fill=True)
+```
+
+#### `display.show_line(x1, y1, x2, y2)`
+
+Draws a line and immediately displays it on screen.
+
+**Parameters:**
+- `x1` (int): X coordinate of start point
+- `y1` (int): Y coordinate of start point
+- `x2` (int): X coordinate of end point
+- `y2` (int): Y coordinate of end point
+
+**Example:**
+```python
+display.show_line(0, 0, 50, 50)  # Immediate display
+display.show_line(0, 50, 50, 0)  # Immediate display
+```
+
+#### `display.show_circle(x, y, r, fill=False)`
+
+Draws a circle and immediately displays it on screen.
+
+**Parameters:**
+- `x` (int): X coordinate of center
+- `y` (int): Y coordinate of center
+- `r` (int): Radius
+- `fill` (bool): Whether to fill (default: False)
+
+**Example:**
+```python
+# Empty circle immediate display
+display.show_circle(32, 32, 10)
+# Filled circle immediate display
+display.show_circle(64, 32, 8, fill=True)
+```
+
+#### `display.show_triangle(x1, y1, x2, y2, x3, y3, fill=False)`
+
+Draws a triangle and immediately displays it on screen.
+
+**Parameters:**
+- `x1, y1` (int): Coordinates of first vertex
+- `x2, y2` (int): Coordinates of second vertex
+- `x3, y3` (int): Coordinates of third vertex
+- `fill` (bool): Whether to fill (default: False)
+
+**Example:**
+```python
+# Empty triangle immediate display
+display.show_triangle(10, 10, 20, 40, 40, 40)
+# Filled triangle immediate display
+display.show_triangle(50, 10, 60, 40, 80, 40, fill=True)
+```
+
+#### `display.show_image(image, x, y, scale=1)`
+
+Draws an image and immediately displays it on screen.
+
+**Parameters:**
+- `image`: Image object
+- `x` (int): Starting X coordinate
+- `y` (int): Starting Y coordinate
+- `scale` (int): Scale size (1=original size, 2=2x, 3=3x), default: 1
+
+**Example:**
+```python
+from codibit import Image
+
+# Built-in image immediate display
+display.show_image(Image.HEART, 0, 0)
+display.show_image(Image.HAPPY, 20, 0, scale=2)
+```
+
 ### Hardware Information
 
 - **Display**: SH1106 OLED
@@ -889,11 +993,14 @@ display.show()
 
 1. **Pixel Coordinates**: Origin (0,0) is at top-left corner
 2. **Pixel Values**: Only 0 (off) or 1 (on) are supported
-3. **Buffer Output**: `show()` must be called after drawing operations to display on screen
-4. **Built-in Images**: 64 different images available (see Image section)
-5. **Scaling**: Images can be scaled for better visibility when displayed
-6. **Performance**: It's efficient to process multiple drawing operations at once before calling `show()`
-7. **Buffer Control**: `clear()` only clears the buffer, while `clear_immediate()` outputs immediately for performance optimization
+3. **Buffer Output**: `draw_` functions only draw to buffer, requires separate `show()` call to display on screen
+4. **Immediate Display**: `show_` functions draw and immediately display on screen
+5. **Built-in Images**: 64 different images available (see Image section)
+6. **Scaling**: Images can be scaled for better visibility when displayed
+7. **Performance**: It's efficient to process multiple drawing operations at once before calling `show()`
+8. **Buffer Control**: `clear()` only clears the buffer, while `clear_immediate()` outputs immediately for performance optimization
+9. **Infinite Loops**: Use `draw_` functions in animations or games and call `show()` only once at the end
+10. **Static Screens**: Use `show_` functions for screens displayed only once to keep code concise
 
 ## Image
 
