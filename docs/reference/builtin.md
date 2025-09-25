@@ -57,30 +57,65 @@ button_b  # Button B
 
 ### Methods
 
+> **⚠️ Important: Performance and Responsiveness**
+>
+> When using button methods in `while` loops, always include appropriate time delays to ensure optimal performance and responsiveness:
+>
+> ```python
+> # ✅ Recommended: Include time delays
+> while True:
+>     if button_a.is_pressed():
+>         print("Button A pressed!")
+>     time.sleep(0.01)  # 10ms delay for optimal performance
+>
+> # ❌ Avoid: No delays can cause performance issues
+> while True:
+>     if button_a.is_pressed():
+>         print("Button A pressed!")
+> ```
+>
+> **Recommended delays:**
+> - `time.sleep(0.01)` - 10ms: Optimal for most applications
+> - `time.sleep(0.05)` - 50ms: For stability-focused applications
+> - `time.sleep(0.1)` - 100ms: For simple applications
+
 #### `button.is_pressed()`
 
-Returns whether the button is currently being pressed.
+Detects the exact moment when a button is pressed (one-time event).
 
 **Returns:**
-- `bool`: `True` if the button is currently pressed, `False` otherwise
+- `bool`: `True` if the button was just pressed, `False` otherwise
 
 **Example:**
 ```python
 if button_a.is_pressed():
-    print("Button A is pressed")
+    print("Button A was pressed!")
 ```
 
-#### `button.was_pressed()`
+#### `button.is_holding()`
 
-Returns whether the button was pressed since the last call to this method or since the device started.
+Detects when a button is continuously being held down.
 
 **Returns:**
-- `bool`: `True` if the button was pressed, `False` otherwise
+- `bool`: `True` if the button is currently being held, `False` otherwise
 
 **Example:**
 ```python
-if button_a.was_pressed():
-    print("Button A was pressed")
+if button_a.is_holding():
+    print("Button A is being held...")
+```
+
+#### `button.is_released()`
+
+Detects the exact moment when a button is released (one-time event).
+
+**Returns:**
+- `bool`: `True` if the button was just released, `False` otherwise
+
+**Example:**
+```python
+if button_a.is_released():
+    print("Button A was released!")
 ```
 
 #### `button.get_presses()`

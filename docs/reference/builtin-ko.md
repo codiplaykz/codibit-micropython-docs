@@ -57,30 +57,65 @@ button_b  # 버튼 B
 
 ### 메서드
 
+> **⚠️ 중요: 성능과 반응성**
+>
+> `while` 루프에서 버튼 메서드를 사용할 때는 최적의 성능과 반응성을 위해 항상 적절한 시간 지연을 포함하세요:
+>
+> ```python
+> # ✅ 권장: 시간 지연 포함
+> while True:
+>     if button_a.is_pressed():
+>         print("버튼 A가 눌렸습니다!")
+>     time.sleep(0.01)  # 최적 성능을 위한 10ms 지연
+>
+> # ❌ 피해야 할 예: 지연 없이는 성능 문제 발생 가능
+> while True:
+>     if button_a.is_pressed():
+>         print("버튼 A가 눌렸습니다!")
+> ```
+>
+> **권장 지연 시간:**
+> - `time.sleep(0.01)` - 10ms: 대부분의 애플리케이션에 최적
+> - `time.sleep(0.05)` - 50ms: 안정성 중심 애플리케이션용
+> - `time.sleep(0.1)` - 100ms: 간단한 애플리케이션용
+
 #### `button.is_pressed()`
 
-버튼이 현재 눌려있는지 확인합니다.
+버튼이 눌리는 정확한 순간을 감지합니다 (한 번의 이벤트).
+
+**반환값:**
+- `bool`: 버튼이 방금 눌렸으면 `True`, 그렇지 않으면 `False`
+
+**예시:**
+```python
+if button_a.is_pressed():
+    print("버튼 A가 눌렸습니다!")
+```
+
+#### `button.is_holding()`
+
+버튼이 계속 눌려있는 상태를 감지합니다.
 
 **반환값:**
 - `bool`: 버튼이 현재 눌려있으면 `True`, 그렇지 않으면 `False`
 
 **예시:**
 ```python
-if button_a.is_pressed():
-    print("버튼 A가 눌려있습니다")
+if button_a.is_holding():
+    print("버튼 A가 눌려있습니다...")
 ```
 
-#### `button.was_pressed()`
+#### `button.is_released()`
 
-마지막 호출 이후 또는 장치 시작 이후 버튼이 눌렸는지 확인합니다.
+버튼이 떼어지는 정확한 순간을 감지합니다 (한 번의 이벤트).
 
 **반환값:**
-- `bool`: 버튼이 눌렸으면 `True`, 그렇지 않으면 `False`
+- `bool`: 버튼이 방금 떼어졌으면 `True`, 그렇지 않으면 `False`
 
 **예시:**
 ```python
-if button_a.was_pressed():
-    print("버튼 A가 눌렸습니다")
+if button_a.is_released():
+    print("버튼 A가 떼어졌습니다!")
 ```
 
 #### `button.get_presses()`
