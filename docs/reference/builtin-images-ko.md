@@ -1,4 +1,4 @@
-# Built-in images and icons(내장 이미지)
+# Built-in images(내장 이미지)
 
 이 문서는 Codi:bit 라이브러리에서 사용할 수 있는 모든 64개의 내장 이미지에 대한 종합적인 참조 자료입니다.
 

@@ -57,30 +57,65 @@ button_b  # 버튼 B
 
 ### 메서드
 
+> **⚠️ 중요: 성능과 반응성**
+>
+> `while` 루프에서 버튼 메서드를 사용할 때는 최적의 성능과 반응성을 위해 항상 적절한 시간 지연을 포함하세요:
+>
+> ```python
+> # ✅ 권장: 시간 지연 포함
+> while True:
+>     if button_a.is_pressed():
+>         print("버튼 A가 눌렸습니다!")
+>     time.sleep(0.01)  # 최적 성능을 위한 10ms 지연
+>
+> # ❌ 피해야 할 예: 지연 없이는 성능 문제 발생 가능
+> while True:
+>     if button_a.is_pressed():
+>         print("버튼 A가 눌렸습니다!")
+> ```
+>
+> **권장 지연 시간:**
+> - `time.sleep(0.01)` - 10ms: 대부분의 애플리케이션에 최적
+> - `time.sleep(0.05)` - 50ms: 안정성 중심 애플리케이션용
+> - `time.sleep(0.1)` - 100ms: 간단한 애플리케이션용
+
 #### `button.is_pressed()`
 
-버튼이 현재 눌려있는지 확인합니다.
+버튼이 눌리는 정확한 순간을 감지합니다 (한 번의 이벤트).
+
+**반환값:**
+- `bool`: 버튼이 방금 눌렸으면 `True`, 그렇지 않으면 `False`
+
+**예시:**
+```python
+if button_a.is_pressed():
+    print("버튼 A가 눌렸습니다!")
+```
+
+#### `button.is_holding()`
+
+버튼이 계속 눌려있는 상태를 감지합니다.
 
 **반환값:**
 - `bool`: 버튼이 현재 눌려있으면 `True`, 그렇지 않으면 `False`
 
 **예시:**
 ```python
-if button_a.is_pressed():
-    print("버튼 A가 눌려있습니다")
+if button_a.is_holding():
+    print("버튼 A가 눌려있습니다...")
 ```
 
-#### `button.was_pressed()`
+#### `button.is_released()`
 
-마지막 호출 이후 또는 장치 시작 이후 버튼이 눌렸는지 확인합니다.
+버튼이 떼어지는 정확한 순간을 감지합니다 (한 번의 이벤트).
 
 **반환값:**
-- `bool`: 버튼이 눌렸으면 `True`, 그렇지 않으면 `False`
+- `bool`: 버튼이 방금 떼어졌으면 `True`, 그렇지 않으면 `False`
 
 **예시:**
 ```python
-if button_a.was_pressed():
-    print("버튼 A가 눌렸습니다")
+if button_a.is_released():
+    print("버튼 A가 떼어졌습니다!")
 ```
 
 #### `button.get_presses()`
@@ -164,7 +199,6 @@ rgb_led  # 내장 RGB LED 스트립
 rgb_led.set_color(0, 255, 0, 0)    # 빨간색
 rgb_led.set_color(1, 0, 255, 0)    # 초록색
 rgb_led.set_color(2, 0, 0, 255)    # 파란색
-rgb_led.show()
 ```
 
 #### `rgb_led.get_color(strip_id)`
@@ -197,11 +231,9 @@ print(f"스트립 0 색상: {current_color}")  # (r, g, b) 튜플 반환
 ```python
 # 모든 스트립을 흰색으로 설정
 rgb_led.set_all_color(255, 255, 255)
-rgb_led.show()
 
 # 모든 스트립을 빨간색으로 설정
 rgb_led.set_all_color(255, 0, 0)
-rgb_led.show()
 ```
 
 #### `rgb_led.set_brightness(strip_id, brightness)`
@@ -261,34 +293,9 @@ rgb_led.show()
 ```python
 # 모든 스트립을 끄기
 rgb_led.turn_off_all()
-rgb_led.show()
 ```
 
 
-#### `rgb_led.show()`
-
-설정된 색상과 밝기를 실제 LED 하드웨어에 적용합니다.
-
-**매개변수:**
-- 없음
-
-**예시:**
-```python
-# 색상 설정 후 변경사항 적용
-rgb_led.set_color(0, 255, 0, 0)  # 빨간색 설정
-rgb_led.show()  # 변경사항 적용
-
-# 여러 설정 후 한 번에 적용
-rgb_led.set_color(0, 255, 0, 0)    # 빨간색
-rgb_led.set_color(1, 0, 255, 0)    # 초록색
-rgb_led.set_color(2, 0, 0, 255)    # 파란색
-rgb_led.show()  # 모든 변경사항 적용
-```
-
-**주의사항:**
-- 색상이나 밝기를 변경한 후에는 반드시 `show()`를 호출해야 합니다
-- `show()`를 호출하지 않으면 변경사항이 LED에 반영되지 않습니다
-- 여러 설정을 한 후 마지막에 한 번만 `show()`를 호출하면 됩니다
 
 ### 하드웨어 정보
 
@@ -305,7 +312,7 @@ rgb_led.show()  # 모든 변경사항 적용
 1. **색상 범위**: 각 색상 구성요소(R, G, B)는 0-255 범위입니다
 2. **밝기 제어**: 밝기는 모든 색상 구성요소에 비례적으로 적용됩니다
 3. **전력 효율성**: 낮은 밝기는 전력 소모를 줄입니다
-4. **업데이트 필요**: 색상 설정 후 `show()`를 호출하여 변경사항을 적용해야 합니다
+4. **자동 업데이트**: 색상 설정 시 자동으로 적용됩니다
 5. **스트립 번호**: 스트립은 왼쪽부터 0, 1, 2로 번호가 매겨집니다
 6. **색상 혼합**: RGB 값들이 혼합되어 다양한 색상을 만듭니다
 
@@ -686,10 +693,9 @@ level = light.read_level()
 
 ### 작동 방식
 
-1. **버퍼 기반**: 모든 그리기 명령은 내부 버퍼에 저장됩니다
-2. **지연 출력**: `show()` 함수를 호출해야 화면에 출력됩니다
-3. **성능 최적화**: 여러 그리기 작업을 한 번에 처리한 후 출력 가능
-4. **메모리 효율**: 버퍼 사용으로 메모리 사용량 최적화
+OLED 디스플레이는 메모리 버퍼(128×64 픽셀 데이터)와 실제 화면으로 구성됩니다. `draw_` 함수들은 버퍼에만 픽셀 데이터를 저장하고, `show()` 함수가 버퍼 전체를 화면으로 전송합니다. `show_`로 시작하는 함수들은 각각 내부적으로 `show()`를 호출하여 매번 화면을 업데이트합니다. 무한 루프에서 `show_` 함수들을 사용하면 화면이 여러 번 깜빡이므로, `draw_` 함수들로 구성 후 한 번의 `show()` 호출로 부드러운 표시가 가능합니다.
+
+> 💡 **자세한 원리는 [디스플레이 사용하기](../how-to/display-usage-ko.md#기술적-원리)에서, 함수별 비교와 사용법은 [draw_ vs show_ 함수 이해하기](../how-to/display-usage-ko.md#draw_-vs-show_-함수-이해하기)에서 확인하세요.**
 
 ### 사용 패턴
 
@@ -783,11 +789,11 @@ display.set_pixel(10, 20, 1)  # 픽셀을 켬
 display.show()
 ```
 
-### 그리기 메서드
+### 그리기 메서드 (draw_ 함수들)
 
 #### `display.draw_text(text, x, y)`
 
-지정된 위치에 텍스트를 그립니다.
+지정된 위치에 텍스트를 그립니다. 버퍼에만 그리며, `show()`를 별도로 호출해야 화면에 표시됩니다.
 
 **매개변수:**
 - `text` (str): 그릴 텍스트
@@ -803,7 +809,7 @@ display.show()
 
 #### `display.draw_rectangle(x, y, w, h, fill=False)`
 
-사각형을 그립니다.
+사각형을 그립니다. 버퍼에만 그리며, `show()`를 별도로 호출해야 화면에 표시됩니다.
 
 **매개변수:**
 - `x` (int): 왼쪽 상단 모서리의 X 좌표
@@ -823,7 +829,7 @@ display.show()
 
 #### `display.draw_line(x1, y1, x2, y2)`
 
-두 점 사이에 선을 그립니다.
+두 점 사이에 선을 그립니다. 버퍼에만 그리며, `show()`를 별도로 호출해야 화면에 표시됩니다.
 
 **매개변수:**
 - `x1` (int): 시작점의 X 좌표
@@ -840,7 +846,7 @@ display.show()
 
 #### `display.draw_circle(x, y, r, fill=False)`
 
-원을 그립니다.
+원을 그립니다. 버퍼에만 그리며, `show()`를 별도로 호출해야 화면에 표시됩니다.
 
 **매개변수:**
 - `x` (int): 중심의 X 좌표
@@ -859,7 +865,7 @@ display.show()
 
 #### `display.draw_triangle(x1, y1, x2, y2, x3, y3, fill=False)`
 
-삼각형을 그립니다.
+삼각형을 그립니다. 버퍼에만 그리며, `show()`를 별도로 호출해야 화면에 표시됩니다.
 
 **매개변수:**
 - `x1, y1` (int): 첫 번째 꼭지점의 좌표
@@ -876,11 +882,9 @@ display.draw_triangle(50, 10, 60, 40, 80, 40, fill=True)
 display.show()
 ```
 
-### 이미지
-
 #### `display.draw_image(image, x, y, scale=1)`
 
-지정된 위치에 이미지를 그립니다. scale 매개변수로 이미지 크기를 조정할 수 있습니다.
+지정된 위치에 이미지를 그립니다. 버퍼에만 그리며, `show()`를 별도로 호출해야 화면에 표시됩니다.
 
 **매개변수:**
 - `image`: Image 객체
@@ -902,6 +906,113 @@ display.draw_image(Image.HAPPY, 40, 20, scale=3)  # 3배 크기
 display.show()
 ```
 
+### 즉시 표시 메서드 (show_ 함수들)
+
+#### `display.show_text(text, x, y)`
+
+텍스트를 그리고 즉시 화면에 표시합니다.
+
+**매개변수:**
+- `text` (str): 그릴 텍스트
+- `x` (int): X 좌표
+- `y` (int): Y 좌표
+
+**예시:**
+```python
+display.show_text("Hello", 0, 0)  # 즉시 표시
+display.show_text("World", 0, 10)  # 즉시 표시
+```
+
+#### `display.show_rectangle(x, y, w, h, fill=False)`
+
+사각형을 그리고 즉시 화면에 표시합니다.
+
+**매개변수:**
+- `x` (int): 왼쪽 상단 모서리의 X 좌표
+- `y` (int): 왼쪽 상단 모서리의 Y 좌표
+- `w` (int): 너비
+- `h` (int): 높이
+- `fill` (bool): 채우기 여부 (기본값: False)
+
+**예시:**
+```python
+# 빈 사각형 즉시 표시
+display.show_rectangle(10, 10, 20, 15)
+# 채워진 사각형 즉시 표시
+display.show_rectangle(40, 10, 20, 15, fill=True)
+```
+
+#### `display.show_line(x1, y1, x2, y2)`
+
+선을 그리고 즉시 화면에 표시합니다.
+
+**매개변수:**
+- `x1` (int): 시작점의 X 좌표
+- `y1` (int): 시작점의 Y 좌표
+- `x2` (int): 끝점의 X 좌표
+- `y2` (int): 끝점의 Y 좌표
+
+**예시:**
+```python
+display.show_line(0, 0, 50, 50)  # 즉시 표시
+display.show_line(0, 50, 50, 0)  # 즉시 표시
+```
+
+#### `display.show_circle(x, y, r, fill=False)`
+
+원을 그리고 즉시 화면에 표시합니다.
+
+**매개변수:**
+- `x` (int): 중심의 X 좌표
+- `y` (int): 중심의 Y 좌표
+- `r` (int): 반지름
+- `fill` (bool): 채우기 여부 (기본값: False)
+
+**예시:**
+```python
+# 빈 원 즉시 표시
+display.show_circle(32, 32, 10)
+# 채워진 원 즉시 표시
+display.show_circle(64, 32, 8, fill=True)
+```
+
+#### `display.show_triangle(x1, y1, x2, y2, x3, y3, fill=False)`
+
+삼각형을 그리고 즉시 화면에 표시합니다.
+
+**매개변수:**
+- `x1, y1` (int): 첫 번째 꼭지점의 좌표
+- `x2, y2` (int): 두 번째 꼭지점의 좌표
+- `x3, y3` (int): 세 번째 꼭지점의 좌표
+- `fill` (bool): 채우기 여부 (기본값: False)
+
+**예시:**
+```python
+# 빈 삼각형 즉시 표시
+display.show_triangle(10, 10, 20, 40, 40, 40)
+# 채워진 삼각형 즉시 표시
+display.show_triangle(50, 10, 60, 40, 80, 40, fill=True)
+```
+
+#### `display.show_image(image, x, y, scale=1)`
+
+이미지를 그리고 즉시 화면에 표시합니다.
+
+**매개변수:**
+- `image`: Image 객체
+- `x` (int): 시작 X 좌표
+- `y` (int): 시작 Y 좌표
+- `scale` (int): 스케일 크기 (1=원본 크기, 2=2배, 3=3배), 기본값: 1
+
+**예시:**
+```python
+from codibit import Image
+
+# 내장 이미지 즉시 표시
+display.show_image(Image.HEART, 0, 0)
+display.show_image(Image.HAPPY, 20, 0, scale=2)
+```
+
 ### 하드웨어 정보
 
 - **디스플레이**: SH1106 OLED
@@ -917,11 +1028,14 @@ display.show()
 
 1. **픽셀 좌표**: 원점 (0,0)은 왼쪽 상단 모서리입니다
 2. **픽셀 값**: 0(꺼짐) 또는 1(켜짐)만 지원합니다
-3. **버퍼 출력**: 그리기 작업 후 반드시 `show()`를 호출해야 화면에 표시됩니다
-4. **내장 이미지**: 64가지 다양한 이미지를 사용할 수 있습니다 (Image 섹션 참조)
-5. **스케일링**: 이미지는 더 나은 가시성을 위해 표시할 때 확대할 수 있습니다
-6. **성능**: 여러 그리기 작업을 한 번에 처리한 후 `show()`를 호출하는 것이 효율적입니다
-7. **버퍼 제어**: `clear()`는 버퍼만 지우지만, `clear_immediate()`는 즉시 출력하여 성능 최적화에 유용합니다
+3. **버퍼 출력**: `draw_` 함수들은 버퍼에만 그리며, `show()`를 별도로 호출해야 화면에 표시됩니다
+4. **즉시 표시**: `show_` 함수들은 그리기와 동시에 화면에 즉시 표시됩니다
+5. **내장 이미지**: 64가지 다양한 이미지를 사용할 수 있습니다 (Image 섹션 참조)
+6. **스케일링**: 이미지는 더 나은 가시성을 위해 표시할 때 확대할 수 있습니다
+7. **성능**: 여러 그리기 작업을 한 번에 처리한 후 `show()`를 호출하는 것이 효율적입니다
+8. **버퍼 제어**: `clear()`는 버퍼만 지우지만, `clear_immediate()`는 즉시 출력하여 성능 최적화에 유용합니다
+9. **무한 루프**: 애니메이션이나 게임에서는 `draw_` 함수들을 사용하고 마지막에 한 번만 `show()`를 호출하세요
+10. **정적 화면**: 한 번만 표시하는 화면에서는 `show_` 함수들을 사용하여 코드를 간결하게 만드세요
 
 ## 이미지 (Image)
 

@@ -57,30 +57,65 @@ button_b  # Button B
 
 ### Methods
 
+> **⚠️ Important: Performance and Responsiveness**
+>
+> When using button methods in `while` loops, always include appropriate time delays to ensure optimal performance and responsiveness:
+>
+> ```python
+> # ✅ Recommended: Include time delays
+> while True:
+>     if button_a.is_pressed():
+>         print("Button A pressed!")
+>     time.sleep(0.01)  # 10ms delay for optimal performance
+>
+> # ❌ Avoid: No delays can cause performance issues
+> while True:
+>     if button_a.is_pressed():
+>         print("Button A pressed!")
+> ```
+>
+> **Recommended delays:**
+> - `time.sleep(0.01)` - 10ms: Optimal for most applications
+> - `time.sleep(0.05)` - 50ms: For stability-focused applications
+> - `time.sleep(0.1)` - 100ms: For simple applications
+
 #### `button.is_pressed()`
 
-Returns whether the button is currently being pressed.
+Detects the exact moment when a button is pressed (one-time event).
 
 **Returns:**
-- `bool`: `True` if the button is currently pressed, `False` otherwise
+- `bool`: `True` if the button was just pressed, `False` otherwise
 
 **Example:**
 ```python
 if button_a.is_pressed():
-    print("Button A is pressed")
+    print("Button A was pressed!")
 ```
 
-#### `button.was_pressed()`
+#### `button.is_holding()`
 
-Returns whether the button was pressed since the last call to this method or since the device started.
+Detects when a button is continuously being held down.
 
 **Returns:**
-- `bool`: `True` if the button was pressed, `False` otherwise
+- `bool`: `True` if the button is currently being held, `False` otherwise
 
 **Example:**
 ```python
-if button_a.was_pressed():
-    print("Button A was pressed")
+if button_a.is_holding():
+    print("Button A is being held...")
+```
+
+#### `button.is_released()`
+
+Detects the exact moment when a button is released (one-time event).
+
+**Returns:**
+- `bool`: `True` if the button was just released, `False` otherwise
+
+**Example:**
+```python
+if button_a.is_released():
+    print("Button A was released!")
 ```
 
 #### `button.get_presses()`
@@ -164,7 +199,6 @@ Sets the color of a specific LED strip.
 rgb_led.set_color(0, 255, 0, 0)    # Red
 rgb_led.set_color(1, 0, 255, 0)    # Green
 rgb_led.set_color(2, 0, 0, 255)    # Blue
-rgb_led.show()
 ```
 
 #### `rgb_led.get_color(strip_id)`
@@ -197,11 +231,9 @@ Sets all LED strips to the same color.
 ```python
 # Set all strips to white
 rgb_led.set_all_color(255, 255, 255)
-rgb_led.show()
 
 # Set all strips to red
 rgb_led.set_all_color(255, 0, 0)
-rgb_led.show()
 ```
 
 #### `rgb_led.set_brightness(strip_id, brightness)`
@@ -261,34 +293,7 @@ Turns off all LED strips.
 ```python
 # Turn off all strips
 rgb_led.turn_off_all()
-rgb_led.show()
 ```
-
-
-#### `rgb_led.show()`
-
-Applies the set colors and brightness to the actual LED hardware.
-
-**Parameters:**
-- None
-
-**Example:**
-```python
-# Apply changes after setting color
-rgb_led.set_color(0, 255, 0, 0)  # Set red
-rgb_led.show()  # Apply changes
-
-# Apply multiple settings at once
-rgb_led.set_color(0, 255, 0, 0)    # Red
-rgb_led.set_color(1, 0, 255, 0)    # Green
-rgb_led.set_color(2, 0, 0, 255)    # Blue
-rgb_led.show()  # Apply all changes
-```
-
-**Notes:**
-- You must call `show()` after changing colors or brightness
-- Changes will not be reflected on the LED without calling `show()`
-- You can set multiple values and call `show()` once at the end
 
 ### Hardware Information
 
@@ -305,7 +310,7 @@ rgb_led.show()  # Apply all changes
 1. **Color Range**: Each color component (R, G, B) ranges from 0-255
 2. **Brightness Control**: Brightness is applied to all color components proportionally
 3. **Power Efficiency**: Lower brightness reduces power consumption
-4. **Update Required**: Call `show()` after setting colors to apply changes
+4. **Automatic Update**: Colors are automatically applied when set
 5. **Strip Numbering**: Strips are numbered 0, 1, 2 from left to right
 6. **Color Mixing**: RGB values are mixed to create various colors
 
@@ -688,10 +693,9 @@ API for controlling the built-in SH1106 OLED display (128x64 pixels). Uses a buf
 
 ### Operation Mode
 
-1. **Buffer-based**: All drawing commands are stored in an internal buffer
-2. **Delayed Output**: The `show()` function must be called to output to screen
-3. **Performance Optimization**: Multiple drawing operations can be processed at once before output
-4. **Memory Efficiency**: Buffer usage optimizes memory consumption
+OLED displays consist of a memory buffer (128×64 pixel data) and the actual screen. `draw_` functions only store pixel data in the buffer, and the `show()` function transfers the entire buffer to the screen. `show_` functions internally call `show()` each time, updating the screen every time. Using `show_` functions in infinite loops causes the screen to flicker multiple times, so using `draw_` functions and then calling `show()` once provides smooth display.
+
+> 💡 **For detailed principles, see [How to use display](../how-to/display-usage.md#technical-background), and for function comparison and usage patterns, see [Understanding draw_ vs show_ Functions](../how-to/display-usage.md#understanding-draw_-vs-show_-functions).**
 
 ### Usage Pattern
 
@@ -785,11 +789,11 @@ display.set_pixel(10, 20, 1)  # Turn on pixel
 display.show()
 ```
 
-### Drawing Methods
+### Drawing Methods (draw_ functions)
 
 #### `display.draw_text(text, x, y)`
 
-Draws text at the specified position.
+Draws text at the specified position. Only draws to buffer, requires separate `show()` call to display on screen.
 
 **Parameters:**
 - `text` (str): Text to draw
@@ -805,7 +809,7 @@ display.show()
 
 #### `display.draw_rectangle(x, y, w, h, fill=False)`
 
-Draws a rectangle.
+Draws a rectangle. Only draws to buffer, requires separate `show()` call to display on screen.
 
 **Parameters:**
 - `x` (int): X coordinate of top-left corner
@@ -825,7 +829,7 @@ display.show()
 
 #### `display.draw_line(x1, y1, x2, y2)`
 
-Draws a line between two points.
+Draws a line between two points. Only draws to buffer, requires separate `show()` call to display on screen.
 
 **Parameters:**
 - `x1` (int): X coordinate of start point
@@ -842,7 +846,7 @@ display.show()
 
 #### `display.draw_circle(x, y, r, fill=False)`
 
-Draws a circle.
+Draws a circle. Only draws to buffer, requires separate `show()` call to display on screen.
 
 **Parameters:**
 - `x` (int): X coordinate of center
@@ -861,7 +865,7 @@ display.show()
 
 #### `display.draw_triangle(x1, y1, x2, y2, x3, y3, fill=False)`
 
-Draws a triangle.
+Draws a triangle. Only draws to buffer, requires separate `show()` call to display on screen.
 
 **Parameters:**
 - `x1, y1` (int): Coordinates of first vertex
@@ -878,11 +882,9 @@ display.draw_triangle(50, 10, 60, 40, 80, 40, fill=True)
 display.show()
 ```
 
-### Images
-
 #### `display.draw_image(image, x, y, scale=1)`
 
-Draws an image at the specified position. The scale parameter allows you to adjust the image size.
+Draws an image at the specified position. Only draws to buffer, requires separate `show()` call to display on screen.
 
 **Parameters:**
 - `image`: Image object
@@ -904,6 +906,113 @@ display.draw_image(Image.HAPPY, 40, 20, scale=3)  # 3x size
 display.show()
 ```
 
+### Immediate Display Methods (show_ functions)
+
+#### `display.show_text(text, x, y)`
+
+Draws text and immediately displays it on screen.
+
+**Parameters:**
+- `text` (str): Text to draw
+- `x` (int): X coordinate
+- `y` (int): Y coordinate
+
+**Example:**
+```python
+display.show_text("Hello", 0, 0)  # Immediate display
+display.show_text("World", 0, 10)  # Immediate display
+```
+
+#### `display.show_rectangle(x, y, w, h, fill=False)`
+
+Draws a rectangle and immediately displays it on screen.
+
+**Parameters:**
+- `x` (int): X coordinate of top-left corner
+- `y` (int): Y coordinate of top-left corner
+- `w` (int): Width
+- `h` (int): Height
+- `fill` (bool): Whether to fill (default: False)
+
+**Example:**
+```python
+# Empty rectangle immediate display
+display.show_rectangle(10, 10, 20, 15)
+# Filled rectangle immediate display
+display.show_rectangle(40, 10, 20, 15, fill=True)
+```
+
+#### `display.show_line(x1, y1, x2, y2)`
+
+Draws a line and immediately displays it on screen.
+
+**Parameters:**
+- `x1` (int): X coordinate of start point
+- `y1` (int): Y coordinate of start point
+- `x2` (int): X coordinate of end point
+- `y2` (int): Y coordinate of end point
+
+**Example:**
+```python
+display.show_line(0, 0, 50, 50)  # Immediate display
+display.show_line(0, 50, 50, 0)  # Immediate display
+```
+
+#### `display.show_circle(x, y, r, fill=False)`
+
+Draws a circle and immediately displays it on screen.
+
+**Parameters:**
+- `x` (int): X coordinate of center
+- `y` (int): Y coordinate of center
+- `r` (int): Radius
+- `fill` (bool): Whether to fill (default: False)
+
+**Example:**
+```python
+# Empty circle immediate display
+display.show_circle(32, 32, 10)
+# Filled circle immediate display
+display.show_circle(64, 32, 8, fill=True)
+```
+
+#### `display.show_triangle(x1, y1, x2, y2, x3, y3, fill=False)`
+
+Draws a triangle and immediately displays it on screen.
+
+**Parameters:**
+- `x1, y1` (int): Coordinates of first vertex
+- `x2, y2` (int): Coordinates of second vertex
+- `x3, y3` (int): Coordinates of third vertex
+- `fill` (bool): Whether to fill (default: False)
+
+**Example:**
+```python
+# Empty triangle immediate display
+display.show_triangle(10, 10, 20, 40, 40, 40)
+# Filled triangle immediate display
+display.show_triangle(50, 10, 60, 40, 80, 40, fill=True)
+```
+
+#### `display.show_image(image, x, y, scale=1)`
+
+Draws an image and immediately displays it on screen.
+
+**Parameters:**
+- `image`: Image object
+- `x` (int): Starting X coordinate
+- `y` (int): Starting Y coordinate
+- `scale` (int): Scale size (1=original size, 2=2x, 3=3x), default: 1
+
+**Example:**
+```python
+from codibit import Image
+
+# Built-in image immediate display
+display.show_image(Image.HEART, 0, 0)
+display.show_image(Image.HAPPY, 20, 0, scale=2)
+```
+
 ### Hardware Information
 
 - **Display**: SH1106 OLED
@@ -919,11 +1028,14 @@ display.show()
 
 1. **Pixel Coordinates**: Origin (0,0) is at top-left corner
 2. **Pixel Values**: Only 0 (off) or 1 (on) are supported
-3. **Buffer Output**: `show()` must be called after drawing operations to display on screen
-4. **Built-in Images**: 64 different images available (see Image section)
-5. **Scaling**: Images can be scaled for better visibility when displayed
-6. **Performance**: It's efficient to process multiple drawing operations at once before calling `show()`
-7. **Buffer Control**: `clear()` only clears the buffer, while `clear_immediate()` outputs immediately for performance optimization
+3. **Buffer Output**: `draw_` functions only draw to buffer, requires separate `show()` call to display on screen
+4. **Immediate Display**: `show_` functions draw and immediately display on screen
+5. **Built-in Images**: 64 different images available (see Image section)
+6. **Scaling**: Images can be scaled for better visibility when displayed
+7. **Performance**: It's efficient to process multiple drawing operations at once before calling `show()`
+8. **Buffer Control**: `clear()` only clears the buffer, while `clear_immediate()` outputs immediately for performance optimization
+9. **Infinite Loops**: Use `draw_` functions in animations or games and call `show()` only once at the end
+10. **Static Screens**: Use `show_` functions for screens displayed only once to keep code concise
 
 ## Image
 

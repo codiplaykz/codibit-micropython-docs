@@ -8,48 +8,93 @@
 - Codi:bit 보드
 - MicroPython 환경 설정 완료
 
-## 기본 버튼 눌림 감지
+## 버튼 상태 감지
 
-버튼 눌림을 감지하는 가장 간단한 방법은 `is_pressed()` 메서드를 사용하는 것입니다.
+Codi:bit 버튼 클래스는 세 가지 주요 메서드를 제공하여 다양한 버튼 상태를 감지할 수 있습니다:
+
+### 1. `is_pressed()` - 눌림 순간 감지
+
+버튼이 눌리는 정확한 순간을 감지합니다 (한 번의 이벤트).
 
 ```python
 from codibit import *
 import time
 
 while True:
-    # 버튼 A가 현재 눌려있는지 확인
+    # 버튼 A가 눌리는 순간 감지
     if button_a.is_pressed():
-        print("버튼 A가 눌려있습니다!")
-
-    # 버튼 B가 현재 눌려있는지 확인
-    if button_b.is_pressed():
-        print("버튼 B가 눌려있습니다!")
-
-    # 너무 빈번한 확인을 피하기 위한 작은 지연
-    time.sleep(0.1)
-```
-
-## 버튼 눌림 이벤트 감지
-
-`was_pressed()`를 사용하여 버튼이 눌렸다가 뗀 이벤트를 감지합니다.
-
-```python
-from codibit import *
-import time
-
-print("버튼 A 또는 B를 눌러주세요...")
-
-while True:
-    # 마지막 확인 이후 버튼 A가 눌렸는지 확인
-    if button_a.was_pressed():
         print("버튼 A가 눌렸습니다!")
 
-    # 마지막 확인 이후 버튼 B가 눌렸는지 확인
-    if button_b.was_pressed():
+    # 버튼 B가 눌리는 순간 감지
+    if button_b.is_pressed():
         print("버튼 B가 눌렸습니다!")
 
-    # 작은 지연
-    time.sleep(0.1)
+    # 최적 성능을 위한 작은 지연
+    time.sleep(0.01)
+```
+
+### 2. `is_holding()` - 계속 눌린 상태 감지
+
+버튼이 계속 눌려있는 상태를 감지합니다.
+
+```python
+from codibit import *
+import time
+
+while True:
+    # 버튼 A가 계속 눌려있는지 확인
+    if button_a.is_holding():
+        print("버튼 A가 눌려있습니다...")
+
+    # 버튼 B가 계속 눌려있는지 확인
+    if button_b.is_holding():
+        print("버튼 B가 눌려있습니다...")
+
+    time.sleep(0.01)
+```
+
+### 3. `is_released()` - 떼어짐 순간 감지
+
+버튼이 떼어지는 정확한 순간을 감지합니다 (한 번의 이벤트).
+
+```python
+from codibit import *
+import time
+
+while True:
+    # 버튼 A가 떼어지는 순간 감지
+    if button_a.is_released():
+        print("버튼 A가 떼어졌습니다!")
+
+    # 버튼 B가 떼어지는 순간 감지
+    if button_b.is_released():
+        print("버튼 B가 떼어졌습니다!")
+
+    time.sleep(0.01)
+```
+
+## 완전한 버튼 상태 모니터링
+
+모든 버튼 상태를 동시에 모니터링할 수 있습니다:
+
+```python
+from codibit import *
+import time
+
+while True:
+    # 눌림 감지
+    if button_a.is_pressed():
+        print("🔴 버튼 A: 눌렸습니다!")
+
+    # 계속 눌린 상태
+    if button_a.is_holding():
+        print("🟡 버튼 A: 눌린 중...", end='\r')
+
+    # 떼어짐 감지
+    if button_a.is_released():
+        print("🟢 버튼 A: 떼어졌습니다!")
+
+    time.sleep(0.01)
 ```
 
 ## 버튼 눌림 횟수 세기
@@ -131,33 +176,49 @@ print(f"get_presses(): {presses_a2} (여전히 0)")
 print(f"get_press_count(): {count_a2} (누적 유지)")
 ```
 
-## 각 버튼에 다른 동작 설정
+## 고급 버튼 패턴
 
-각 버튼에 서로 다른 동작을 만들 수 있습니다.
+### 상태 기반 버튼 처리
+
+더 복잡한 상호작용을 위해 버튼 상태를 추적합니다:
 
 ```python
 from codibit import *
 import time
 
+button_a_pressed = False
 counter = 0
+
 print("버튼 A: 증가, 버튼 B: 감소")
 print(f"카운터: {counter}")
 
 while True:
-    if button_a.was_pressed():
+    # 버튼 A 눌림 감지
+    if button_a.is_pressed():
+        button_a_pressed = True
         counter += 1
         print(f"카운터: {counter}")
 
-    if button_b.was_pressed():
+    # 버튼 A 떼어짐 감지
+    if button_a.is_released():
+        button_a_pressed = False
+        print("버튼 A가 떼어졌습니다")
+
+    # 버튼 B 눌림 감지
+    if button_b.is_pressed():
         counter -= 1
         print(f"카운터: {counter}")
 
-    time.sleep(0.1)
+    # 버튼 B 떼어짐 감지
+    if button_b.is_released():
+        print("버튼 B가 떼어졌습니다")
+
+    time.sleep(0.01)
 ```
 
-## 버튼 상태 조합
+### 동시 버튼 감지
 
-여러 버튼을 동시에 확인할 수 있습니다.
+여러 버튼이 동시에 눌렸을 때를 감지합니다:
 
 ```python
 from codibit import *
@@ -166,18 +227,25 @@ import time
 print("버튼 A와 B를 동시에 눌러주세요...")
 
 while True:
-    # 두 버튼이 동시에 눌렸는지 확인
-    if button_a.is_pressed() and button_b.is_pressed():
+    # 두 버튼이 동시에 눌려있는지 확인
+    if button_a.is_holding() and button_b.is_holding():
         print("두 버튼이 모두 눌려있습니다!")
 
-    # 어느 한 버튼이라도 눌렸는지 확인
-    elif button_a.was_pressed() or button_b.was_pressed():
-        if button_a.was_pressed():
-            print("버튼 A만 눌렸습니다")
-        if button_b.was_pressed():
-            print("버튼 B만 눌렸습니다")
+    # 개별 버튼 눌림 감지
+    if button_a.is_pressed():
+        print("버튼 A가 눌렸습니다")
 
-    time.sleep(0.1)
+    if button_b.is_pressed():
+        print("버튼 B가 눌렸습니다")
+
+    # 개별 버튼 떼어짐 감지
+    if button_a.is_released():
+        print("버튼 A가 떼어졌습니다")
+
+    if button_b.is_released():
+        print("버튼 B가 떼어졌습니다")
+
+    time.sleep(0.01)
 ```
 
 ## 간단한 메뉴 시스템
@@ -199,42 +267,76 @@ def show_menu():
 show_menu()
 
 while True:
-    if button_a.was_pressed():
-        # 현재 메뉴 항목 선택
+    # 메뉴 선택
+    if button_a.is_pressed():
         print(f"선택됨: {menu_items[current_item]}")
         time.sleep(1)
         show_menu()
 
-    if button_b.was_pressed():
-        # 다음 메뉴 항목으로 이동
+    # 메뉴 탐색
+    if button_b.is_pressed():
         current_item = (current_item + 1) % len(menu_items)
         show_menu()
 
-    time.sleep(0.1)
+    time.sleep(0.01)
 ```
 
 ## 팁과 모범 사례
 
 ### 1. 적절한 메서드 선택
 
-- `is_pressed()`: 연속적인 동작용 (예: 버튼을 계속 누르고 있을 때)
-- `was_pressed()`: 단일 이벤트용 (예: 메뉴 선택)
-- `get_presses()`: 주기적인 카운팅용 (예: 5초마다 누름 횟수 확인)
-- `get_press_count()`: 실시간 누적 카운팅용 (예: 총 누름 횟수 추적)
+- **`is_pressed()`**: 버튼이 눌리는 순간 감지 (한 번의 이벤트)
+- **`is_holding()`**: 버튼이 계속 눌린 상태 감지
+- **`is_released()`**: 버튼이 떼어지는 순간 감지 (한 번의 이벤트)
+- **`get_presses()`**: 주기적 카운팅 (카운터 리셋)
+- **`get_press_count()`**: 실시간 누적 카운팅 (카운터 유지)
 
-### 2. 지연 추가
+### 2. 성능 최적화
 
-출력이 너무 많아지는 것을 방지하고 적절한 버튼 디바운싱을 위해 루프에 항상 작은 지연을 포함하세요.
+루프에 항상 작은 지연을 포함하세요:
+```python
+time.sleep(0.01)  # 10ms - 대부분의 경우 권장
+time.sleep(0.05)  # 50ms - 안정성 중심 애플리케이션용
+```
 
-### 3. 버튼 조합
+### 3. 버튼 상태 흐름
 
-`is_pressed()`는 현재 상태를 확인하고, `was_pressed()`는 마지막 호출 이후의 이벤트를 확인한다는 점을 기억하세요.
+일반적인 버튼 상호작용 흐름:
+1. `is_pressed()` - 버튼이 눌림
+2. `is_holding()` - 버튼이 계속 눌려있음 (연속)
+3. `is_released()` - 버튼이 떼어짐
 
 ### 4. 디바운싱
 
-버튼은 50ms 지연으로 자동 디바운싱 처리되므로 버튼 바운스에 대해 걱정할 필요가 없습니다.
+버튼은 50ms 지연으로 자동 디바운싱 처리됩니다. 조정 가능합니다:
+```python
+button_a = Button(BUTTON_A_PIN, debounce_ms=30)  # 더 빠른 반응
+button_b = Button(BUTTON_B_PIN, debounce_ms=100)  # 더 안정적
+```
 
-### 5. 카운터 관리
+### 5. 이벤트 처리 모범 사례
 
-- `get_presses()`: 카운터를 리셋하므로 주기적인 카운팅에 적합
-- `get_press_count()`: 카운터를 리셋하지 않으므로 누적 통계에 적합
+```python
+# ✅ 좋은 예: 모든 상태를 순서대로 확인
+if button_a.is_pressed():
+    print("눌렸습니다!")
+
+if button_a.is_holding():
+    print("눌린 중...")
+
+if button_a.is_released():
+    print("떼어졌습니다!")
+
+# ❌ 피해야 할 예: 상태 확인 누락
+if button_a.is_holding():  # is_pressed()를 먼저 확인해야 함
+    print("눌린 중...")
+```
+
+### 6. 카운터 관리
+
+- **`get_presses()`**: 카운터 리셋, 주기적 카운팅에 적합
+- **`get_press_count()`**: 카운터 유지, 누적 통계에 적합
+
+### 7. 메모리 효율성
+
+MicroPython 환경에서는 반응성과 CPU 사용량의 균형을 위해 적절한 sleep 간격을 사용하세요.

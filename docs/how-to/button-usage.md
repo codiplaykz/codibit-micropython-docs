@@ -8,48 +8,93 @@ This guide shows you how to use the built-in buttons on the Codi:bit board to de
 - Codi:bit board
 - MicroPython environment set up
 
-## Basic Button Press Detection
+## Button State Detection
 
-The simplest way to detect button presses is using the `is_pressed()` method.
+The Codi:bit button class provides three main methods for detecting different button states:
+
+### 1. `is_pressed()` - Moment of Press Detection
+
+Detects the exact moment when a button is pressed (one-time event).
 
 ```python
 from codibit import *
 import time
 
 while True:
-    # Check if Button A is currently pressed
+    # Detect when Button A is pressed
     if button_a.is_pressed():
-        print("Button A is pressed!")
+        print("Button A pressed!")
 
-    # Check if Button B is currently pressed
+    # Detect when Button B is pressed
     if button_b.is_pressed():
-        print("Button B is pressed!")
+        print("Button B pressed!")
 
-    # Small delay to avoid too frequent checks
-    time.sleep(0.1)
+    # Small delay for optimal performance
+    time.sleep(0.01)
 ```
 
-## Detecting Button Press Events
+### 2. `is_holding()` - Continuous Press Detection
 
-Use `was_pressed()` to detect when a button was pressed and released (button press events).
+Detects when a button is continuously being held down.
 
 ```python
 from codibit import *
 import time
 
-print("Press buttons A or B...")
+while True:
+    # Check if Button A is being held
+    if button_a.is_holding():
+        print("Button A is being held...")
+
+    # Check if Button B is being held
+    if button_b.is_holding():
+        print("Button B is being held...")
+
+    time.sleep(0.01)
+```
+
+### 3. `is_released()` - Moment of Release Detection
+
+Detects the exact moment when a button is released (one-time event).
+
+```python
+from codibit import *
+import time
 
 while True:
-    # Check if Button A was pressed since last check
-    if button_a.was_pressed():
-        print("Button A was pressed!")
+    # Detect when Button A is released
+    if button_a.is_released():
+        print("Button A released!")
 
-    # Check if Button B was pressed since last check
-    if button_b.was_pressed():
-        print("Button B was pressed!")
+    # Detect when Button B is released
+    if button_b.is_released():
+        print("Button B released!")
 
-    # Small delay
-    time.sleep(0.1)
+    time.sleep(0.01)
+```
+
+## Complete Button State Monitoring
+
+You can monitor all button states simultaneously:
+
+```python
+from codibit import *
+import time
+
+while True:
+    # Press detection
+    if button_a.is_pressed():
+        print("🔴 Button A: Pressed!")
+
+    # Continuous holding
+    if button_a.is_holding():
+        print("🟡 Button A: Holding...", end='\r')
+
+    # Release detection
+    if button_a.is_released():
+        print("🟢 Button A: Released!")
+
+    time.sleep(0.01)
 ```
 
 ## Counting Button Presses
@@ -131,33 +176,49 @@ print(f"get_presses(): {presses_a2} (still 0)")
 print(f"get_press_count(): {count_a2} (accumulated maintained)")
 ```
 
-## Different Responses for Each Button
+## Advanced Button Patterns
 
-You can create different behaviors for each button.
+### State-Based Button Handling
+
+Track button states for more complex interactions:
 
 ```python
 from codibit import *
 import time
 
+button_a_pressed = False
 counter = 0
+
 print("Button A: increment, Button B: decrement")
 print(f"Counter: {counter}")
 
 while True:
-    if button_a.was_pressed():
+    # Button A press detection
+    if button_a.is_pressed():
+        button_a_pressed = True
         counter += 1
         print(f"Counter: {counter}")
 
-    if button_b.was_pressed():
+    # Button A release detection
+    if button_a.is_released():
+        button_a_pressed = False
+        print("Button A released")
+
+    # Button B press detection
+    if button_b.is_pressed():
         counter -= 1
         print(f"Counter: {counter}")
 
-    time.sleep(0.1)
+    # Button B release detection
+    if button_b.is_released():
+        print("Button B released")
+
+    time.sleep(0.01)
 ```
 
-## Combining Button States
+### Simultaneous Button Detection
 
-You can check multiple buttons at the same time.
+Detect when multiple buttons are pressed at the same time:
 
 ```python
 from codibit import *
@@ -166,18 +227,25 @@ import time
 print("Press both buttons A and B together...")
 
 while True:
-    # Check if both buttons are pressed simultaneously
-    if button_a.is_pressed() and button_b.is_pressed():
-        print("Both buttons are pressed!")
+    # Check if both buttons are being held simultaneously
+    if button_a.is_holding() and button_b.is_holding():
+        print("Both buttons are being held!")
 
-    # Check if either button was pressed
-    elif button_a.was_pressed() or button_b.was_pressed():
-        if button_a.was_pressed():
-            print("Only Button A was pressed")
-        if button_b.was_pressed():
-            print("Only Button B was pressed")
+    # Individual button press detection
+    if button_a.is_pressed():
+        print("Button A pressed")
 
-    time.sleep(0.1)
+    if button_b.is_pressed():
+        print("Button B pressed")
+
+    # Individual button release detection
+    if button_a.is_released():
+        print("Button A released")
+
+    if button_b.is_released():
+        print("Button B released")
+
+    time.sleep(0.01)
 ```
 
 ## Simple Menu System
@@ -199,42 +267,76 @@ def show_menu():
 show_menu()
 
 while True:
-    if button_a.was_pressed():
-        # Select current menu item
+    # Menu selection
+    if button_a.is_pressed():
         print(f"Selected: {menu_items[current_item]}")
         time.sleep(1)
         show_menu()
 
-    if button_b.was_pressed():
-        # Move to next menu item
+    # Navigate menu
+    if button_b.is_pressed():
         current_item = (current_item + 1) % len(menu_items)
         show_menu()
 
-    time.sleep(0.1)
+    time.sleep(0.01)
 ```
 
 ## Tips and Best Practices
 
 ### 1. Choose the Right Method
 
-- Use `is_pressed()` for continuous actions (e.g., holding a button)
-- Use `was_pressed()` for single events (e.g., menu selection)
-- Use `get_presses()` for periodic counting (e.g., check every 5 seconds)
-- Use `get_press_count()` for real-time cumulative counting (e.g., total press tracking)
+- **`is_pressed()`**: Detect the moment a button is pressed (one-time event)
+- **`is_holding()`**: Detect continuous button holding
+- **`is_released()`**: Detect the moment a button is released (one-time event)
+- **`get_presses()`**: Periodic counting with counter reset
+- **`get_press_count()`**: Real-time cumulative counting without reset
 
-### 2. Add Delays
+### 2. Performance Optimization
 
-Always include small delays in your loops to avoid overwhelming the output and to allow for proper button debouncing.
+Always include small delays in your loops:
+```python
+time.sleep(0.01)  # 10ms - recommended for most cases
+time.sleep(0.05)  # 50ms - for stability-focused applications
+```
 
-### 3. Button Combinations
+### 3. Button State Flow
 
-Remember that `is_pressed()` checks the current state, while `was_pressed()` checks for events since the last call.
+The typical button interaction flow:
+1. `is_pressed()` - Button is pressed
+2. `is_holding()` - Button is being held (continuous)
+3. `is_released()` - Button is released
 
 ### 4. Debouncing
 
-The buttons automatically handle debouncing with a 50ms delay, so you don't need to worry about button bounce.
+The buttons automatically handle debouncing with a 50ms delay. You can adjust this:
+```python
+button_a = Button(BUTTON_A_PIN, debounce_ms=30)  # Faster response
+button_b = Button(BUTTON_B_PIN, debounce_ms=100)  # More stable
+```
 
-### 5. Counter Management
+### 5. Event Handling Best Practices
 
-- `get_presses()`: Resets the counter, suitable for periodic counting
-- `get_press_count()`: Does not reset the counter, suitable for cumulative statistics
+```python
+# ✅ Good: Check all states in order
+if button_a.is_pressed():
+    print("Pressed!")
+
+if button_a.is_holding():
+    print("Holding...")
+
+if button_a.is_released():
+    print("Released!")
+
+# ❌ Avoid: Missing state checks
+if button_a.is_holding():  # Should check is_pressed() first
+    print("Holding...")
+```
+
+### 6. Counter Management
+
+- **`get_presses()`**: Resets counter, suitable for periodic counting
+- **`get_press_count()`**: Maintains counter, suitable for cumulative statistics
+
+### 7. Memory Efficiency
+
+For MicroPython environments, use appropriate sleep intervals to balance responsiveness and CPU usage.

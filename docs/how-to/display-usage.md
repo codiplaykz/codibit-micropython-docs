@@ -6,6 +6,19 @@ This guide explains how to use the Codi:bit display with the new buffer-based AP
 
 The Codi:bit display uses a buffer-based approach where drawing commands are stored in an internal buffer and then output to the screen using the `show()` function. This approach provides better performance and more control over the display.
 
+## 🔬 Technical Background
+
+**Background**: OLED displays consist of a memory buffer (128×64 pixel data) and the actual screen.
+
+**Operation**:
+- `draw_` functions only store pixel data in the buffer
+- `show()` function transfers the entire buffer to the screen
+- `show_` functions internally call `show()` each time, updating the screen every time
+
+**Result**: Using `show_` functions in infinite loops causes the screen to flicker multiple times. Using `draw_` functions and then calling `show()` once provides smooth display.
+
+> 💡 **For detailed comparison and usage patterns, see the [Understanding draw_ vs show_ Functions](#understanding-draw_-vs-show_-functions) section below.**
+
 ## Basic Usage Pattern
 
 ```python
@@ -147,6 +160,87 @@ if display.get_pixel(10, 20):
     print("Pixel is on")
 else:
     print("Pixel is off")
+```
+
+## Understanding draw_ vs show_ Functions
+
+### Correct Usage Patterns
+
+#### ✅ Using draw_ functions in infinite loops (Recommended)
+
+```python
+import time
+from codibit import *
+
+# Animation in infinite loop
+while True:
+    display.clear()                    # Clear buffer
+    display.draw_text("Hello", 0, 0)   # Draw text to buffer
+    display.draw_circle(32, 32, 10)    # Draw circle to buffer
+    display.show()                     # Display all content at once
+    time.sleep(0.5)
+```
+
+**Advantages:**
+- Smooth animation without flickering
+- Memory efficient (single update)
+- Performance optimized
+
+#### ✅ Using show_ functions for static screens
+
+```python
+from codibit import *
+
+# Static screen composition
+display.clear()
+display.show_text("Hello", 0, 0)                    # Immediate display
+display.show_circle(32, 32, 10)                     # Immediate display
+```
+
+**Advantages:**
+- Simple and intuitive
+- Suitable for static screen composition
+- Concise code
+
+#### ❌ Using show_ functions in infinite loops (Avoid this)
+
+```python
+import time
+from codibit import *
+
+# Problematic code - causes flickering
+while True:
+    display.clear()
+    display.show_text("Hello", 0, 0)                    # Immediate display
+    display.show_circle(32, 32, 10)                     # Immediate display
+    time.sleep(0.5)
+```
+
+**Problems:**
+- **Flickering occurs**: Screen updates with each show_ function call
+- **Performance degradation**: Unnecessary screen updates cause performance issues
+- **Visual discomfort**: Poor user experience
+
+### Flickering Issue Resolution
+
+#### Cause
+Using multiple show_ functions in infinite loops:
+1. `show_text()` call → Screen update
+2. `show_circle()` call → Screen update
+
+Each step updates the screen, causing flickering.
+
+#### Solution
+Use draw_ functions in infinite loops and call `show()` only once at the end:
+
+```python
+# Correct approach
+while True:
+    display.clear()
+    display.draw_text("Hello", 0, 0)      # Draw to buffer only
+    display.draw_circle(32, 32, 10)       # Draw to buffer only
+    display.show()                         # Display once
+    time.sleep(0.5)
 ```
 
 ## Performance Optimization
@@ -303,6 +397,9 @@ else:
 6. **Consider performance**: Minimize the number of `show()` calls for better performance
 7. **Test visibility**: Ensure text and graphics are visible against the background
 8. **Choose clear method**: Use `clear()` for performance optimization with multiple operations, `clear_immediate()` for immediate feedback
+9. **Use draw_ functions in infinite loops**: For animations or games, use `draw_` functions and call `show()` only once at the end
+10. **Use show_ functions for static screens**: For screens displayed only once, use `show_` functions to keep code concise
+11. **Avoid flickering**: Don't use `show_` functions in infinite loops as they cause flickering
 
 ## Hardware Limitations
 
