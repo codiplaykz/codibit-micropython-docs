@@ -148,8 +148,9 @@ print(f"Button A was pressed {total_presses} times total")
 
 | Method | Function | Counter Reset | Use Case |
 |--------|----------|---------------|----------|
-| `is_pressed()` | Check current press state | - | Continuous actions (holding button) |
-| `was_pressed()` | Event detection | - | Single events (menu selection) |
+| `is_pressed()` | Event detection (press moment) | - | Single events (menu selection, trigger actions) |
+| `is_holding()` | Check current press state | - | Continuous actions (holding button) |
+| `is_released()` | Event detection (release moment) | - | Single events (release trigger) |
 | `get_presses()` | Return press count and reset | ✅ | Periodic counting (check every 5 seconds) |
 | `get_press_count()` | Check accumulated press count | ❌ | Real-time cumulative counting (total press tracking) |
 
@@ -1503,19 +1504,6 @@ heading = magnetometer.get_heading()
 ```
 
 ### Methods
-
-#### `magnetometer.calibrate()`
-
-Calibrates the magnetometer sensor. For accurate measurements, hold the board in the air and slowly draw figure-8 patterns for about 20 seconds.
-
-**Example:**
-```python
-print("Starting magnetometer calibration...")
-print("Please hold the board in the air and slowly draw figure-8 patterns")
-print("for about 20 seconds to calibrate the sensor...")
-magnetometer.calibrate()
-print("Calibration complete!")
-```
 
 #### `magnetometer.calibrate()`
 
