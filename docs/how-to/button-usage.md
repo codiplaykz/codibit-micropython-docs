@@ -18,7 +18,6 @@ Detects the exact moment when a button is pressed (one-time event).
 
 ```python
 from codibit import *
-import time
 
 while True:
     # Detect when Button A is pressed
@@ -30,7 +29,7 @@ while True:
         print("Button B pressed!")
 
     # Small delay for optimal performance
-    time.sleep(0.01)
+    sleep(0.01)
 ```
 
 ### 2. `is_holding()` - Continuous Press Detection
@@ -39,7 +38,6 @@ Detects when a button is continuously being held down.
 
 ```python
 from codibit import *
-import time
 
 while True:
     # Check if Button A is being held
@@ -50,7 +48,7 @@ while True:
     if button_b.is_holding():
         print("Button B is being held...")
 
-    time.sleep(0.01)
+    sleep(0.01)
 ```
 
 ### 3. `is_released()` - Moment of Release Detection
@@ -59,7 +57,6 @@ Detects the exact moment when a button is released (one-time event).
 
 ```python
 from codibit import *
-import time
 
 while True:
     # Detect when Button A is released
@@ -70,7 +67,7 @@ while True:
     if button_b.is_released():
         print("Button B released!")
 
-    time.sleep(0.01)
+    sleep(0.01)
 ```
 
 ## Complete Button State Monitoring
@@ -79,7 +76,6 @@ You can monitor all button states simultaneously:
 
 ```python
 from codibit import *
-import time
 
 while True:
     # Press detection
@@ -94,7 +90,7 @@ while True:
     if button_a.is_released():
         print("🟢 Button A: Released!")
 
-    time.sleep(0.01)
+    sleep(0.01)
 ```
 
 ## Counting Button Presses
@@ -103,13 +99,12 @@ The `get_presses()` method returns the total number of button presses and resets
 
 ```python
 from codibit import *
-import time
 
 print("Press buttons multiple times, then wait 5 seconds for count...")
 
 while True:
     # Wait 5 seconds
-    time.sleep(5)
+    sleep(5)
 
     # Get the number of times Button A was pressed
     a_presses = button_a.get_presses()
@@ -131,7 +126,6 @@ The `get_press_count()` method returns the total accumulated number of button pr
 
 ```python
 from codibit import *
-import time
 
 print("Press buttons to see real-time accumulated count...")
 
@@ -145,7 +139,7 @@ while True:
     # Real-time display
     print(f"\rTotal presses - A: {total_a}, B: {total_b}", end="")
 
-    time.sleep(0.1)
+    sleep(0.1)
 ```
 
 ## get_presses() vs get_press_count() Comparison
@@ -154,10 +148,9 @@ It's important to understand the difference between these two methods:
 
 ```python
 from codibit import *
-import time
 
 print("Press buttons multiple times...")
-time.sleep(3)
+sleep(3)
 
 # First check
 presses_a = button_a.get_presses()  # Counter is reset
@@ -166,7 +159,7 @@ count_a = button_a.get_press_count()  # Counter is not reset
 print(f"get_presses(): {presses_a} (reset)")
 print(f"get_press_count(): {count_a} (accumulated)")
 
-time.sleep(2)
+sleep(2)
 
 # Second check
 presses_a2 = button_a.get_presses()  # 0 (already reset)
@@ -184,7 +177,6 @@ Track button states for more complex interactions:
 
 ```python
 from codibit import *
-import time
 
 button_a_pressed = False
 counter = 0
@@ -213,7 +205,7 @@ while True:
     if button_b.is_released():
         print("Button B released")
 
-    time.sleep(0.01)
+    sleep(0.01)
 ```
 
 ### Simultaneous Button Detection
@@ -222,7 +214,6 @@ Detect when multiple buttons are pressed at the same time:
 
 ```python
 from codibit import *
-import time
 
 print("Press both buttons A and B together...")
 
@@ -245,7 +236,7 @@ while True:
     if button_b.is_released():
         print("Button B released")
 
-    time.sleep(0.01)
+    sleep(0.01)
 ```
 
 ## Simple Menu System
@@ -254,7 +245,6 @@ Create a basic menu system using buttons.
 
 ```python
 from codibit import *
-import time
 
 menu_items = ["Start Game", "Settings", "Exit"]
 current_item = 0
@@ -270,7 +260,7 @@ while True:
     # Menu selection
     if button_a.is_pressed():
         print(f"Selected: {menu_items[current_item]}")
-        time.sleep(1)
+        sleep(1)
         show_menu()
 
     # Navigate menu
@@ -278,7 +268,7 @@ while True:
         current_item = (current_item + 1) % len(menu_items)
         show_menu()
 
-    time.sleep(0.01)
+    sleep(0.01)
 ```
 
 ## Tips and Best Practices
@@ -295,8 +285,8 @@ while True:
 
 Always include small delays in your loops:
 ```python
-time.sleep(0.01)  # 10ms - recommended for most cases
-time.sleep(0.05)  # 50ms - for stability-focused applications
+sleep(0.01)  # 10ms - recommended for most cases
+sleep(0.05)  # 50ms - for stability-focused applications
 ```
 
 ### 3. Button State Flow

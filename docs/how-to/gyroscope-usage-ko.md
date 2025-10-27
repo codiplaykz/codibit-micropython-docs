@@ -48,7 +48,6 @@ print(f"회전 강도: {strength}")
 
 ```python
 from codibit import *
-import time
 
 gyroscope = Gyroscope()
 
@@ -63,7 +62,7 @@ while True:
     else:
         print(f"정지 상태. 강도: {strength}")
 
-    time.sleep(0.1)
+    sleep(0.1)
 ```
 
 ### 2. 축별 회전 감지
@@ -72,7 +71,6 @@ while True:
 
 ```python
 from codibit import *
-import time
 
 gyroscope = Gyroscope()
 
@@ -95,7 +93,7 @@ while True:
         direction = "시계방향" if z > 0 else "반시계방향"
         print(f"요잉 {direction}: {z}")
 
-    time.sleep(0.1)
+    sleep(0.1)
 ```
 
 

@@ -11,6 +11,34 @@ import TOCInline from '@theme/TOCInline';
 
 내장 센서와 함께 작동하는 유틸리티 함수들의 API입니다.
 
+### `sleep(n)`
+
+지정된 시간(초) 동안 프로그램 실행을 일시 정지합니다.
+
+**매개변수:**
+- `n` (int or float): 대기 시간 (초)
+
+**반환값:**
+- 없음
+
+**예시:**
+```python
+# 1초 대기
+codibit.sleep(1)
+
+# 0.5초 대기
+codibit.sleep(0.5)
+
+# 2.5초 대기
+codibit.sleep(2.5)
+```
+
+**주의사항:**
+1. **음수 값**: 음수 값이 입력되면 무시됩니다
+2. **에러 처리**: 예외 발생 시 조용히 실패합니다
+3. **메모리 효율성**: MicroPython의 메모리 제약을 고려한 구현입니다
+4. **정밀도**: 부동소수점 값도 지원합니다
+
 ### `get_board_temperature()`
 
 QMI8658 IMU 센서에서 현재 보드 온도를 읽어옵니다.
@@ -66,7 +94,7 @@ button_b  # 버튼 B
 > while True:
 >     if button_a.is_pressed():
 >         print("버튼 A가 눌렸습니다!")
->     time.sleep(0.01)  # 최적 성능을 위한 10ms 지연
+>     sleep(0.01)  # 최적 성능을 위한 10ms 지연
 >
 > # ❌ 피해야 할 예: 지연 없이는 성능 문제 발생 가능
 > while True:
@@ -75,9 +103,9 @@ button_b  # 버튼 B
 > ```
 >
 > **권장 지연 시간:**
-> - `time.sleep(0.01)` - 10ms: 대부분의 애플리케이션에 최적
-> - `time.sleep(0.05)` - 50ms: 안정성 중심 애플리케이션용
-> - `time.sleep(0.1)` - 100ms: 간단한 애플리케이션용
+> - `sleep(0.01)` - 10ms: 대부분의 애플리케이션에 최적
+> - `sleep(0.05)` - 50ms: 안정성 중심 애플리케이션용
+> - `sleep(0.1)` - 100ms: 간단한 애플리케이션용
 
 #### `button.is_pressed()`
 
@@ -1257,7 +1285,7 @@ for clock in Image.ALL_CLOCKS:
     display.clear()
     display.draw_image(clock, 0, 0)
     display.show()
-    time.sleep(0.1)
+    sleep(0.1)
 ```
 
 #### `Image.ALL_ARROWS`
@@ -1271,7 +1299,7 @@ for arrow in Image.ALL_ARROWS:
     display.clear()
     display.draw_image(arrow, 0, 0)
     display.show()
-    time.sleep(0.2)
+    sleep(0.2)
 
 # 랜덤 화살표 선택
 import random

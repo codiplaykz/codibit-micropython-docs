@@ -46,7 +46,7 @@ C5 = 523
 notes = [C4, D4, E4, F4, G4, A4, B4, C5]
 for note in notes:
     buzzer.play_tone(note, 500)
-    time.sleep(0.1)
+    sleep(0.1)
 ```
 
 ## Playing Melodies
@@ -199,34 +199,33 @@ Create simple drum patterns:
 
 ```python
 from codibit import *
-import time
 
 # Simple rock beat
 def play_rock_beat():
     for _ in range(4):  # 4 measures
         # Beat 1
         buzzer.play_sound(Sound.DRUM_KICK)
-        time.sleep(0.1)
+        sleep(0.1)
         buzzer.play_sound(Sound.DRUM_HIHAT)
-        time.sleep(0.1)
+        sleep(0.1)
 
         # Beat 2
         buzzer.play_sound(Sound.DRUM_SNARE)
-        time.sleep(0.1)
+        sleep(0.1)
         buzzer.play_sound(Sound.DRUM_HIHAT)
-        time.sleep(0.1)
+        sleep(0.1)
 
         # Beat 3
         buzzer.play_sound(Sound.DRUM_KICK)
-        time.sleep(0.1)
+        sleep(0.1)
         buzzer.play_sound(Sound.DRUM_HIHAT)
-        time.sleep(0.1)
+        sleep(0.1)
 
         # Beat 4
         buzzer.play_sound(Sound.DRUM_SNARE)
-        time.sleep(0.1)
+        sleep(0.1)
         buzzer.play_sound(Sound.DRUM_HIHAT)
-        time.sleep(0.1)
+        sleep(0.1)
 
 play_rock_beat()
 ```
@@ -276,7 +275,7 @@ buzzer.play_tone(440, 1000)
 for volume in range(4):
     buzzer.set_volume(volume)
     buzzer.play_tone(440, 500)
-    time.sleep(0.1)
+    sleep(0.1)
 ```
 
 ## Stopping Sounds
@@ -301,7 +300,6 @@ Here's a complete example that demonstrates various buzzer features:
 
 ```python
 from codibit import *
-import time
 
 print("=== Codi:bit Buzzer Demo ===")
 
@@ -310,7 +308,7 @@ print("Testing volume levels...")
 for volume in range(4):
     buzzer.set_volume(volume)
     buzzer.play_tone(440, 500)
-    time.sleep(0.5)
+    sleep(0.5)
 
 # Note string test
 print("Playing C major scale...")
@@ -322,14 +320,14 @@ print("Playing practical sounds...")
 sounds = [Sound.BEEP, Sound.CHIME, Sound.ALERT, Sound.SUCCESS]
 for sound in sounds:
     buzzer.play_sound(sound)
-    time.sleep(0.5)
+    sleep(0.5)
 
 # Drum sounds test
 print("Playing drum sounds...")
 drums = [Sound.DRUM_KICK, Sound.DRUM_SNARE, Sound.DRUM_HIHAT, Sound.DRUM_CRASH]
 for drum in drums:
     buzzer.play_sound(drum)
-    time.sleep(0.3)
+    sleep(0.3)
 
 # Custom melody
 print("Playing custom melody...")
@@ -342,7 +340,7 @@ melody = ['c4:4', 'd4:4', 'e4:4', 'f4:4', 'g4:8']
 for bpm in [60, 120, 180]:
     buzzer.set_tempo(bpm=bpm)
     buzzer.play_melody(melody)
-    time.sleep(0.5)
+    sleep(0.5)
 
 # Built-in song
 print("Playing Happy Birthday...")

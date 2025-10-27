@@ -132,36 +132,33 @@ Codi:bit is an ESP32-based educational microcontroller board with:
 ### Button Example
 ```python
 from codibit import *
-import time
 
 while True:
     if button_a.is_pressed():
         print("Button A pressed!")
     if button_b.is_pressed():
         print("Button B pressed!")
-    time.sleep(0.1)
+    sleep(0.1)
 ```
 
 ### Light Sensor Example
 ```python
 from codibit import *
-import time
 
 while True:
     level = light.read_level()
     print(f"Light level: {level}")
-    time.sleep(1)
+    sleep(1)
 ```
 
 ### Microphone Example
 ```python
 from codibit import *
-import time
 
 while True:
     if microphone.is_loud():
         print("Loud sound detected!")
-    time.sleep(0.1)
+    sleep(0.1)
 ```
 
 ## 📚 Additional Resources

@@ -178,7 +178,7 @@ while True:
     display.draw_text("Hello", 0, 0)   # Draw text to buffer
     display.draw_circle(32, 32, 10)    # Draw circle to buffer
     display.show()                     # Display all content at once
-    time.sleep(0.5)
+    sleep(0.5)
 ```
 
 **Advantages:**
@@ -213,7 +213,7 @@ while True:
     display.clear()
     display.show_text("Hello", 0, 0)                    # Immediate display
     display.show_circle(32, 32, 10)                     # Immediate display
-    time.sleep(0.5)
+    sleep(0.5)
 ```
 
 **Problems:**
@@ -240,7 +240,7 @@ while True:
     display.draw_text("Hello", 0, 0)      # Draw to buffer only
     display.draw_circle(32, 32, 10)       # Draw to buffer only
     display.show()                         # Display once
-    time.sleep(0.5)
+    sleep(0.5)
 ```
 
 ## Performance Optimization
@@ -348,7 +348,7 @@ for x in range(0, 128, 5):
     display.clear()
     display.draw_circle(x, 32, 5)
     display.show()
-    time.sleep(0.1)
+    sleep(0.1)
 ```
 
 ### Blinking Text
@@ -361,11 +361,11 @@ for _ in range(5):
     display.clear()
     display.draw_text("Hello", 0, 0)
     display.show()
-    time.sleep(0.5)
+    sleep(0.5)
 
     display.clear()
     display.show()
-    time.sleep(0.5)
+    sleep(0.5)
 ```
 
 ## Error Handling

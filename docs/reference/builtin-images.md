@@ -113,7 +113,7 @@ for clock in Image.ALL_CLOCKS:
     display.clear()
     display.draw_image(clock, 0, 0)
     display.show()
-    time.sleep(0.5)
+    sleep(0.5)
 ```
 
 ### `Image.ALL_ARROWS`
@@ -128,5 +128,5 @@ for arrow in Image.ALL_ARROWS:
     display.clear()
     display.draw_image(arrow, 0, 0)
     display.show()
-    time.sleep(0.3)
+    sleep(0.3)
 ```

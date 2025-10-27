@@ -55,7 +55,6 @@ Create a basic compass that shows the current direction:
 
 ```python
 from codibit import *
-import time
 
 magnetometer = Magnetometer()
 
@@ -84,7 +83,7 @@ while True:
     direction = get_direction_name(heading)
 
     print(f"Direction: {direction} ({heading:.1f}°)")
-    time.sleep(0.5)
+    sleep(0.5)
 ```
 
 ### Example 2: Magnetic Field Monitor
@@ -93,7 +92,6 @@ Monitor magnetic field strength and detect strong magnetic fields:
 
 ```python
 from codibit import *
-import time
 
 magnetometer = Magnetometer()
 
@@ -119,7 +117,7 @@ while True:
         print("✅ Normal magnetic field")
 
     print("-" * 30)
-    time.sleep(1)
+    sleep(1)
 ```
 
 ### Example 3: Calibration
@@ -128,7 +126,6 @@ Calibrate the magnetometer for accurate readings:
 
 ```python
 from codibit import *
-import time
 
 magnetometer = Magnetometer()
 
@@ -149,7 +146,6 @@ Create a compass application that shows direction on the OLED display:
 
 ```python
 from codibit import *
-import time
 
 magnetometer = Magnetometer()
 
@@ -184,7 +180,7 @@ while True:
     display.draw_text(direction, 0, 30)
     display.show()
 
-    time.sleep(0.5)
+    sleep(0.5)
 ```
 
 ## Advanced Features
