@@ -94,7 +94,7 @@ button_b  # Button B
 > while True:
 >     if button_a.is_pressed():
 >         print("Button A pressed!")
->     time.sleep(0.01)  # 10ms delay for optimal performance
+>     sleep(0.01)  # 10ms delay for optimal performance
 >
 > # ❌ Avoid: No delays can cause performance issues
 > while True:
@@ -103,9 +103,9 @@ button_b  # Button B
 > ```
 >
 > **Recommended delays:**
-> - `time.sleep(0.01)` - 10ms: Optimal for most applications
-> - `time.sleep(0.05)` - 50ms: For stability-focused applications
-> - `time.sleep(0.1)` - 100ms: For simple applications
+> - `sleep(0.01)` - 10ms: Optimal for most applications
+> - `sleep(0.05)` - 50ms: For stability-focused applications
+> - `sleep(0.1)` - 100ms: For simple applications
 
 #### `button.is_pressed()`
 
@@ -1285,7 +1285,7 @@ for clock in Image.ALL_CLOCKS:
     display.clear()
     display.draw_image(clock, 0, 0)
     display.show()
-    time.sleep(0.1)
+    sleep(0.1)
 ```
 
 #### `Image.ALL_ARROWS`
@@ -1299,7 +1299,7 @@ for arrow in Image.ALL_ARROWS:
     display.clear()
     display.draw_image(arrow, 0, 0)
     display.show()
-    time.sleep(0.2)
+    sleep(0.2)
 
 # Random arrow selection
 import random

@@ -116,7 +116,7 @@ def color_gradient():
             b = int(color1[2] * (1 - ratio) + color2[2] * ratio)
 
             rgb_led.set_all_color(r, g, b)
-            time.sleep(0.05)
+            sleep(0.05)
 
 # 그라데이션 효과 실행
 color_gradient()
@@ -141,7 +141,7 @@ def breathing_effect():
         g = int(base_color[1] * brightness_ratio)
         b = int(base_color[2] * brightness_ratio)
         rgb_led.set_all_color(r, g, b)
-        time.sleep(0.05)
+        sleep(0.05)
 
     # 밝기 감소 (100% → 0%)
     for brightness in range(100, -1, -5):
@@ -150,7 +150,7 @@ def breathing_effect():
         g = int(base_color[1] * brightness_ratio)
         b = int(base_color[2] * brightness_ratio)
         rgb_led.set_all_color(r, g, b)
-        time.sleep(0.05)
+        sleep(0.05)
 
 # 숨쉬기 효과 실행
 breathing_effect()
@@ -168,7 +168,7 @@ def sequential_led():
 
     # 먼저 모든 LED 끄기
     rgb_led.turn_off_all()
-    time.sleep(1)
+    sleep(1)
 
     # 각 LED를 다른 색상으로 켜기
     colors = [
@@ -179,7 +179,7 @@ def sequential_led():
 
     for i in range(3):
         rgb_led.set_color(i, *colors[i])
-        time.sleep(1)
+        sleep(1)
 
 # 순차 LED 효과 실행
 sequential_led()
@@ -209,7 +209,7 @@ def color_memory_demo():
 
     # 모든 스트립 끄기
     rgb_led.turn_off_all()
-    time.sleep(2)
+    sleep(2)
 
     # 색상 복원
     for i, color in enumerate(stored_colors):
@@ -284,15 +284,15 @@ def traffic_light():
     while True:
         # 빨간불
         rgb_led.set_all_color(255, 0, 0)
-        time.sleep(3)
+        sleep(3)
 
         # 노란불
         rgb_led.set_all_color(255, 255, 0)
-        time.sleep(1)
+        sleep(1)
 
         # 초록불
         rgb_led.set_all_color(0, 255, 0)
-        time.sleep(3)
+        sleep(3)
 
 # 신호등 실행 (Ctrl+C로 중단)
 traffic_light()
@@ -317,7 +317,7 @@ def mood_light():
     for color in colors:
         rgb_led.set_all_color(*color)
         rgb_led.set_all_brightness(0.5)  # 50% 밝기
-        time.sleep(2)
+        sleep(2)
 
 # 무드 라이트 실행
 mood_light()

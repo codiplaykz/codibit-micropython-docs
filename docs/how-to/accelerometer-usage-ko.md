@@ -74,7 +74,7 @@ try:
         strength = accelerometer.get_strength()
 
         print(f"X: {x:6d} | Y: {y:6d} | Z: {z:6d} | 강도: {strength:6d}")
-        time.sleep(0.1)  # 초당 10회 업데이트
+        sleep(0.1)  # 초당 10회 업데이트
 
 except KeyboardInterrupt:
     print("\n모니터링 중지됨")
@@ -90,7 +90,7 @@ accelerometer = Accelerometer()
 
 # 기준값 설정
 print("기준값 설정 중... 2초간 움직이지 마세요")
-time.sleep(2)
+sleep(2)
 
 baseline_strength = accelerometer.get_strength()
 threshold = baseline_strength * 1.5  # 50% 증가 임계값
@@ -105,9 +105,9 @@ try:
 
         if current_strength > threshold:
             print("움직임 감지됨!")
-            time.sleep(0.5)  # 디바운스
+            sleep(0.5)  # 디바운스
 
-        time.sleep(0.1)
+        sleep(0.1)
 
 except KeyboardInterrupt:
     print("\n감지 중지됨")
@@ -137,7 +137,7 @@ try:
         display.show()
 
         print(f"현재 방향: {orientation}")
-        time.sleep(0.5)
+        sleep(0.5)
 
 except KeyboardInterrupt:
     print("\n감지 중지됨")
@@ -179,7 +179,7 @@ try:
             print("보드가 아래쪽으로 뒤집힘!")
             buzzer.play_tone(330, 50)
 
-        time.sleep(0.1)
+        sleep(0.1)
 
 except KeyboardInterrupt:
     print("\n감지 중지됨")
@@ -209,7 +209,7 @@ try:
         else:
             rgb_led.set_color(0, 0, 255)  # 다른 방향일 때 파란색
 
-        time.sleep(0.1)
+        sleep(0.1)
 
 except KeyboardInterrupt:
     print("\n모니터링 중지됨")

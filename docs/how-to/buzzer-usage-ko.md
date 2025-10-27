@@ -46,7 +46,7 @@ C5 = 523
 notes = [C4, D4, E4, F4, G4, A4, B4, C5]
 for note in notes:
     buzzer.play_tone(note, 500)
-    time.sleep(0.1)
+    sleep(0.1)
 ```
 
 ## 멜로디 재생
@@ -199,34 +199,33 @@ buzzer.play_sound(Sound.DRUM_SHAKER)    # 쉐이커
 
 ```python
 from codibit import *
-import time
 
 # 간단한 록 비트
 def play_rock_beat():
     for _ in range(4):  # 4마디
         # 1박자
         buzzer.play_sound(Sound.DRUM_KICK)
-        time.sleep(0.1)
+        sleep(0.1)
         buzzer.play_sound(Sound.DRUM_HIHAT)
-        time.sleep(0.1)
+        sleep(0.1)
 
         # 2박자
         buzzer.play_sound(Sound.DRUM_SNARE)
-        time.sleep(0.1)
+        sleep(0.1)
         buzzer.play_sound(Sound.DRUM_HIHAT)
-        time.sleep(0.1)
+        sleep(0.1)
 
         # 3박자
         buzzer.play_sound(Sound.DRUM_KICK)
-        time.sleep(0.1)
+        sleep(0.1)
         buzzer.play_sound(Sound.DRUM_HIHAT)
-        time.sleep(0.1)
+        sleep(0.1)
 
         # 4박자
         buzzer.play_sound(Sound.DRUM_SNARE)
-        time.sleep(0.1)
+        sleep(0.1)
         buzzer.play_sound(Sound.DRUM_HIHAT)
-        time.sleep(0.1)
+        sleep(0.1)
 
 play_rock_beat()
 ```
@@ -276,7 +275,7 @@ buzzer.play_tone(440, 1000)
 for volume in range(4):
     buzzer.set_volume(volume)
     buzzer.play_tone(440, 500)
-    time.sleep(0.1)
+    sleep(0.1)
 ```
 
 ## 소리 정지
@@ -301,7 +300,6 @@ buzzer.stop()  # 멜로디 정지
 
 ```python
 from codibit import *
-import time
 
 print("=== Codi:bit 버저 데모 ===")
 
@@ -310,7 +308,7 @@ print("볼륨 레벨 테스트 중...")
 for volume in range(4):
     buzzer.set_volume(volume)
     buzzer.play_tone(440, 500)
-    time.sleep(0.5)
+    sleep(0.5)
 
 # 음표 문자열 테스트
 print("C 장음계 재생 중...")
@@ -322,14 +320,14 @@ print("실용적인 소리 재생 중...")
 sounds = [Sound.BEEP, Sound.CHIME, Sound.ALERT, Sound.SUCCESS]
 for sound in sounds:
     buzzer.play_sound(sound)
-    time.sleep(0.5)
+    sleep(0.5)
 
 # 드럼 소리 테스트
 print("드럼 소리 재생 중...")
 drums = [Sound.DRUM_KICK, Sound.DRUM_SNARE, Sound.DRUM_HIHAT, Sound.DRUM_CRASH]
 for drum in drums:
     buzzer.play_sound(drum)
-    time.sleep(0.3)
+    sleep(0.3)
 
 # 사용자 정의 멜로디
 print("사용자 정의 멜로디 재생 중...")
@@ -342,7 +340,7 @@ melody = ['c4:4', 'd4:4', 'e4:4', 'f4:4', 'g4:8']
 for bpm in [60, 120, 180]:
     buzzer.set_tempo(bpm=bpm)
     buzzer.play_melody(melody)
-    time.sleep(0.5)
+    sleep(0.5)
 
 # 내장 곡
 print("생일 축하합니다 재생 중...")

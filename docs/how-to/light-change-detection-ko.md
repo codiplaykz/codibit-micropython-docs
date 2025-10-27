@@ -14,7 +14,6 @@
 
 ```python
 from codibit import *
-import time
 
 # 이전 조도 레벨 저장
 previous_level = light.read_level()
@@ -31,7 +30,7 @@ while True:
         previous_level = current_level
 
     # 너무 자주 확인하지 않도록 작은 지연
-    time.sleep(0.5)
+    sleep(0.5)
 ```
 
 ## 조도 변화에 반응하기
@@ -59,7 +58,7 @@ while True:
 
         previous_level = current_level
 
-    time.sleep(0.5)
+    sleep(0.5)
 ```
 
 ## 고급: 임계값 기반 감지
@@ -68,7 +67,6 @@ while True:
 
 ```python
 from codibit import *
-import time
 
 previous_level = light.read_level()
 threshold = 2  # 감지를 트리거하는 최소 변화량
@@ -92,7 +90,7 @@ while True:
 
         previous_level = current_level
 
-    time.sleep(0.3)
+    sleep(0.3)
 ```
 
 ## 실용적 응용
@@ -101,7 +99,6 @@ while True:
 
 ```python
 from codibit import *
-import time
 
 previous_level = light.read_level()
 change_count = 0
@@ -118,14 +115,13 @@ while True:
 
         previous_level = current_level
 
-    time.sleep(0.5)
+    sleep(0.5)
 ```
 
 ### 2. 조도 기반 알림
 
 ```python
 from codibit import *
-import time
 
 previous_level = light.read_level()
 
@@ -143,7 +139,7 @@ while True:
 
         previous_level = current_level
 
-    time.sleep(0.5)
+    sleep(0.5)
 ```
 
 ## 팁과 모범 사례

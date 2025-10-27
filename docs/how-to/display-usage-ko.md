@@ -178,7 +178,7 @@ while True:
     display.draw_text("Hello", 0, 0)   # 버퍼에 텍스트 그리기
     display.draw_circle(32, 32, 10)    # 버퍼에 원 그리기
     display.show()                     # 모든 내용을 한 번에 화면에 표시
-    time.sleep(0.5)
+    sleep(0.5)
 ```
 
 **장점:**
@@ -213,7 +213,7 @@ while True:
     display.clear()
     display.show_text("Hello", 0, 0)                    # 즉시 표시
     display.show_circle(32, 32, 10)                     # 즉시 표시
-    time.sleep(0.5)
+    sleep(0.5)
 ```
 
 **문제점:**
@@ -240,7 +240,7 @@ while True:
     display.draw_text("Hello", 0, 0)      # 버퍼에만 그리기
     display.draw_circle(32, 32, 10)       # 버퍼에만 그리기
     display.show()                         # 한 번에 표시
-    time.sleep(0.5)
+    sleep(0.5)
 ```
 
 ## 성능 최적화
@@ -348,7 +348,7 @@ for x in range(0, 128, 5):
     display.clear()
     display.draw_circle(x, 32, 5)
     display.show()
-    time.sleep(0.1)
+    sleep(0.1)
 ```
 
 ### 깜빡이는 텍스트
@@ -361,11 +361,11 @@ for _ in range(5):
     display.clear()
     display.draw_text("Hello", 0, 0)
     display.show()
-    time.sleep(0.5)
+    sleep(0.5)
 
     display.clear()
     display.show()
-    time.sleep(0.5)
+    sleep(0.5)
 ```
 
 ## 에러 처리

@@ -55,7 +55,6 @@ heading = magnetometer.get_heading()
 
 ```python
 from codibit import *
-import time
 
 magnetometer = Magnetometer()
 
@@ -84,7 +83,7 @@ while True:
     direction = get_direction_name(heading)
 
     print(f"방향: {direction} ({heading:.1f}°)")
-    time.sleep(0.5)
+    sleep(0.5)
 ```
 
 ### 예제 2: 자기장 모니터
@@ -93,7 +92,6 @@ while True:
 
 ```python
 from codibit import *
-import time
 
 magnetometer = Magnetometer()
 
@@ -119,7 +117,7 @@ while True:
         print("✅ 정상 자기장")
 
     print("-" * 30)
-    time.sleep(1)
+    sleep(1)
 ```
 
 ### 예제 3: 보정
@@ -128,7 +126,6 @@ while True:
 
 ```python
 from codibit import *
-import time
 
 magnetometer = Magnetometer()
 
@@ -149,7 +146,6 @@ OLED 디스플레이에 방향을 표시하는 나침반 애플리케이션 만�
 
 ```python
 from codibit import *
-import time
 
 magnetometer = Magnetometer()
 
@@ -184,7 +180,7 @@ while True:
     display.draw_text(direction, 0, 30)
     display.show()
 
-    time.sleep(0.5)
+    sleep(0.5)
 ```
 
 ## 고급 기능

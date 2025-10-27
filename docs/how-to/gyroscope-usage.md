@@ -48,7 +48,6 @@ Detect when the board is being rotated:
 
 ```python
 from codibit import *
-import time
 
 gyroscope = Gyroscope()
 
@@ -63,7 +62,7 @@ while True:
     else:
         print(f"Still. Strength: {strength}")
 
-    time.sleep(0.1)
+    sleep(0.1)
 ```
 
 ### 2. Axis-Specific Rotation Detection
@@ -72,7 +71,6 @@ Detect rotation around specific axes:
 
 ```python
 from codibit import *
-import time
 
 gyroscope = Gyroscope()
 
@@ -95,7 +93,7 @@ while True:
         direction = "clockwise" if z > 0 else "counterclockwise"
         print(f"Yawing {direction}: {z}")
 
-    time.sleep(0.1)
+    sleep(0.1)
 ```
 
 

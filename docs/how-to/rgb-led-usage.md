@@ -115,7 +115,7 @@ def color_gradient():
             b = int(color1[2] * (1 - ratio) + color2[2] * ratio)
 
             rgb_led.set_all_color(r, g, b)
-            time.sleep(0.05)
+            sleep(0.05)
 
 # Run the gradient effect
 color_gradient()
@@ -140,7 +140,7 @@ def breathing_effect():
         g = int(base_color[1] * brightness_ratio)
         b = int(base_color[2] * brightness_ratio)
         rgb_led.set_all_color(r, g, b)
-        time.sleep(0.05)
+        sleep(0.05)
 
     # Decrease brightness (100% to 0%)
     for brightness in range(100, -1, -5):
@@ -149,7 +149,7 @@ def breathing_effect():
         g = int(base_color[1] * brightness_ratio)
         b = int(base_color[2] * brightness_ratio)
         rgb_led.set_all_color(r, g, b)
-        time.sleep(0.05)
+        sleep(0.05)
 
 # Run the breathing effect
 breathing_effect()
@@ -167,7 +167,7 @@ def sequential_led():
 
     # Turn off all LEDs first
     rgb_led.turn_off_all()
-    time.sleep(1)
+    sleep(1)
 
     # Turn on each LED with different colors
     colors = [
@@ -178,7 +178,7 @@ def sequential_led():
 
     for i in range(3):
         rgb_led.set_color(i, *colors[i])
-        time.sleep(1)
+        sleep(1)
 
 # Run the sequential LED effect
 sequential_led()
@@ -206,7 +206,7 @@ def color_memory_demo():
 
     # Turn off all strips
     rgb_led.turn_off_all()
-    time.sleep(2)
+    sleep(2)
 
     # Restore colors
     for i, color in enumerate(stored_colors):
@@ -281,15 +281,15 @@ def traffic_light():
     while True:
         # Red light
         rgb_led.set_all_color(255, 0, 0)
-        time.sleep(3)
+        sleep(3)
 
         # Yellow light
         rgb_led.set_all_color(255, 255, 0)
-        time.sleep(1)
+        sleep(1)
 
         # Green light
         rgb_led.set_all_color(0, 255, 0)
-        time.sleep(3)
+        sleep(3)
 
 # Run traffic light (Ctrl+C to stop)
 traffic_light()
@@ -314,7 +314,7 @@ def mood_light():
     for color in colors:
         rgb_led.set_all_color(*color)
         rgb_led.set_all_brightness(0.5)  # 50% brightness
-        time.sleep(2)
+        sleep(2)
 
 # Run mood light
 mood_light()

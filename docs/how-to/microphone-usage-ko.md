@@ -58,7 +58,6 @@ if mic.is_quiet():
 
 ```python
 from codibit import *
-import time
 
 # 마이크 초기화
 mic = Microphone()
@@ -73,7 +72,7 @@ try:
         if mic.is_loud():
             print("👏 박수 감지!")
             # 여러 번 감지되는 것을 방지하기 위해 잠시 대기
-            time.sleep(0.5)
+            sleep(0.5)
 
         # 현재 소리 레벨 표시
         level = mic.get_level()
@@ -81,7 +80,7 @@ try:
             print(f"소리 레벨: {level}")
 
         # 출력이 너무 많아지는 것을 방지하기 위한 짧은 대기
-        time.sleep(0.1)
+        sleep(0.1)
 
 except KeyboardInterrupt:
     print("\n박수 감지가 중지되었습니다.")

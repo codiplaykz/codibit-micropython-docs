@@ -74,7 +74,7 @@ try:
         strength = accelerometer.get_strength()
 
         print(f"X: {x:6d} | Y: {y:6d} | Z: {z:6d} | Strength: {strength:6d}")
-        time.sleep(0.1)  # Update 10 times per second
+        sleep(0.1)  # Update 10 times per second
 
 except KeyboardInterrupt:
     print("\nMonitoring stopped")
@@ -90,7 +90,7 @@ accelerometer = Accelerometer()
 
 # Calibrate to ambient conditions
 print("Calibrating... Stay still for 2 seconds")
-time.sleep(2)
+sleep(2)
 
 baseline_strength = accelerometer.get_strength()
 threshold = baseline_strength * 1.5  # 50% increase threshold
@@ -105,9 +105,9 @@ try:
 
         if current_strength > threshold:
             print("Movement detected!")
-            time.sleep(0.5)  # Debounce
+            sleep(0.5)  # Debounce
 
-        time.sleep(0.1)
+        sleep(0.1)
 
 except KeyboardInterrupt:
     print("\nDetection stopped")
@@ -137,7 +137,7 @@ try:
         display.show()
 
         print(f"Current orientation: {orientation}")
-        time.sleep(0.5)
+        sleep(0.5)
 
 except KeyboardInterrupt:
     print("\nDetection stopped")
@@ -179,7 +179,7 @@ try:
             print("Board flipped to face down!")
             buzzer.play_tone(330, 50)
 
-        time.sleep(0.1)
+        sleep(0.1)
 
 except KeyboardInterrupt:
     print("\nDetection stopped")
@@ -209,7 +209,7 @@ try:
         else:
             rgb_led.set_color(0, 0, 255)  # Blue for other orientations
 
-        time.sleep(0.1)
+        sleep(0.1)
 
 except KeyboardInterrupt:
     print("\nMonitoring stopped")
@@ -243,7 +243,7 @@ def log_acceleration_data(filename="acceleration_log.txt"):
                 f.flush()  # Ensure data is written immediately
 
                 print(f"Logged: X={x}, Y={y}, Z={z}, Strength={strength}")
-                time.sleep(0.1)  # 10Hz sampling rate
+                sleep(0.1)  # 10Hz sampling rate
 
         except KeyboardInterrupt:
             print(f"\nLogging stopped. Data saved to {filename}")
@@ -292,7 +292,7 @@ try:
         print(f"Filtered: X={filtered_x:6.1f} Y={filtered_y:6.1f} Z={filtered_z:6.1f}")
         print("-" * 40)
 
-        time.sleep(0.1)
+        sleep(0.1)
 
 except KeyboardInterrupt:
     print("\nMonitoring stopped")

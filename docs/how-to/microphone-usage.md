@@ -58,7 +58,6 @@ Here's a complete example that detects clapping sounds:
 
 ```python
 from codibit import *
-import time
 
 # Initialize microphone
 mic = Microphone()
@@ -73,7 +72,7 @@ try:
         if mic.is_loud():
             print("👏 Clap detected!")
             # Wait a bit to avoid multiple detections
-            time.sleep(0.5)
+            sleep(0.5)
 
         # Show current sound level
         level = mic.get_level()
@@ -81,7 +80,7 @@ try:
             print(f"Sound level: {level}")
 
         # Small delay to prevent overwhelming output
-        time.sleep(0.1)
+        sleep(0.1)
 
 except KeyboardInterrupt:
     print("\nClap detection stopped.")

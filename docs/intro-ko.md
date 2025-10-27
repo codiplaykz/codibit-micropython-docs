@@ -132,36 +132,33 @@ Codi:bit는 ESP32 기반 교육용 마이크로컨트롤러 보드로 다음과 
 ### 버튼 예제
 ```python
 from codibit import *
-import time
 
 while True:
     if button_a.is_pressed():
         print("버튼 A가 눌렸습니다!")
     if button_b.is_pressed():
         print("버튼 B가 눌렸습니다!")
-    time.sleep(0.1)
+    sleep(0.1)
 ```
 
 ### 조도 센서 예제
 ```python
 from codibit import *
-import time
 
 while True:
     level = light.read_level()
     print(f"조도 레벨: {level}")
-    time.sleep(1)
+    sleep(1)
 ```
 
 ### 마이크 예제
 ```python
 from codibit import *
-import time
 
 while True:
     if microphone.is_loud():
         print("큰 소리가 감지되었습니다!")
-    time.sleep(0.1)
+    sleep(0.1)
 ```
 
 ## 📚 추가 자료

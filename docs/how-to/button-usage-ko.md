@@ -18,7 +18,6 @@ Codi:bit 버튼 클래스는 세 가지 주요 메서드를 제공하여 다양�
 
 ```python
 from codibit import *
-import time
 
 while True:
     # 버튼 A가 눌리는 순간 감지
@@ -30,7 +29,7 @@ while True:
         print("버튼 B가 눌렸습니다!")
 
     # 최적 성능을 위한 작은 지연
-    time.sleep(0.01)
+    sleep(0.01)
 ```
 
 ### 2. `is_holding()` - 계속 눌린 상태 감지
@@ -39,7 +38,6 @@ while True:
 
 ```python
 from codibit import *
-import time
 
 while True:
     # 버튼 A가 계속 눌려있는지 확인
@@ -50,7 +48,7 @@ while True:
     if button_b.is_holding():
         print("버튼 B가 눌려있습니다...")
 
-    time.sleep(0.01)
+    sleep(0.01)
 ```
 
 ### 3. `is_released()` - 떼어짐 순간 감지
@@ -59,7 +57,6 @@ while True:
 
 ```python
 from codibit import *
-import time
 
 while True:
     # 버튼 A가 떼어지는 순간 감지
@@ -70,7 +67,7 @@ while True:
     if button_b.is_released():
         print("버튼 B가 떼어졌습니다!")
 
-    time.sleep(0.01)
+    sleep(0.01)
 ```
 
 ## 완전한 버튼 상태 모니터링
@@ -79,7 +76,6 @@ while True:
 
 ```python
 from codibit import *
-import time
 
 while True:
     # 눌림 감지
@@ -94,7 +90,7 @@ while True:
     if button_a.is_released():
         print("🟢 버튼 A: 떼어졌습니다!")
 
-    time.sleep(0.01)
+    sleep(0.01)
 ```
 
 ## 버튼 눌림 횟수 세기
@@ -103,13 +99,12 @@ while True:
 
 ```python
 from codibit import *
-import time
 
 print("버튼을 여러 번 누른 후 5초간 기다리면 카운트가 표시됩니다...")
 
 while True:
     # 5초 대기
-    time.sleep(5)
+    sleep(5)
 
     # 버튼 A가 눌린 횟수 가져오기
     a_presses = button_a.get_presses()
@@ -131,7 +126,6 @@ while True:
 
 ```python
 from codibit import *
-import time
 
 print("버튼을 눌러보세요. 실시간으로 누적 횟수가 표시됩니다...")
 
@@ -145,7 +139,7 @@ while True:
     # 실시간 표시
     print(f"\r총 누름 횟수 - A: {total_a}, B: {total_b}", end="")
 
-    time.sleep(0.1)
+    sleep(0.1)
 ```
 
 ## get_presses() vs get_press_count() 비교
@@ -154,10 +148,9 @@ while True:
 
 ```python
 from codibit import *
-import time
 
 print("버튼을 여러 번 눌러보세요...")
-time.sleep(3)
+sleep(3)
 
 # 첫 번째 확인
 presses_a = button_a.get_presses()  # 카운터 리셋됨
@@ -166,7 +159,7 @@ count_a = button_a.get_press_count()  # 카운터 리셋되지 않음
 print(f"get_presses(): {presses_a} (리셋됨)")
 print(f"get_press_count(): {count_a} (누적)")
 
-time.sleep(2)
+sleep(2)
 
 # 두 번째 확인
 presses_a2 = button_a.get_presses()  # 0 (이미 리셋됨)
@@ -184,7 +177,6 @@ print(f"get_press_count(): {count_a2} (누적 유지)")
 
 ```python
 from codibit import *
-import time
 
 button_a_pressed = False
 counter = 0
@@ -213,7 +205,7 @@ while True:
     if button_b.is_released():
         print("버튼 B가 떼어졌습니다")
 
-    time.sleep(0.01)
+    sleep(0.01)
 ```
 
 ### 동시 버튼 감지
@@ -222,7 +214,6 @@ while True:
 
 ```python
 from codibit import *
-import time
 
 print("버튼 A와 B를 동시에 눌러주세요...")
 
@@ -245,7 +236,7 @@ while True:
     if button_b.is_released():
         print("버튼 B가 떼어졌습니다")
 
-    time.sleep(0.01)
+    sleep(0.01)
 ```
 
 ## 간단한 메뉴 시스템
@@ -254,7 +245,6 @@ while True:
 
 ```python
 from codibit import *
-import time
 
 menu_items = ["게임 시작", "설정", "종료"]
 current_item = 0
@@ -270,7 +260,7 @@ while True:
     # 메뉴 선택
     if button_a.is_pressed():
         print(f"선택됨: {menu_items[current_item]}")
-        time.sleep(1)
+        sleep(1)
         show_menu()
 
     # 메뉴 탐색
@@ -278,7 +268,7 @@ while True:
         current_item = (current_item + 1) % len(menu_items)
         show_menu()
 
-    time.sleep(0.01)
+    sleep(0.01)
 ```
 
 ## 팁과 모범 사례
@@ -295,8 +285,8 @@ while True:
 
 루프에 항상 작은 지연을 포함하세요:
 ```python
-time.sleep(0.01)  # 10ms - 대부분의 경우 권장
-time.sleep(0.05)  # 50ms - 안정성 중심 애플리케이션용
+sleep(0.01)  # 10ms - 대부분의 경우 권장
+sleep(0.05)  # 50ms - 안정성 중심 애플리케이션용
 ```
 
 ### 3. 버튼 상태 흐름

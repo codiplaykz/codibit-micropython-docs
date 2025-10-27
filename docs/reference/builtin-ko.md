@@ -94,7 +94,7 @@ button_b  # 버튼 B
 > while True:
 >     if button_a.is_pressed():
 >         print("버튼 A가 눌렸습니다!")
->     time.sleep(0.01)  # 최적 성능을 위한 10ms 지연
+>     sleep(0.01)  # 최적 성능을 위한 10ms 지연
 >
 > # ❌ 피해야 할 예: 지연 없이는 성능 문제 발생 가능
 > while True:
@@ -103,9 +103,9 @@ button_b  # 버튼 B
 > ```
 >
 > **권장 지연 시간:**
-> - `time.sleep(0.01)` - 10ms: 대부분의 애플리케이션에 최적
-> - `time.sleep(0.05)` - 50ms: 안정성 중심 애플리케이션용
-> - `time.sleep(0.1)` - 100ms: 간단한 애플리케이션용
+> - `sleep(0.01)` - 10ms: 대부분의 애플리케이션에 최적
+> - `sleep(0.05)` - 50ms: 안정성 중심 애플리케이션용
+> - `sleep(0.1)` - 100ms: 간단한 애플리케이션용
 
 #### `button.is_pressed()`
 
@@ -1285,7 +1285,7 @@ for clock in Image.ALL_CLOCKS:
     display.clear()
     display.draw_image(clock, 0, 0)
     display.show()
-    time.sleep(0.1)
+    sleep(0.1)
 ```
 
 #### `Image.ALL_ARROWS`
@@ -1299,7 +1299,7 @@ for arrow in Image.ALL_ARROWS:
     display.clear()
     display.draw_image(arrow, 0, 0)
     display.show()
-    time.sleep(0.2)
+    sleep(0.2)
 
 # 랜덤 화살표 선택
 import random
