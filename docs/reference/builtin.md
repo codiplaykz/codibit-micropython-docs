@@ -11,6 +11,34 @@ import TOCInline from '@theme/TOCInline';
 
 API for utility functions that work with built-in sensors.
 
+### `sleep(n)`
+
+Pauses program execution for the specified time in seconds.
+
+**Parameters:**
+- `n` (int or float): Sleep time in seconds
+
+**Returns:**
+- None
+
+**Example:**
+```python
+# Wait for 1 second
+codibit.sleep(1)
+
+# Wait for 0.5 seconds
+codibit.sleep(0.5)
+
+# Wait for 2.5 seconds
+codibit.sleep(2.5)
+```
+
+**Notes:**
+1. **Negative Values**: Negative values are ignored
+2. **Error Handling**: Fails silently on exceptions
+3. **Memory Efficiency**: Implementation considers MicroPython memory constraints
+4. **Precision**: Supports floating-point values
+
 ### `get_board_temperature()`
 
 Returns the current board temperature from the QMI8658 IMU sensor.
