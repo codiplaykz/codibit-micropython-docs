@@ -32,6 +32,10 @@ print(f"Raw value: {raw_value}")
 # Get normalized level (0-9)
 level = mic.get_level()
 print(f"Sound level: {level}")
+
+# Get status string (5 levels)
+status = mic.get_status()
+print(f"Sound status: {status}")
 ```
 
 ### 3. Detect Sound Events
@@ -90,8 +94,9 @@ except KeyboardInterrupt:
 
 1. **Raw Reading**: The `read()` method returns the raw ADC value from the microphone sensor
 2. **Level Conversion**: The `get_level()` method converts the raw value to a normalized level (0-9)
-3. **Event Detection**: The sensor automatically calibrates to ambient noise and detects changes
-4. **Threshold Checking**: Methods like `is_loud()` and `is_quiet()` use predefined thresholds
+3. **Status String**: The `get_status()` method returns a 5-level status string ("very_quiet", "quiet", "medium", "loud", "very_loud")
+4. **Event Detection**: The sensor automatically calibrates to ambient noise and detects changes
+5. **Threshold Checking**: Methods like `is_loud()` and `is_quiet()` use predefined thresholds
 
 ## Tips
 

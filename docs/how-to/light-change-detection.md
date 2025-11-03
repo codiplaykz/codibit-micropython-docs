@@ -16,11 +16,11 @@ The simplest way to detect light changes is to compare the current reading with 
 from codibit import *
 
 # Store the previous light level
-previous_level = light.read_level()
+previous_level = light.get_level()
 
 while True:
     # Get current light level
-    current_level = light.read_level()
+    current_level = light.get_level()
 
     # Check if light level has changed
     if current_level != previous_level:
@@ -40,10 +40,10 @@ You can add different responses based on the type of change.
 ```python
 from codibit import *
 
-previous_level = light.read_level()
+previous_level = light.get_level()
 
 while True:
-    current_level = light.read_level()
+    current_level = light.get_level()
 
     if current_level != previous_level:
         # Determine the type of change
@@ -68,11 +68,11 @@ For more precise control, you can set specific thresholds for light changes.
 ```python
 from codibit import *
 
-previous_level = light.read_level()
+previous_level = light.get_level()
 threshold = 2  # Minimum change to trigger detection
 
 while True:
-    current_level = light.read_level()
+    current_level = light.get_level()
 
     # Check if change exceeds threshold
     change = abs(current_level - previous_level)
@@ -100,11 +100,11 @@ while True:
 ```python
 from codibit import *
 
-previous_level = light.read_level()
+previous_level = light.get_level()
 change_count = 0
 
 while True:
-    current_level = light.read_level()
+    current_level = light.get_level()
 
     if current_level != previous_level:
         change_count += 1
@@ -123,10 +123,10 @@ while True:
 ```python
 from codibit import *
 
-previous_level = light.read_level()
+previous_level = light.get_level()
 
 while True:
-    current_level = light.read_level()
+    current_level = light.get_level()
 
     if current_level != previous_level:
         # Alert based on light level

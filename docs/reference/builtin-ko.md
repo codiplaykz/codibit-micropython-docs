@@ -641,6 +641,24 @@ if microphone.is_quiet():
     print("매우 조용합니다.")
 ```
 
+#### `microphone.get_status()`
+
+소리 상태를 문자열로 반환합니다 (5단계).
+
+**반환값:**
+- `str`: 소리 상태 문자열
+  - `"very_quiet"` (0-1)
+  - `"quiet"` (2-3)
+  - `"medium"` (4-5)
+  - `"loud"` (6-7)
+  - `"very_loud"` (8-9)
+
+**예시:**
+```python
+status = microphone.get_status()
+print(f"소리 상태: {status}")
+```
+
 ### 하드웨어 정보
 
 - **센서**: 내장 마이크 센서
@@ -682,7 +700,7 @@ light
 value = light.read()
 ```
 
-#### `light.read_level()`
+#### `light.get_level()`
 
 조도 레벨을 읽습니다.
 
@@ -698,7 +716,25 @@ value = light.read()
 
 **예시:**
 ```python
-level = light.read_level()
+level = light.get_level()
+```
+
+#### `light.get_status()`
+
+조도 상태를 문자열로 반환합니다 (5단계).
+
+**반환값:**
+- `str`: 조도 상태 문자열
+  - `"very_dark"` (0-1)
+  - `"dark"` (2-3)
+  - `"medium"` (4-5)
+  - `"bright"` (6-7)
+  - `"very_bright"` (8-9)
+
+**예시:**
+```python
+status = light.get_status()
+print(f"조도 상태: {status}")
 ```
 
 ### 하드웨어 정보

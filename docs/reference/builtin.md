@@ -641,6 +641,24 @@ if microphone.is_quiet():
     print("It's very quiet.")
 ```
 
+#### `microphone.get_status()`
+
+Returns the sound status as a string (5 levels).
+
+**Returns:**
+- `str`: Sound status string
+  - `"very_quiet"` (0-1)
+  - `"quiet"` (2-3)
+  - `"medium"` (4-5)
+  - `"loud"` (6-7)
+  - `"very_loud"` (8-9)
+
+**Example:**
+```python
+status = microphone.get_status()
+print(f"Sound status: {status}")
+```
+
 ### Hardware Information
 
 - **Sensor**: Built-in microphone
@@ -682,7 +700,7 @@ Reads the raw light sensor value.
 value = light.read()
 ```
 
-#### `light.read_level()`
+#### `light.get_level()`
 
 Reads the light level.
 
@@ -698,7 +716,25 @@ Reads the light level.
 
 **Example:**
 ```python
-level = light.read_level()
+level = light.get_level()
+```
+
+#### `light.get_status()`
+
+Returns the light status as a string (5 levels).
+
+**Returns:**
+- `str`: Light status string
+  - `"very_dark"` (0-1)
+  - `"dark"` (2-3)
+  - `"medium"` (4-5)
+  - `"bright"` (6-7)
+  - `"very_bright"` (8-9)
+
+**Example:**
+```python
+status = light.get_status()
+print(f"Light status: {status}")
 ```
 
 ### Hardware Information

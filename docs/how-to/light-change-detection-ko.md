@@ -16,11 +16,11 @@
 from codibit import *
 
 # 이전 조도 레벨 저장
-previous_level = light.read_level()
+previous_level = light.get_level()
 
 while True:
     # 현재 조도 레벨 가져오기
-    current_level = light.read_level()
+    current_level = light.get_level()
 
     # 조도 레벨이 변화했는지 확인
     if current_level != previous_level:
@@ -40,10 +40,10 @@ while True:
 ```python
 from codibit import *
 
-previous_level = light.read_level()
+previous_level = light.get_level()
 
 while True:
-    current_level = light.read_level()
+    current_level = light.get_level()
 
     if current_level != previous_level:
         # 변화 유형 결정
@@ -68,11 +68,11 @@ while True:
 ```python
 from codibit import *
 
-previous_level = light.read_level()
+previous_level = light.get_level()
 threshold = 2  # 감지를 트리거하는 최소 변화량
 
 while True:
-    current_level = light.read_level()
+    current_level = light.get_level()
 
     # 변화가 임계값을 초과하는지 확인
     change = abs(current_level - previous_level)
@@ -100,11 +100,11 @@ while True:
 ```python
 from codibit import *
 
-previous_level = light.read_level()
+previous_level = light.get_level()
 change_count = 0
 
 while True:
-    current_level = light.read_level()
+    current_level = light.get_level()
 
     if current_level != previous_level:
         change_count += 1
@@ -123,10 +123,10 @@ while True:
 ```python
 from codibit import *
 
-previous_level = light.read_level()
+previous_level = light.get_level()
 
 while True:
-    current_level = light.read_level()
+    current_level = light.get_level()
 
     if current_level != previous_level:
         # 조도 레벨에 따른 알림

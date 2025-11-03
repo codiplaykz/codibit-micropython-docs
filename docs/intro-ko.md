@@ -54,7 +54,7 @@ if button_a.is_pressed():
     print("버튼 A가 눌렸습니다!")
 
 # 조도 센서 읽기
-light_level = light.read_level()
+light_level = light.get_level()
 print(f"조도 레벨: {light_level}")
 
 # 마이크 읽기
@@ -146,7 +146,7 @@ while True:
 from codibit import *
 
 while True:
-    level = light.read_level()
+    level = light.get_level()
     print(f"조도 레벨: {level}")
     sleep(1)
 ```

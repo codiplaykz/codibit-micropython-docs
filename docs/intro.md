@@ -54,7 +54,7 @@ if button_a.is_pressed():
     print("Button A is pressed!")
 
 # Read light sensor
-light_level = light.read_level()
+light_level = light.get_level()
 print(f"Light level: {light_level}")
 
 # Read microphone
@@ -146,7 +146,7 @@ while True:
 from codibit import *
 
 while True:
-    level = light.read_level()
+    level = light.get_level()
     print(f"Light level: {level}")
     sleep(1)
 ```
