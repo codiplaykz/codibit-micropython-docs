@@ -1818,3 +1818,141 @@ The Codi:bit board's gyroscope operates based on the board's actual physical ori
 4. **Sampling**: Values are updated at the sensor's configured rate
 5. **Noise**: Small variations are normal due to sensor noise
 6. **Range selection**: The sensor automatically selects appropriate measurement range
+
+## Serial
+
+API for serial communication using REPL stdin/stdout. Provides microbit-like serial communication interface for ESP32 MicroPython. Supports communication between clients (web apps, etc.) and user code using `sys.stdin` and `sys.stdout`. Uses a [2-way handshake protocol](../explanation/serial-protocol.md#2-way-handshake-protocol) to automatically establish connections with clients.
+
+### Global Instance
+
+```python
+from codibit import serial
+
+serial  # Built-in serial communication instance
+```
+
+### Methods
+
+#### `serial.write(data)`
+
+Writes a string to the serial output.
+
+**Parameters:**
+- `data` (str or bytes): String or bytes to send. Bytes are automatically converted to UTF-8 string.
+
+**Returns:**
+- `int`: Number of bytes sent. Returns 0 on error.
+
+**Example:**
+```python
+serial.write("Hello")
+serial.write("World")
+```
+
+**Notes:**
+- Automatically converts bytes to UTF-8 string
+- Ensures immediate transmission with `flush()` call
+- Returns 0 on exception (silent failure)
+
+#### `serial.read()`
+
+Reads available data from serial input (non-blocking).
+
+Returns all available data immediately. Returns empty string if no data is available. Automatically responds with ACK(0x06) when ENQ(0x05) is detected. Control characters (ENQ/ACK) are filtered from user data.
+
+**Returns:**
+- `str`: Read string. Returns empty string if no data is available.
+
+**Example:**
+```python
+data = serial.read()
+if data:
+    print(f"Received: {data}")
+```
+
+**Notes:**
+- Non-blocking: Returns immediately even if no data is available
+- Connection establishment: Automatically handles [2-way handshake protocol](../explanation/serial-protocol.md#2-way-handshake-protocol) internally
+- Control characters: ENQ/ACK are filtered and not exposed to user code
+- Empty string: Returns empty string when no data is available
+
+#### `serial.write_line(data)`
+
+Writes a string followed by a newline character (`\n`) to the serial output.
+
+**Parameters:**
+- `data` (str or bytes): String or bytes to send. Bytes are automatically converted to UTF-8 string.
+
+**Returns:**
+- `int`: Number of bytes sent (including `\n`). Returns 0 on error.
+
+**Example:**
+```python
+serial.write_line("Hello World")
+serial.write_line("Line 2")
+```
+
+**Notes:**
+- Automatically adds `\n` after the data
+- Useful for line-based communication protocols
+
+#### `serial.read_line()`
+
+Reads a line from serial input (non-blocking, until `\n`).
+
+Accumulates data in buffer until newline character (`\n` or `\r`) is received. Returns empty string if no complete line is available. Automatically responds with ACK(0x06) when ENQ(0x05) is detected. Control characters (ENQ/ACK) are filtered from user data.
+
+**Returns:**
+- `str`: Read line string (without newline). Returns empty string if no complete line is available.
+
+**Example:**
+```python
+line = serial.read_line()
+if line:
+    print(f"Received line: {line}")
+    serial.write_line(f"Echo: {line}")
+```
+
+**Notes:**
+- Non-blocking: Returns immediately even if no complete line is available
+- Buffer management: Accumulates data until newline is received
+- Connection establishment: Automatically handles [2-way handshake protocol](../explanation/serial-protocol.md#2-way-handshake-protocol) internally
+- Control characters: ENQ/ACK are filtered and not exposed to user code
+- Empty string: Returns empty string when no complete line is available
+
+### Connection Establishment
+
+The Serial class automatically handles connection establishment using a 2-way handshake protocol:
+
+1. **Client sends ENQ (0x05)**: Connection request (periodic)
+2. **Board responds with ACK (0x06)**: Ready response
+3. **Connection established**: Data transmission can begin
+
+**Key Features:**
+- **Automatic**: No explicit connection calls required in user code
+- **Asynchronous**: Works regardless of which side starts first
+- **Transparent**: Connection establishment is handled internally
+- **Non-intrusive**: Control characters are filtered from user data
+
+For detailed protocol design and implementation, see [Serial Communication Protocol](../explanation/serial-protocol.md).
+
+### Hardware Information
+
+- **Interface**: REPL stdin/stdout (`sys.stdin`, `sys.stdout`)
+- **Protocol**: 2-way handshake (ENQ/ACK)
+- **Baud Rate**: 115200 (default ESP32 MicroPython REPL)
+- **Data Format**: Plain text strings
+- **Control Characters**: ENQ (0x05), ACK (0x06) - filtered from user data
+
+### Notes
+
+1. **Non-blocking**: All read operations are non-blocking and return immediately
+2. **Connection establishment**: Automatically handled internally, no user code required
+3. **Control characters**: ENQ/ACK are filtered and not exposed to user code
+4. **Buffer management**: `read_line()` uses internal buffer to accumulate data until newline
+5. **Error handling**: Returns empty string or 0 on error (silent failure)
+6. **Memory efficiency**: Designed for MicroPython memory constraints
+7. **Client compatibility**: Works with web apps and other serial clients
+8. **Asynchronous connection**: Works correctly regardless of which side starts first
+
+For detailed usage examples and patterns, see [How to use serial communication](../how-to/serial-usage.md). For protocol design details, see [Serial Communication Protocol](../explanation/serial-protocol.md).
