@@ -2,6 +2,14 @@
 
 Codi:bit 보드의 내장 버저를 사용하여 소리, 멜로디, 음악을 만드는 방법을 배워보세요.
 
+> **⚠️ 중요: 논블로킹 방식**
+>
+> 버저는 `_thread`를 사용한 **논블로킹 방식**으로 동작합니다:
+> - 모든 재생 함수(`play_tone`, `play_melody`, `play_sound`)는 즉시 반환됩니다
+> - 소리는 백그라운드 스레드에서 재생됩니다
+> - `stop()` 메서드로 재생 중인 소리를 즉시 정지할 수 있습니다
+> - 새로운 재생 명령은 이전 재생을 자동으로 정지시킵니다
+
 ## 기본 설정
 
 버저는 전역 인스턴스로 사용할 수 있습니다:
@@ -14,10 +22,10 @@ from codibit import buzzer
 
 ### 기본 음
 
-특정 주파수로 단순한 음을 재생합니다. 지정된 시간 후 자동으로 정지됩니다:
+특정 주파수로 단순한 음을 재생합니다. 논블로킹 방식으로 동작하며, 지정된 시간 후 자동으로 정지됩니다:
 
 ```python
-# A4 음을 1초간 재생 (자동 정지)
+# A4 음을 1초간 재생 (논블로킹, 자동 정지)
 buzzer.play_tone(440, 1000)
 
 # 저음 재생
@@ -25,6 +33,9 @@ buzzer.play_tone(200, 500)
 
 # 고음 재생
 buzzer.play_tone(1000, 2000)
+
+# 즉시 정지
+buzzer.stop()
 ```
 
 ### 주파수 예시
@@ -235,9 +246,10 @@ play_rock_beat()
 멜로디의 템포를 설정하고 조정합니다:
 
 ```python
-# 템포 설정
-buzzer.set_tempo(bpm=180)  # 빠른 템포
-buzzer.set_tempo(bpm=60)   # 느린 템포
+# 템포 설정 (ticks와 bpm 모두 설정 가능)
+buzzer.set_tempo(ticks=4, bpm=180)  # 빠른 템포
+buzzer.set_tempo(ticks=4, bpm=60)   # 느린 템포
+buzzer.set_tempo(bpm=120)           # bpm만 변경 (ticks는 유지)
 
 # 현재 템포 확인
 ticks, bpm = buzzer.get_tempo()
@@ -280,18 +292,29 @@ for volume in range(4):
 
 ## 소리 정지
 
-현재 재생 중인 소리를 정지합니다:
+현재 재생 중인 소리를 즉시 정지합니다. 논블로킹 방식으로 동작하므로 재생 중 언제든 정지 가능합니다:
 
 ```python
-# 긴 음 시작
+# 긴 음 시작 (논블로킹)
 buzzer.play_tone(440, 10000)  # 10초
 
-# 즉시 정지
+# 즉시 정지 (약 30ms 이내 반응)
 buzzer.stop()
 
-# 멜로디 정지
+# 멜로디 재생 중 정지
 buzzer.play_melody(['c4:4', 'd4:4', 'e4:4', 'f4:4', 'g4:8'])
-buzzer.stop()  # 멜로디 정지
+sleep(1)  # 1초 후
+buzzer.stop()  # 멜로디 즉시 정지
+
+# 버튼으로 정지하기
+from codibit import button_a
+
+buzzer.play_melody(Melody.HAPPY_BIRTHDAY, tempo=120)
+while True:
+    if button_a.is_pressed():
+        buzzer.stop()
+        break
+    sleep(0.01)
 ```
 
 ## 완전한 예시
@@ -381,16 +404,16 @@ print("버저 데모 완료!")
 
 ### 핵심 메서드
 
-- `buzzer.play_tone(frequency, duration_ms)` - 단일 음 재생 (자동 정지)
-- `buzzer.play_melody(melody, tempo=None)` - 음표 문자열로 멜로디 재생
-- `buzzer.play_sound(sound_type)` - 미리 정의된 소리 재생
-- `buzzer.stop()` - 현재 소리 정지
+- `buzzer.play_tone(frequency, duration_ms)` - 단일 음 재생 (논블로킹, 자동 정지)
+- `buzzer.play_melody(melody, tempo=None)` - 음표 문자열로 멜로디 재생 (논블로킹)
+- `buzzer.play_sound(sound_type)` - 미리 정의된 소리 재생 (논블로킹)
+- `buzzer.stop()` - 현재 소리 즉시 정지 (약 30ms 이내 반응)
 
 ### 제어 메서드
 
 - `buzzer.set_volume(volume)` - 볼륨 설정 (0-3)
 - `buzzer.set_tempo(ticks=4, bpm=120)` - 템포 설정
-- `buzzer.get_tempo()` - 현재 템포 가져오기
+- `buzzer.get_tempo()` - 현재 템포 가져오기 (ticks, bpm)
 
 ### 내장 리소스
 
@@ -402,11 +425,14 @@ print("버저 데모 완료!")
 
 ## 팁
 
-1. **단순하고 직관적**: API는 `auto_stop` 같은 복잡한 파라미터 없이 단순하게 설계되었습니다
-2. **자동 정지**: 모든 음은 지정된 시간 후 자동으로 정지됩니다
-3. **중단**: Ctrl+C로 모든 멜로디나 곡 재생을 중단할 수 있습니다
-4. **볼륨 범위**: 볼륨 레벨은 0 (음소거)부터 3 (크게)까지입니다
-5. **템포**: 템포는 BPM (분당 비트 수)로 지정됩니다
-6. **음표 표기법**: 음표는 `NOTE[octave][:duration]` 형식을 사용하세요
-7. **소리 타입**: 8가지 실용적인 소리와 16가지 드럼 소리를 사용할 수 있습니다
-8. **틱 시스템**: 음악의 기본 시간 단위는 틱이며, 템포에 따라 길이가 결정됩니다
+1. **논블로킹 방식**: 모든 재생 함수는 즉시 반환되며, 소리는 백그라운드에서 재생됩니다
+2. **즉시 정지**: `stop()` 메서드는 약 30ms 이내에 소리를 정지시킵니다
+3. **자동 정지**: 모든 음은 지정된 시간 후 자동으로 정지됩니다
+4. **자동 교체**: 새로운 재생 명령은 이전 재생을 자동으로 정지시킵니다
+5. **중단**: Ctrl+C로 모든 멜로디나 곡 재생을 중단할 수 있습니다
+6. **볼륨 범위**: 볼륨 레벨은 0 (음소거)부터 3 (크게)까지입니다
+7. **템포**: 템포는 BPM (분당 비트 수)와 틱으로 지정됩니다
+8. **음표 표기법**: 음표는 `NOTE[octave][:duration]` 형식을 사용하세요
+9. **소리 타입**: 8가지 실용적인 소리와 16가지 드럼 소리를 사용할 수 있습니다
+10. **틱 시스템**: 음악의 기본 시간 단위는 틱이며, 템포에 따라 길이가 결정됩니다
+11. **스레드 기반**: `_thread` 모듈을 사용하여 안정적인 논블로킹 재생을 제공합니다

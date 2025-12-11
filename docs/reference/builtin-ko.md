@@ -347,7 +347,7 @@ rgb_led.turn_off_all()
 
 ## 버저 (Buzzer)
 
-Codi:bit 보드의 내장 버저를 제어하는 API입니다.
+Codi:bit 보드의 내장 버저를 제어하는 API입니다. `_thread`를 사용한 논블로킹 방식으로 동작하며, 재생 중 `stop()` 호출로 즉시 정지 가능합니다.
 
 ### 전역 인스턴스
 
@@ -387,32 +387,32 @@ buzzer  # 내장 버저
 실용적인 소리와 드럼 소리 타입 상수들입니다.
 
 **실용적인 소리들:**
-- `Sound.BEEP`
-- `Sound.CHIME`
-- `Sound.ALERT`
-- `Sound.NOTIFICATION`
-- `Sound.SUCCESS`
-- `Sound.ERROR`
-- `Sound.CLICK`
-- `Sound.TICK`
+- `Sound.BEEP` - 기본 비프음
+- `Sound.CHIME` - 차임벨
+- `Sound.ALERT` - 경고음
+- `Sound.NOTIFICATION` - 알림음
+- `Sound.SUCCESS` - 성공음
+- `Sound.ERROR` - 오류음
+- `Sound.CLICK` - 클릭음
+- `Sound.TICK` - 틱음
 
-**드럼 소리들:**
-- `Sound.DRUM_KICK`
-- `Sound.DRUM_SNARE`
-- `Sound.DRUM_HIHAT`
-- `Sound.DRUM_TOM1`
-- `Sound.DRUM_TOM2`
-- `Sound.DRUM_TOM3`
-- `Sound.DRUM_FLOOR_TOM`
-- `Sound.DRUM_CRASH`
-- `Sound.DRUM_RIDE`
-- `Sound.DRUM_HIHAT_OPEN`
-- `Sound.DRUM_HIHAT_CLOSED`
-- `Sound.DRUM_CHINA`
-- `Sound.DRUM_SPLASH`
-- `Sound.DRUM_COWBELL`
-- `Sound.DRUM_CLAP`
-- `Sound.DRUM_SHAKER`
+**드럼 소리들 (4가지 알고리즘):**
+- `Sound.DRUM_KICK` - 킥 드럼 (sweep_down: 주파수 하강)
+- `Sound.DRUM_SNARE` - 스네어 드럼 (noise: 노이즈 효과)
+- `Sound.DRUM_HIHAT` - 하이햇 (decay: 볼륨 감쇠)
+- `Sound.DRUM_TOM1` - 톰 1 (sweep_down)
+- `Sound.DRUM_TOM2` - 톰 2 (sweep_down)
+- `Sound.DRUM_TOM3` - 톰 3 (sweep_down)
+- `Sound.DRUM_FLOOR_TOM` - 플로어 톰 (sweep_down)
+- `Sound.DRUM_CRASH` - 크래시 심벌 (decay)
+- `Sound.DRUM_RIDE` - 라이드 심벌 (decay)
+- `Sound.DRUM_HIHAT_OPEN` - 오픈 하이햇 (decay)
+- `Sound.DRUM_HIHAT_CLOSED` - 클로즈드 하이햇 (decay)
+- `Sound.DRUM_CHINA` - 차이나 심벌 (decay)
+- `Sound.DRUM_SPLASH` - 스플래시 심벌 (decay)
+- `Sound.DRUM_COWBELL` - 카우벨 (simple: 단순 톤)
+- `Sound.DRUM_CLAP` - 클랩 (noise)
+- `Sound.DRUM_SHAKER` - 쉐이커 (noise)
 
 #### `Melody`
 
@@ -421,16 +421,16 @@ buzzer  # 내장 버저
 ```python
 from codibit import Melody
 
-Melody.HAPPY_BIRTHDAY  # 생일 축하합니다
-Melody.TWINKLE_TWINKLE # 반짝반짝 작은 별
-Melody.MARY_HAD_A_LITTLE_LAMB  # 비행기
+Melody.HAPPY_BIRTHDAY           # 생일 축하합니다
+Melody.TWINKLE_TWINKLE          # 반짝반짝 작은 별
+Melody.MARY_HAD_A_LITTLE_LAMB   # 비행기
 ```
 
 ### 메서드
 
 #### `buzzer.play_tone(frequency, duration_ms=1000)`
 
-지정된 주파수로 음을 재생합니다. 지정된 시간 후 자동으로 정지됩니다.
+지정된 주파수로 음을 재생합니다. 논블로킹으로 동작하며, 지정된 시간 후 자동으로 정지됩니다.
 
 **매개변수:**
 - `frequency` (int): 주파수 (Hz)
@@ -438,17 +438,17 @@ Melody.MARY_HAD_A_LITTLE_LAMB  # 비행기
 
 **예시:**
 ```python
-buzzer.play_tone(440, 1000)      # 440Hz를 1초간 재생 (자동 정지)
-buzzer.play_tone(262, 500)       # C4 음을 0.5초간 재생 (자동 정지)
+buzzer.play_tone(440, 1000)      # 440Hz를 1초간 재생 (논블로킹, 자동 정지)
+buzzer.play_tone(262, 500)       # C4 음을 0.5초간 재생 (논블로킹, 자동 정지)
 ```
 
 #### `buzzer.play_melody(melody, tempo=None)`
 
-음표 문자열을 사용하여 멜로디를 재생합니다.
+음표 문자열을 사용하여 멜로디를 재생합니다. 논블로킹으로 동작하며, `stop()` 호출로 즉시 정지 가능합니다.
 
 **매개변수:**
 - `melody` (list): 음표 문자열 리스트 (예: ['c4:4', 'd4:4', 'e4:8'])
-- `tempo` (int, optional): BPM 단위의 템포, None이면 기본값 사용
+- `tempo` (int, optional): BPM 단위의 템포, None이면 현재 설정 사용
 
 **내장 멜로디:**
 ```python
@@ -462,35 +462,44 @@ Melody.MARY_HAD_A_LITTLE_LAMB
 
 **예시:**
 ```python
-# 사용자 정의 멜로디
+# 사용자 정의 멜로디 (논블로킹)
 buzzer.play_melody(['c4:4', 'd4:4', 'e4:4', 'f4:4', 'g4:8'], tempo=120)
 
-# 내장 멜로디
+# 내장 멜로디 (논블로킹)
 from codibit import Melody
 buzzer.play_melody(Melody.HAPPY_BIRTHDAY, tempo=200)
 ```
 
 #### `buzzer.play_sound(sound_type)`
 
-미리 정의된 소리를 재생합니다.
+미리 정의된 소리를 재생합니다. 논블로킹으로 동작하며, `stop()` 호출로 즉시 정지 가능합니다.
 
 **매개변수:**
 - `sound_type` (str | Sound): Sound 클래스 상수 중 하나
 
 **예시:**
 ```python
-buzzer.play_sound(Sound.BEEP)
-buzzer.play_sound(Sound.DRUM_KICK)
+buzzer.play_sound(Sound.BEEP)        # 논블로킹
+buzzer.play_sound(Sound.DRUM_KICK)   # 논블로킹
 ```
 
 #### `buzzer.stop()`
 
-현재 재생 중인 소리를 정지합니다.
+현재 재생 중인 소리를 즉시 정지합니다. 약 30ms 이내에 반응합니다.
 
 **예시:**
 ```python
-buzzer.play_tone(440, 5000)  # 5초간 재생
-buzzer.stop()  # 즉시 정지
+buzzer.play_tone(440, 5000)  # 5초간 재생 (논블로킹)
+buzzer.stop()  # 즉시 정지 (약 30ms 이내)
+
+# 버튼으로 정지하기
+from codibit import button_a
+buzzer.play_melody(Melody.HAPPY_BIRTHDAY)
+while True:
+    if button_a.is_pressed():
+        buzzer.stop()
+        break
+    sleep(0.01)
 ```
 
 #### `buzzer.set_tempo(ticks=4, bpm=120)`
@@ -522,14 +531,14 @@ print(f"현재 템포: {bpm} BPM, {ticks}틱")
 
 #### `buzzer.set_volume(volume)`
 
-버저 볼륨을 설정합니다.
+버저 볼륨을 설정합니다. PWM duty cycle로 제어됩니다.
 
 **매개변수:**
 - `volume` (int): 볼륨 레벨 (0-3)
-  - `0`: 음소거
-  - `1`: 작게
-  - `2`: 중간 (기본값)
-  - `3`: 크게
+  - `0`: 음소거 (duty: 0)
+  - `1`: 작게 (duty: 200)
+  - `2`: 중간 (duty: 500, 기본값)
+  - `3`: 크게 (duty: 900)
 
 **예시:**
 ```python
@@ -548,13 +557,16 @@ buzzer.play_tone(440, 1000)
 
 ### 주의사항
 
-1. **볼륨 제어**: 볼륨은 PWM 듀티 사이클로 제어되며, 최대 듀티 사이클은 900입니다
-2. **중단 가능**: 모든 멜로디와 곡 재생은 Ctrl+C로 중단할 수 있습니다
-3. **템포 제어**: 템포는 BPM (분당 비트 수)로 지정됩니다
-4. **음표 표기법**: 음표는 `NOTE[octave][:duration]` 형식을 사용하세요
-5. **소리 타입**: 8가지 실용적인 소리와 16가지 드럼 소리를 사용할 수 있습니다
-6. **드럼 사운드**: 16가지 다양한 드럼 소리를 제공합니다
-7. **틱 시스템**: 음악의 기본 시간 단위는 틱이며, 템포에 따라 길이가 결정됩니다
+1. **논블로킹 방식**: `_thread` 기반으로 동작하며, 모든 재생 함수는 즉시 반환됩니다
+2. **즉시 정지**: `stop()` 메서드는 약 30ms 이내에 소리를 정지시킵니다 (SLEEP_CHUNK_MS 기준)
+3. **자동 교체**: 새로운 재생 명령은 이전 재생을 자동으로 정지시킵니다
+4. **볼륨 제어**: 볼륨은 PWM 듀티 사이클로 제어되며, 최대 듀티 사이클은 900입니다
+5. **중단 가능**: 모든 멜로디와 곡 재생은 Ctrl+C로 중단할 수 있습니다
+6. **템포 제어**: 템포는 BPM (분당 비트 수)와 틱으로 지정됩니다
+7. **음표 표기법**: 음표는 `NOTE[octave][:duration]` 형식을 사용하세요
+8. **소리 타입**: 8가지 실용적인 소리와 16가지 드럼 소리를 사용할 수 있습니다
+9. **드럼 알고리즘**: 드럼 소리는 4가지 알고리즘(simple, sweep_down, decay, noise)으로 생성됩니다
+10. **틱 시스템**: 음악의 기본 시간 단위는 틱이며, 템포에 따라 길이가 결정됩니다 (1틱 = 60000 / BPM / ticks)
 
 ## 마이크 (Microphone)
 
