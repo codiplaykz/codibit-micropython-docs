@@ -187,16 +187,24 @@ print(f"Button A was pressed {total_presses} times total")
 - **Type**: Tactile push buttons
 - **Pull-up Resistor**: 10KΩ (Hardware)
 - **Active State**: LOW (pressed = 0V, released = 3.3V)
-- **Debounce Time**: 50ms (Software)
+- **Debounce Time**: 50ms (Software-based, handled in interrupt handler)
+- **Interrupt-based**: Uses hardware interrupts (IRQ_FALLING | IRQ_RISING) for real-time button state tracking
 - **Pin Assignment**: Button A (GPIO0), Button B (GPIO2)
 - **Physical Location**: Front side of the board, labeled A and B
 
 ### Notes
 
-1. **Debouncing**: Hardware button bouncing is handled automatically with 50ms debounce time
-2. **Pull-up**: Built-in 10KΩ pull-up resistors ensure stable HIGH state when not pressed
-3. **State Tracking**: `was_pressed()`, `get_presses()`, and `get_press_count()` methods automatically track button events
-4. **Counter Management**: `get_presses()` resets the counter, while `get_press_count()` does not
+1. **Interrupt-based Operation**: Button state tracking uses hardware interrupts, allowing button presses to be detected even during `sleep()` calls. This ensures no button events are missed.
+
+2. **Event Methods**: `is_pressed()` and `is_released()` check interrupt-set flags and automatically reset after being read. Each press/release event is detected exactly once.
+
+3. **Counter Methods**: `get_presses()` and `get_press_count()` track button presses through interrupts, accumulating counts even during `sleep()` periods.
+
+4. **Debouncing**: Software-based 50ms debounce time is handled automatically in the interrupt handler to prevent false triggers from button bouncing.
+
+5. **Pull-up**: Built-in 10KΩ pull-up resistors ensure stable HIGH state when not pressed.
+
+6. **Counter Management**: `get_presses()` resets the counter, while `get_press_count()` does not
 
 ## RGB LED
 
