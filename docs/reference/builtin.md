@@ -187,24 +187,16 @@ print(f"Button A was pressed {total_presses} times total")
 - **Type**: Tactile push buttons
 - **Pull-up Resistor**: 10KΩ (Hardware)
 - **Active State**: LOW (pressed = 0V, released = 3.3V)
-- **Debounce Time**: 50ms (Software-based, handled in interrupt handler)
-- **Interrupt-based**: Uses hardware interrupts (IRQ_FALLING | IRQ_RISING) for real-time button state tracking
+- **Debounce Time**: 50ms (Software)
 - **Pin Assignment**: Button A (GPIO0), Button B (GPIO2)
 - **Physical Location**: Front side of the board, labeled A and B
 
 ### Notes
 
-1. **Interrupt-based Operation**: Button state tracking uses hardware interrupts, allowing button presses to be detected even during `sleep()` calls. This ensures no button events are missed.
-
-2. **Event Methods**: `is_pressed()` and `is_released()` check interrupt-set flags and automatically reset after being read. Each press/release event is detected exactly once.
-
-3. **Counter Methods**: `get_presses()` and `get_press_count()` track button presses through interrupts, accumulating counts even during `sleep()` periods.
-
-4. **Debouncing**: Software-based 50ms debounce time is handled automatically in the interrupt handler to prevent false triggers from button bouncing.
-
-5. **Pull-up**: Built-in 10KΩ pull-up resistors ensure stable HIGH state when not pressed.
-
-6. **Counter Management**: `get_presses()` resets the counter, while `get_press_count()` does not
+1. **Debouncing**: Hardware button bouncing is handled automatically with 50ms debounce time
+2. **Pull-up**: Built-in 10KΩ pull-up resistors ensure stable HIGH state when not pressed
+3. **State Tracking**: `was_pressed()`, `get_presses()`, and `get_press_count()` methods automatically track button events
+4. **Counter Management**: `get_presses()` resets the counter, while `get_press_count()` does not
 
 ## RGB LED
 
@@ -698,46 +690,66 @@ light
 
 #### `light.read()`
 
-Reads the raw light sensor value.
+Reads the raw ADC value from the light sensor.
 
 **Returns:**
-- `int`: Light value (0-4095)
+- `int`: Light value (0-4095, returns 0 on error)
 
 **Example:**
 ```python
 value = light.read()
+print(f"Raw value: {value}")
+```
+
+#### `light.get_lux()`
+
+Calculates the illuminance (Lux) based on the current voltage.
+
+**Returns:**
+- `float`: Illuminance value (in Lux, returns 0.0 on error)
+
+**Example:**
+```python
+lux = light.get_lux()
+print(f"Illuminance: {lux} Lux")
 ```
 
 #### `light.get_level()`
 
-Reads the light level.
+Classifies the light value into 0~9 levels.
 
 **Returns:**
-- `int`: Light level (0-9)
+- `int`: Light level (0-9, returns 0 on error)
 
 **Levels:**
-- 0: Very dark
-- 1-2: Dark
-- 3-6: Normal
-- 7-8: Bright
-- 9: Very bright
+- 0: Pitch black (complete darkness)
+- 1: Very dark (bedroom light, movie theater)
+- 2: Dark (hallway, warehouse)
+- 3: Slightly dark (comfortable for rest)
+- 4: Normal (typical living room)
+- 5: Bright (office, study room recommended)
+- 6: Quite bright (precision workroom, supermarket)
+- 7: Very bright (window side, daytime indoor)
+- 8: Near direct sunlight (glaring)
+- 9: Saturated (exceeds measurement limit)
 
 **Example:**
 ```python
 level = light.get_level()
+print(f"Light level: {level}")
 ```
 
 #### `light.get_status()`
 
-Returns the light status as a string (5 levels).
+Returns the current brightness status as a string (5 levels).
 
 **Returns:**
-- `str`: Light status string
-  - `"very_dark"` (0-1)
-  - `"dark"` (2-3)
-  - `"medium"` (4-5)
-  - `"bright"` (6-7)
-  - `"very_bright"` (8-9)
+- `str`: Light status string (returns 'Unknown' on error)
+  - `"Dark"` (Level 0, 1)
+  - `"Dim"` (Level 2, 3)
+  - `"Normal"` (Level 4, 5)
+  - `"Bright"` (Level 6, 7)
+  - `"Very Bright"` (Level 8, 9)
 
 **Example:**
 ```python
@@ -753,12 +765,17 @@ print(f"Light status: {status}")
 - **Response Time**: < 1ms
 - **Power Consumption**: Very low
 
+For detailed hardware information, see [Light Sensor Hardware](../explanation/light-sensor-hardware.md).
+
 ### Notes
 
 1. **Environmental Factors**: Values may vary depending on ambient lighting
 2. **Reflection**: Reflective objects near the sensor may affect measurements
 3. **Temperature**: Accuracy may decrease at extreme temperatures
 4. **Initialization**: Sensor automatically initializes when board is powered on
+5. **Noise Filtering**: Noise levels below 0.005V are automatically ignored
+6. **Saturation**: Direct sunlight (>10,000 Lux) will immediately saturate the sensor
+7. **Measurement Limit**: Maximum measurable illuminance is approximately 2,350 Lux
 
 ## Display
 
