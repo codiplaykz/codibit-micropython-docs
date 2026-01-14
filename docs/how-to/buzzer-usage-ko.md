@@ -22,10 +22,10 @@ from codibit import buzzer
 
 ### 기본 음
 
-특정 주파수로 단순한 음을 재생합니다. 논블로킹 방식으로 동작하며, 지정된 시간 후 자동으로 정지됩니다:
+특정 주파수로 단순한 음을 재생합니다. 논블로킹 방식으로 동작하며, **최대 재생 시간** 이후 자동으로 정지됩니다:
 
 ```python
-# A4 음을 1초간 재생 (논블로킹, 자동 정지)
+# A4 음을 최대 1초까지 재생 (논블로킹, 자동 정지)
 buzzer.play_tone(440, 1000)
 
 # 저음 재생
@@ -35,6 +35,18 @@ buzzer.play_tone(200, 500)
 buzzer.play_tone(1000, 2000)
 
 # 즉시 정지
+buzzer.stop()
+```
+
+### sleep과 함께 사용하기
+
+`duration_ms`는 **버저가 자동으로 정지되는 최대 재생 시간**입니다.  
+원하는 시점에 더 빨리 멈추고 싶다면 `sleep()` 후 `stop()`으로 제어합니다:
+
+```python
+# 최대 60초까지 울리되, 실제 재생 시간은 stop() 호출 시점으로 제어
+buzzer.play_tone(440, 60000)
+sleep(1)
 buzzer.stop()
 ```
 
@@ -56,8 +68,10 @@ C5 = 523
 # 간단한 C 장음계 재생
 notes = [C4, D4, E4, F4, G4, A4, B4, C5]
 for note in notes:
-    buzzer.play_tone(note, 500)
-    sleep(0.1)
+    buzzer.play_tone(note, 60000)  # 최대 재생 시간
+    sleep(0.5)
+    buzzer.stop()
+    sleep(0.1)  # 음 사이 간격
 ```
 
 ## 멜로디 재생
@@ -286,8 +300,8 @@ buzzer.play_tone(440, 1000)
 # 볼륨 페이드 효과 만들기
 for volume in range(4):
     buzzer.set_volume(volume)
-    buzzer.play_tone(440, 500)
-    sleep(0.1)
+    buzzer.play_tone(440, 200)
+    sleep(0.2)  # 재생이 끝날 때까지 잠시 대기
 ```
 
 ## 소리 정지
@@ -404,7 +418,7 @@ print("버저 데모 완료!")
 
 ### 핵심 메서드
 
-- `buzzer.play_tone(frequency, duration_ms)` - 단일 음 재생 (논블로킹, 자동 정지)
+- `buzzer.play_tone(frequency, duration_ms)` - 단일 음 재생 (논블로킹, 최대 재생 시간 이후 자동 정지)
 - `buzzer.play_melody(melody, tempo=None)` - 음표 문자열로 멜로디 재생 (논블로킹)
 - `buzzer.play_sound(sound_type)` - 미리 정의된 소리 재생 (논블로킹)
 - `buzzer.stop()` - 현재 소리 즉시 정지 (약 30ms 이내 반응)
@@ -427,7 +441,7 @@ print("버저 데모 완료!")
 
 1. **논블로킹 방식**: 모든 재생 함수는 즉시 반환되며, 소리는 백그라운드에서 재생됩니다
 2. **즉시 정지**: `stop()` 메서드는 약 30ms 이내에 소리를 정지시킵니다
-3. **자동 정지**: 모든 음은 지정된 시간 후 자동으로 정지됩니다
+3. **자동 정지**: 모든 음은 **최대 재생 시간** 이후 자동으로 정지됩니다 (더 빨리 멈추려면 `stop()` 사용)
 4. **자동 교체**: 새로운 재생 명령은 이전 재생을 자동으로 정지시킵니다
 5. **중단**: Ctrl+C로 모든 멜로디나 곡 재생을 중단할 수 있습니다
 6. **볼륨 범위**: 볼륨 레벨은 0 (음소거)부터 3 (크게)까지입니다
